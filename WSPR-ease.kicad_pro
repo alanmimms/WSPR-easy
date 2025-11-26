@@ -614,6 +614,12 @@
           "label": "#",
           "name": "${ITEM_NUMBER}",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "LCSC",
+          "name": "LCSC",
+          "show": false
         }
       ],
       "filter_string": "",
@@ -671,6 +677,14 @@
     [
       "ab0ef40e-2ba9-4126-8561-248abf25197d",
       "Low Pass Filters"
+    ],
+    [
+      "23b3e7ef-2325-4c00-b23e-f86801b0fb79",
+      "Transmitter"
+    ],
+    [
+      "ba241438-e62f-45ec-b6ed-2635f15a094d",
+      "Ethernet"
     ]
   ],
   "text_variables": {}
