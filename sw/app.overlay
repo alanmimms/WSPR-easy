@@ -1,0 +1,120 @@
+/* file: app.overlay */
+
+/ {
+	aliases {
+		/* Clean aliases for C code access */
+		fpgaSpi = &spi2;
+		gnssUart = &uart1;
+		
+		/* Direct GPIO aliases if needed, though we use the group below */
+		led0 = &led_blue; 
+	};
+
+	chosen {
+		zephyr,console = &usb_serial;
+		zephyr,shell-uart = &usb_serial;
+	};
+
+	/* Virtual "LED" for board heartbeat if needed */
+	leds {
+		compatible = "gpio-leds";
+		led_blue: led_0 {
+			gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>; /* Onboard LED if available, optional */
+		};
+	};
+
+	/* * Custom Node: Transceiver IO
+	 * Groups all discrete control signals.
+	 * Note: Prop names must be snake-case by Zephyr rules, 
+	 * but we access them via clean struct names in C.
+	 */
+	transceiver_io: transceiver-io {
+		compatible = "gpio-keys"; 
+		
+		/* FPGA Control */
+		fpga_reset: fpga-reset {
+			gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
+			label = "FPGA Reset";
+		};
+		fpga_done: fpga-done {
+			gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
+			label = "FPGA Done";
+		};
+		fpga_cs: fpga-cs {
+			gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+			label = "FPGA CS";
+		};
+
+		/* GNSS Timing */
+		pps_in: pps-in {
+			gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>; /* IO 48 (Bank 1, pin 16) */
+			label = "GNSS PPS";
+		};
+
+		/* Low Pass Filter Switching */
+		lpf_high: lpf-high {
+			gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+			label = "LPF High Band";
+		};
+		lpf_low_master: lpf-low-master {
+			gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
+			label = "LPF Low Master";
+		};
+		lpf_low1: lpf-low1 {
+			gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+			label = "LPF Low 1";
+		};
+		lpf_low2: lpf-low2 {
+			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+			label = "LPF Low 2";
+		};
+	};
+};
+
+/* Pin Control Definitions */
+
+&pinctrl {
+	/* SPI2 (FSPI) for FPGA Tuning */
+	spi2_default: spi2_default {
+		group1 {
+			pinmux = <SPIM2_MISO_GPIO13>,
+			         <SPIM2_MOSI_GPIO11>,
+			         <SPIM2_SCLK_GPIO12>;
+		};
+	};
+
+	/* UART1 for GNSS */
+	uart1_default: uart1_default {
+		group1 {
+			pinmux = <UART1_TX_GPIO44>,
+			         <UART1_RX_GPIO43>;
+		};
+	};
+};
+
+/* Peripheral Configuration */
+
+&spi2 {
+	status = "okay";
+	pinctrl-0 = <&spi2_default>;
+	pinctrl-names = "default";
+	cs-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>; /* Hardware CS managed by driver if needed */
+	
+	/* FPGA is the only device on this bus */
+	fpga_dev: fpga@0 {
+		compatible = "vnd,spi-device";
+		reg = <0>;
+		spi-max-frequency = <40000000>; /* Start 40MHz, can go 80MHz */
+	};
+};
+
+&uart1 {
+	status = "okay";
+	current-speed = <9600>; /* Default GNSS baud */
+	pinctrl-0 = <&uart1_default>;
+	pinctrl-names = "default";
+};
+
+&usb_serial {
+	status = "okay";
+};
