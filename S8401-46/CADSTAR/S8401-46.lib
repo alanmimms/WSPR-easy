@@ -1,0 +1,16 @@
+.S8401-46 :1 ;Coin Cell Battery Retainer, Vertical Throughboard, for CR2032 and BR2032 Coin Cell Batteries
+S8401-46
+*STM J
+*NGS
+*PLB 1="-VE" 2="2" 3="3"
+*MXP 3
+*DFN S8401-46
+~!Mouser Part Number (855-S8401-46)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Harwin/S8401-46?qs=Qom7kyPojXaFNoCO9lxVnA%3D%3D)
+~!Manufacturer_Name (Harwin)
+~!Manufacturer_Part_Number (S8401-46)
+~!Link Datasheet (https://cdn.harwin.com/pdfs/S8401.pdf)
+~!Height (-)
+~!3D_Model (S8401-46)
+S8401-46
+1.1!U 2.1!U 3.1!U 

@@ -1,4 +1,4 @@
-26783559378953952
+26785323898515339
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -70594,6 +70594,13 @@ USB-C USB 2.0 16-pin HRO
 0
 32
 20
+Library
+S8401-46
+S8401-46
+Connector
+0
+3
+3
 Library
 SOIC127P1030X265-20N
 DW0020A _2021

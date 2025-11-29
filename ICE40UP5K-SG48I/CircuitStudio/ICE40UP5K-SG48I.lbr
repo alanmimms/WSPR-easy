@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/1274164/1634345/2.50/49/3/Integrated Circuit/-->
+<!DOCTYPE curve SYSTEM "eagle.dtd">
+<eagle version="7.7.0">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="no" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="no" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="no" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<description>&lt;FPGA - Field Programmable Gate Array iCE40-UltraPlus, 5280 LUTs, 1.2V&lt;/b&gt;&lt;p&gt;
+&lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
+<packages>
+<package name="QFN50P700X700X100-49N">
+<description>&lt;b&gt;48-Pin QFN&lt;/b&gt;&lt;br&gt;
+</description>
+<smd name="1" x="-3.45" y="2.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="2" x="-3.45" y="2.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="3" x="-3.45" y="1.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="4" x="-3.45" y="1.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="5" x="-3.45" y="0.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="6" x="-3.45" y="0.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="7" x="-3.45" y="-0.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="8" x="-3.45" y="-0.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="9" x="-3.45" y="-1.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="10" x="-3.45" y="-1.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="11" x="-3.45" y="-2.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="12" x="-3.45" y="-2.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="13" x="-2.75" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="14" x="-2.25" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="15" x="-1.75" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="16" x="-1.25" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="17" x="-0.75" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="18" x="-0.25" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="19" x="0.25" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="20" x="0.75" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="21" x="1.25" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="22" x="1.75" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="23" x="2.25" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="24" x="2.75" y="-3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="25" x="3.45" y="-2.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="26" x="3.45" y="-2.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="27" x="3.45" y="-1.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="28" x="3.45" y="-1.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="29" x="3.45" y="-0.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="30" x="3.45" y="-0.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="31" x="3.45" y="0.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="32" x="3.45" y="0.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="33" x="3.45" y="1.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="34" x="3.45" y="1.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="35" x="3.45" y="2.25" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="36" x="3.45" y="2.75" dx="0.85" dy="0.25" layer="1" rot="R0"/>
+<smd name="37" x="2.75" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="38" x="2.25" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="39" x="1.75" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="40" x="1.25" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="41" x="0.75" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="42" x="0.25" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="43" x="-0.25" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="44" x="-0.75" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="45" x="-1.25" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="46" x="-1.75" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="47" x="-2.25" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="48" x="-2.75" y="3.45" dx="0.85" dy="0.25" layer="1" rot="R90"/>
+<smd name="49" x="0" y="0" dx="5.5" dy="5.5" layer="1" rot="R90"/>
+<text x="0" y="0" align="center" size="1.27" layer="25" rot="R0" >&gt;NAME</text>
+<text x="0" y="0" align="center" size="1.27" layer="27" rot="R0" >&gt;VALUE</text>
+<wire x1="-4.125" y1="4.125" x2="4.125" y2="4.125" width="0.05" layer="51"/>
+<wire x1="4.125" y1="4.125" x2="4.125" y2="-4.125" width="0.05" layer="51"/>
+<wire x1="4.125" y1="-4.125" x2="-4.125" y2="-4.125" width="0.05" layer="51"/>
+<wire x1="-4.125" y1="-4.125" x2="-4.125" y2="4.125" width="0.05" layer="51"/>
+<wire x1="-3.5" y1="3.5" x2="3.5" y2="3.5" width="0.1" layer="51"/>
+<wire x1="3.5" y1="3.5" x2="3.5" y2="-3.5" width="0.1" layer="51"/>
+<wire x1="3.5" y1="-3.5" x2="-3.5" y2="-3.5" width="0.1" layer="51"/>
+<wire x1="-3.5" y1="-3.5" x2="-3.5" y2="3.5" width="0.1" layer="51"/>
+<wire x1="-3.5" y1="3" x2="-3" y2="3.5" width="0.1" layer="51"/>
+<circle x="-3.875" y="3.5" radius="0.125" width="0.25" layer="25"/>
+</package>
+</packages>
+<symbols>
+<symbol name="ICE40UP5K-SG48I">
+<wire x1="5.08" y1="17.78" x2="40.64" y2="17.78" width="0.254" layer="94"/>
+<wire x1="40.64" y1="-53.34" x2="40.64" y2="17.78" width="0.254" layer="94"/>
+<wire x1="40.64" y1="-53.34" x2="5.08" y2="-53.34" width="0.254" layer="94"/>
+<wire x1="5.08" y1="17.78" x2="5.08" y2="-53.34" width="0.254" layer="94"/>
+<text x="41.91" y="22.86" align="center-left" size="1.778" layer="95">&gt;NAME</text>
+<text x="41.91" y="20.32" align="center-left" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="VCCIO_2" x="0" y="0" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_6A" x="0" y="-2.54" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_9B" x="0" y="-5.08" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_8A" x="0" y="-7.62" length="middle" direction="io" rot="R0"/>
+<pin name="VCC_1" x="0" y="-10.16" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_13B" x="0" y="-12.7" length="middle" direction="io" rot="R0"/>
+<pin name="CDONE" x="0" y="-15.24" length="middle" direction="io" rot="R0"/>
+<pin name="CRESET_B" x="0" y="-17.78" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_16A" x="0" y="-20.32" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_18A" x="0" y="-22.86" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_20A" x="0" y="-25.4" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_22A" x="0" y="-27.94" length="middle" direction="io" rot="R0"/>
+<pin name="IOB_24A" x="7.62" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOB_32A_SPI_SO" x="10.16" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOB_34A_SPI_SCK" x="12.7" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOB_35B_SPI_SS" x="15.24" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOB_33B_SPI_SI" x="17.78" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOB_31B" x="20.32" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOB_29B" x="22.86" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOB_25B_G3" x="25.4" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOB_23B" x="27.94" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="SPI_VCCIO1" x="30.48" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOT_37A" x="33.02" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="VPP_2V5" x="35.56" y="-58.42" length="middle" direction="io" rot="R90"/>
+<pin name="IOT_48B" x="45.72" y="0" length="middle" direction="io" rot="R180"/>
+<pin name="IOT_46B_G0" x="45.72" y="-2.54" length="middle" direction="io" rot="R180"/>
+<pin name="IOT_44B" x="45.72" y="-5.08" length="middle" direction="io" rot="R180"/>
+<pin name="VCCIO_0" x="45.72" y="-7.62" length="middle" direction="io" rot="R180"/>
+<pin name="IOT_43A" x="45.72" y="-10.16" length="middle" direction="io" rot="R180"/>
+<pin name="IOT_42B" x="45.72" y="-12.7" length="middle" direction="io" rot="R180"/>
+<pin name="VCC_2" x="45.72" y="-15.24" length="middle" direction="io" rot="R180"/>
+<pin name="VCCPLL" x="45.72" y="-17.78" length="middle" direction="io" rot="R180"/>
+<pin name="IOT_41A" x="45.72" y="-20.32" length="middle" direction="io" rot="R180"/>
+<pin name="IOT_38B" x="45.72" y="-22.86" length="middle" direction="io" rot="R180"/>
+<pin name="IOT_39A" x="45.72" y="-25.4" length="middle" direction="io" rot="R180"/>
+<pin name="IOT_36B" x="45.72" y="-27.94" length="middle" direction="io" rot="R180"/>
+<pin name="GND" x="7.62" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOB_4A" x="10.16" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOB_2A" x="12.7" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOB_0A" x="15.24" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOB_5B" x="17.78" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOB_3B_G6" x="20.32" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOT_49A" x="22.86" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOT_51A" x="25.4" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="RGB2" x="27.94" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="RGB1" x="30.48" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="RGB0" x="33.02" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOT_50B" x="35.56" y="22.86" length="middle" direction="io" rot="R270"/>
+<pin name="IOT_45A_G1" x="38.1" y="22.86" length="middle" direction="io" rot="R270"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="ICE40UP5K-SG48I" prefix="IC">
+<description>&lt;b&gt;FPGA - Field Programmable Gate Array iCE40-UltraPlus, 5280 LUTs, 1.2V&lt;/b&gt;&lt;p&gt;
+Source: &lt;a href="http://www.latticesemi.com/view_document?document_id=51968"&gt; Datasheet &lt;/a&gt;</description>
+<gates>
+<gate name="G$1" symbol="ICE40UP5K-SG48I" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="QFN50P700X700X100-49N">
+<connects>
+<connect gate="G$1" pin="VCCIO_2" pad="1"/>
+<connect gate="G$1" pin="IOB_6A" pad="2"/>
+<connect gate="G$1" pin="IOB_9B" pad="3"/>
+<connect gate="G$1" pin="IOB_8A" pad="4"/>
+<connect gate="G$1" pin="VCC_1" pad="5"/>
+<connect gate="G$1" pin="IOB_13B" pad="6"/>
+<connect gate="G$1" pin="CDONE" pad="7"/>
+<connect gate="G$1" pin="CRESET_B" pad="8"/>
+<connect gate="G$1" pin="IOB_16A" pad="9"/>
+<connect gate="G$1" pin="IOB_18A" pad="10"/>
+<connect gate="G$1" pin="IOB_20A" pad="11"/>
+<connect gate="G$1" pin="IOB_22A" pad="12"/>
+<connect gate="G$1" pin="IOB_24A" pad="13"/>
+<connect gate="G$1" pin="IOB_32A_SPI_SO" pad="14"/>
+<connect gate="G$1" pin="IOB_34A_SPI_SCK" pad="15"/>
+<connect gate="G$1" pin="IOB_35B_SPI_SS" pad="16"/>
+<connect gate="G$1" pin="IOB_33B_SPI_SI" pad="17"/>
+<connect gate="G$1" pin="IOB_31B" pad="18"/>
+<connect gate="G$1" pin="IOB_29B" pad="19"/>
+<connect gate="G$1" pin="IOB_25B_G3" pad="20"/>
+<connect gate="G$1" pin="IOB_23B" pad="21"/>
+<connect gate="G$1" pin="SPI_VCCIO1" pad="22"/>
+<connect gate="G$1" pin="IOT_37A" pad="23"/>
+<connect gate="G$1" pin="VPP_2V5" pad="24"/>
+<connect gate="G$1" pin="IOT_36B" pad="25"/>
+<connect gate="G$1" pin="IOT_39A" pad="26"/>
+<connect gate="G$1" pin="IOT_38B" pad="27"/>
+<connect gate="G$1" pin="IOT_41A" pad="28"/>
+<connect gate="G$1" pin="VCCPLL" pad="29"/>
+<connect gate="G$1" pin="VCC_2" pad="30"/>
+<connect gate="G$1" pin="IOT_42B" pad="31"/>
+<connect gate="G$1" pin="IOT_43A" pad="32"/>
+<connect gate="G$1" pin="VCCIO_0" pad="33"/>
+<connect gate="G$1" pin="IOT_44B" pad="34"/>
+<connect gate="G$1" pin="IOT_46B_G0" pad="35"/>
+<connect gate="G$1" pin="IOT_48B" pad="36"/>
+<connect gate="G$1" pin="IOT_45A_G1" pad="37"/>
+<connect gate="G$1" pin="IOT_50B" pad="38"/>
+<connect gate="G$1" pin="RGB0" pad="39"/>
+<connect gate="G$1" pin="RGB1" pad="40"/>
+<connect gate="G$1" pin="RGB2" pad="41"/>
+<connect gate="G$1" pin="IOT_51A" pad="42"/>
+<connect gate="G$1" pin="IOT_49A" pad="43"/>
+<connect gate="G$1" pin="IOB_3B_G6" pad="44"/>
+<connect gate="G$1" pin="IOB_5B" pad="45"/>
+<connect gate="G$1" pin="IOB_0A" pad="46"/>
+<connect gate="G$1" pin="IOB_2A" pad="47"/>
+<connect gate="G$1" pin="IOB_4A" pad="48"/>
+<connect gate="G$1" pin="GND" pad="49"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="Mouser_Part_Number" value="842-ICE40UP5K-SG48I" constant="no"/>
+<attribute name="Mouser_Price-Stock" value="https://www.mouser.co.uk/ProductDetail/Lattice/ICE40UP5K-SG48I?qs=Rp3RbKSfAt3UqOG1AN4%2FAg%3D%3D" constant="no"/>
+<attribute name="Manufacturer_Name" value="Lattice Semiconductor" constant="no"/>
+<attribute name="Manufacturer_Part_Number" value="ICE40UP5K-SG48I" constant="no"/>
+<attribute name="Description" value="FPGA - Field Programmable Gate Array iCE40-UltraPlus, 5280 LUTs, 1.2V" constant="no"/>
+<attribute name="Height" value="1mm" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+</drawing>
+</eagle>

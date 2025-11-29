@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "ICE40UP5K-SG48I"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2019-08-28-03:51:25)
+    (mountForm default
+        (footprintRef "QFN50P700X700X100-49N-D")
+        (spec "System")
+    )
+)

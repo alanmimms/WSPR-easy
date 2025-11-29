@@ -1,0 +1,69 @@
+(Japanese_coding: sjis)
+(function "ECS_630268"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2017-07-26-13:08:11)
+    (utime 2025-07-02-10:58:48)
+    (interface
+        (port "1" (symbPinId 1) (portType INOUT))
+        (port "2" (symbPinId 2) (portType INOUT))
+        (port "3" (symbPinId 3) (portType INOUT))
+    )
+    (property "symbolName" "S8401-46")
+)
+
+
+(pinAssign "ECS_630268"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2017-07-26-13:08:11)
+    (utime 2025-07-02-10:58:48)
+    (interface
+        (port "1" (symbPinId 1) (portName "-VE") (portType INOUT))
+        (port "2" (symbPinId 2) (portName "2") (portType INOUT))
+        (port "3" (symbPinId 3) (portName "3") (portType INOUT))
+    )
+    (internal
+        (funcInst (functionRef "ECS_630268")
+                (port "1" (match "1"))
+                (port "2" (match "2"))
+                (port "3" (match "3"))
+        )
+    )
+    (property "usePowerBox" "No")
+    (property "symbolName" "S8401-46")
+)
+
+
+(part "S8401-46"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2017-07-26-13:08:11)
+    (utime 2025-07-02-10:58:48)
+    (packageRef "S8401-46")
+    (pinAssignRef "ECS_630268")
+    (interface
+        (port "1" (symbPinId 1) (portName "-VE") (portType INOUT))
+        (port "2" (symbPinId 2) (portName "2") (portType INOUT))
+        (port "3" (symbPinId 3) (portName "3") (portType INOUT))
+    )
+    (partClass UNDEF)
+    (useInSchema Y)
+    (useInLayout Y)
+    (inPartsList Y)
+    (partType NORMAL)
+    (placeRestriction FREE)
+    (property "enetNonSeries" "YES")
+    (property "refDesPrefix" "J")
+    (property "description" "Coin Cell Battery Retainer, Vertical Throughboard, for CR2032 and BR2032 Coin Cell Batteries")
+    (property "Mouser_Part_Number" "855-S8401-46")
+    (property "Mouser_Price/Stock" "https://www.mouser.co.uk/ProductDetail/Harwin/S8401-46?qs=Qom7kyPojXaFNoCO9lxVnA%3D%3D")
+    (property "Manufacturer_Name" "Harwin")
+    (property "Manufacturer_Part_Number" "S8401-46")
+    (property "Datasheet_Link" "https://cdn.harwin.com/pdfs/S8401.pdf")
+)
+
+

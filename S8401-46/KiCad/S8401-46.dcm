@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP S8401-46
+D Coin Cell Battery Retainer, Vertical Throughboard, for CR2032 and BR2032 Coin Cell Batteries
+K
+F https://cdn.harwin.com/pdfs/S8401.pdf
+$ENDCMP
+#
+#End Doc Library

@@ -2450,7 +2450,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" "Coilcraft"
+		(property "MFG" ""
 			(at 132.08 34.29 90)
 			(effects
 				(font
@@ -2459,7 +2459,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "1008LS-222"
+		(property "MPN" ""
 			(at 132.08 34.29 90)
 			(effects
 				(font
@@ -2468,7 +2468,25 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C46470448"
+			(at 132.08 34.29 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "Coilcraft"
+			(at 132.08 34.29 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "1008LS-222"
 			(at 132.08 34.29 90)
 			(effects
 				(font
@@ -2691,7 +2709,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" "Coilcraft"
+		(property "MFG" ""
 			(at 148.59 34.29 90)
 			(effects
 				(font
@@ -2700,7 +2718,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "1008LS-222"
+		(property "MPN" ""
 			(at 148.59 34.29 90)
 			(effects
 				(font
@@ -2709,7 +2727,25 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C46470448"
+			(at 148.59 34.29 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "Coilcraft"
+			(at 148.59 34.29 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "1008LS-222"
 			(at 148.59 34.29 90)
 			(effects
 				(font
@@ -3073,7 +3109,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" "Coilcraft"
+		(property "MFG" ""
 			(at 148.59 63.5 90)
 			(effects
 				(font
@@ -3082,7 +3118,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "0805CS-391"
+		(property "MPN" ""
 			(at 148.59 63.5 90)
 			(effects
 				(font
@@ -3091,7 +3127,25 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C20417044"
+			(at 148.59 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "Coilcraft"
+			(at 148.59 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "0805CS-391XGLC"
 			(at 148.59 63.5 90)
 			(effects
 				(font
@@ -3324,7 +3378,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" "Coilcraft"
+		(property "MFG" ""
 			(at 148.59 91.44 90)
 			(effects
 				(font
@@ -3333,7 +3387,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "0805CS-271"
+		(property "MPN" ""
 			(at 148.59 91.44 90)
 			(effects
 				(font
@@ -3342,7 +3396,25 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C20623520"
+			(at 148.59 91.44 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "Coilcraft"
+			(at 148.59 91.44 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "0805CS-271 XGLC"
 			(at 148.59 91.44 90)
 			(effects
 				(font
@@ -3419,7 +3491,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" "Coilcraft"
+		(property "MFG" ""
 			(at 132.08 91.44 90)
 			(effects
 				(font
@@ -3428,7 +3500,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "0805CS-271"
+		(property "MPN" ""
 			(at 132.08 91.44 90)
 			(effects
 				(font
@@ -3437,7 +3509,25 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C20623520"
+			(at 132.08 91.44 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "Coilcraft"
+			(at 132.08 91.44 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "0805CS-271 XGLC"
 			(at 132.08 91.44 90)
 			(effects
 				(font
@@ -3815,7 +3905,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" "Coilcraft"
+		(property "MFG" ""
 			(at 132.08 63.5 90)
 			(effects
 				(font
@@ -3824,7 +3914,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "0805CS-391"
+		(property "MPN" ""
 			(at 132.08 63.5 90)
 			(effects
 				(font
@@ -3833,7 +3923,25 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C20417044"
+			(at 132.08 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "Coilcraft"
+			(at 132.08 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "0805CS-391XGLC"
 			(at 132.08 63.5 90)
 			(effects
 				(font

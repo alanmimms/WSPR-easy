@@ -1,0 +1,100 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "S8401-46"
+   (description "Coin Cell Battery Retainer, Vertical Throughboard, for CR2032 and BR2032 Coin Cell Batteries")
+   (family "CON")
+   (package "S8401-46")
+   (attribute "Datasheet Link" "https://cdn.harwin.com/pdfs/S8401.pdf")
+   (attribute "Mouser Part Number" "855-S8401-46")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Harwin/S8401-46?qs=Qom7kyPojXaFNoCO9lxVnA%3D%3D")
+   (attribute "Manufacturer_Name" "Harwin")
+   (attribute "Manufacturer_Part_Number" "S8401-46")
+   (gate
+    (symbol "S8401-46")
+    (pin "-VE" 1 PS)
+    (pin "2" 2 PS)
+    (pin "3" 3 PS)
+   )
+  )
+  (symbol "S8401-46"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 700 100) (pt 700 -200) (pt 200 -200) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 900 0) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "S8401-46"
+   (units MM)
+   (layer TASM
+    (graphic
+     (stroke 0.254)
+     (path
+      (closed true)
+      (pt -11.45 3.3)
+      (pt 11.45 3.3)
+      (pt 11.45 -3.3)
+      (pt -11.45 -3.3)
+      (pt -11.45 3.3))))
+   (layer TSLK
+    (graphic
+     (stroke 0.254)
+     (path
+      (closed false)
+      (pt -11.45 3.3)
+      (pt -11.45 -3.3)
+      (pt 11.45 -3.3)
+      (pt 11.45 3.3)
+      (pt -11.45 3.3))))
+   (layer TSLK
+    (graphic
+     (stroke 0.254)
+     (circle
+      (pt -0.08162 3.891) (pt 0.10562 3.891)
+     )
+    )
+   )
+   (leg 1 (pt 0 1.6) (padstack 0))
+   (leg 2 (pt -5 -1.6) (padstack 0))
+   (leg 3 (pt 5 -1.6) (padstack 0))
+   (padstack 0
+    (hole 0.9)
+    (plated true)
+    (pad (layer TCOP) (round 1.45))
+    (pad (layer INNER) (round 1.45))
+    (pad (layer BCOP) (round 1.45))
+   )
+   (model "S8401-46.stp"
+    (euler 180 0 0)
+    (offset -0.05999999865889549 3 15.029999732971191)
+   )
+  )
+ )
+)

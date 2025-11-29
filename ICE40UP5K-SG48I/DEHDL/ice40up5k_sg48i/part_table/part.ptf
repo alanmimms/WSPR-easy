@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'ICE40UP5K_SG48I'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Lattice Semiconductor", "ICE40UP5K-SG48I" (!) = "", "QFN50P700X700X100-49N-D", "Quad Flat No-Lead", "842-ICE40UP5K-SG48I", "https://www.mouser.co.uk/ProductDetail/Lattice/ICE40UP5K-SG48I?qs=Rp3RbKSfAt3UqOG1AN4%2FAg%3D%3D", "FPGA - Field Programmable Gate Array iCE40-UltraPlus, 5280 LUTs, 1.2V", "http://www.latticesemi.com/view_document?document_id=51968", "1 mm"
+END_PART
+
+END.

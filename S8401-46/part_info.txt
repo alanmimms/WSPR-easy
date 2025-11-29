@@ -1,0 +1,9 @@
+Manufacturer=Harwin
+PartNumber=S8401-46
+PartCategory=Connector
+PackageCategory=Other
+PinCount=3
+Version=2.1
+Released=2017-07-26 13:08:11
+Downloaded=2025-11-29 20:23:13
+3D=Y

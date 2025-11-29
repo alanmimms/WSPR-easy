@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ICE40UP5K-SG48I
+D FPGA - Field Programmable Gate Array iCE40-UltraPlus, 5280 LUTs, 1.2V
+K
+F http://www.latticesemi.com/view_document?document_id=51968
+$ENDCMP
+#
+#End Doc Library
