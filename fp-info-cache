@@ -1,4 +1,4 @@
-26780029950803635
+26783559378953952
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -70581,11 +70581,25 @@ CD74AC244M
 20
 20
 Library
+ESP32-S3-WROOM-1
+2.4 GHz Wi-Fi and Bluetooth module  https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf
+2.4 GHz Wi-Fi and Bluetooth module
+0
+62
+41
+Library
 HRO-TYPE-C-31-M-12
 USB Type-C Receptacle, 16-Pin, HRO Electronics TYPE-C-31-M-12 (LCSC C165948)
 USB-C USB 2.0 16-pin HRO
 0
 32
+20
+Library
+SOIC127P1030X265-20N
+DW0020A _2021
+Integrated Circuit
+0
+20
 20
 Library
 SOT65P220X110-6N

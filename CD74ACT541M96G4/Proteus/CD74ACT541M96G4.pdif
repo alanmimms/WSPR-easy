@@ -1,0 +1,216 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "CD74ACT541M96G4"
+   (description "Buffer/Line Driver 8-CH Non-Inverting 3-ST CMOS 20-Pin SOIC T/R")
+   (family "ANA")
+   (package "SOIC127P1030X265-20N")
+   (attribute "Datasheet Link" "https://www.arrow.com/en/products/cd74act541m96g4/texas-instruments")
+   (attribute "Geometry.Height" "2.65mm")
+   (attribute "Mouser Part Number" "595-CD74ACT541M96G4")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Texas-Instruments/CD74ACT541M96G4?qs=QZ5G6pSGt5ou3puft%252BB9Xw%3D%3D")
+   (attribute "Manufacturer_Name" "Texas Instruments")
+   (attribute "Manufacturer_Part_Number" "CD74ACT541M96G4")
+   (gate
+    (symbol "CD74ACT541M96G4")
+    (pin "$OE1$" 1 PS)
+    (pin "A0" 2 PS)
+    (pin "A1" 3 PS)
+    (pin "A2" 4 PS)
+    (pin "A3" 5 PS)
+    (pin "A4" 6 PS)
+    (pin "A5" 7 PS)
+    (pin "A6" 8 PS)
+    (pin "A7" 9 PS)
+    (pin "GND" 10 PS)
+    (pin "VCC" 20 PS)
+    (pin "$OE2$" 19 PS)
+    (pin "Y0" 18 PS)
+    (pin "Y1" 17 PS)
+    (pin "Y2" 16 PS)
+    (pin "Y3" 15 PS)
+    (pin "Y4" 14 PS)
+    (pin "Y5" 13 PS)
+    (pin "Y6" 12 PS)
+    (pin "Y7" 11 PS)
+   )
+  )
+  (symbol "CD74ACT541M96G4"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 900 100) (pt 900 -1000) (pt 200 -1000) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -200) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -300) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -400) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -500) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -600) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -700) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -800) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -900) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 0) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -100) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -200) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -300) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -400) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -500) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -600) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -700) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -800) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -900) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "SOIC127P1030X265-20N"
+   (units MM)
+   (layer OCCA
+    (graphic
+     (stroke 0.05)
+     (path
+      (closed true)
+      (pt -5.95 6.75)
+      (pt 5.95 6.75)
+      (pt 5.95 -6.75)
+      (pt -5.95 -6.75)
+      (pt -5.95 6.75))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -3.75 6.4)
+      (pt 3.75 6.4)
+      (pt 3.75 -6.4)
+      (pt -3.75 -6.4)
+      (pt -3.75 6.4))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed false)
+      (pt -3.75 5.13)
+      (pt -2.48 6.4))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed true)
+      (pt -3.4 6.4)
+      (pt 3.4 6.4)
+      (pt 3.4 -6.4)
+      (pt -3.4 -6.4)
+      (pt -3.4 6.4))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -5.7 6.39)
+      (pt -3.75 6.39))))
+   (leg 1 (pt -4.725 5.715) (padstack 0))
+   (leg 2 (pt -4.725 4.445) (padstack 0))
+   (leg 3 (pt -4.725 3.175) (padstack 0))
+   (leg 4 (pt -4.725 1.905) (padstack 0))
+   (leg 5 (pt -4.725 0.635) (padstack 0))
+   (leg 6 (pt -4.725 -0.635) (padstack 0))
+   (leg 7 (pt -4.725 -1.905) (padstack 0))
+   (leg 8 (pt -4.725 -3.175) (padstack 0))
+   (leg 9 (pt -4.725 -4.445) (padstack 0))
+   (leg 10 (pt -4.725 -5.715) (padstack 0))
+   (leg 11 (pt 4.725 -5.715) (padstack 0))
+   (leg 12 (pt 4.725 -4.445) (padstack 0))
+   (leg 13 (pt 4.725 -3.175) (padstack 0))
+   (leg 14 (pt 4.725 -1.905) (padstack 0))
+   (leg 15 (pt 4.725 -0.635) (padstack 0))
+   (leg 16 (pt 4.725 0.635) (padstack 0))
+   (leg 17 (pt 4.725 1.905) (padstack 0))
+   (leg 18 (pt 4.725 3.175) (padstack 0))
+   (leg 19 (pt 4.725 4.445) (padstack 0))
+   (leg 20 (pt 4.725 5.715) (padstack 0))
+   (padstack 0
+    (plated false)
+    (pad (layer TCOP) (rectf 0.65 1.95 0 0 0))
+   )
+   (model "CD74ACT541M96G4.stp"
+    (euler 0 0 0)
+    (offset 0 0 0)
+   )
+  )
+ )
+)

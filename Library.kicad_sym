@@ -1072,6 +1072,482 @@
 		)
 		(embedded_fonts no)
 	)
+	(symbol "CD74ACT541M96G4"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 10.16 12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(property "Value" "CD74ACT541M96G4"
+			(at 10.16 10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(property "Footprint" "SOIC127P1030X265-20N"
+			(at 10.16 -89.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.arrow.com/en/products/cd74act541m96g4/texas-instruments"
+			(at 10.16 -189.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Description" "Buffer/Line Driver 8-CH Non-Inverting 3-ST CMOS 20-Pin SOIC T/R"
+			(at -13.97 5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Height" "2.65"
+			(at 10.16 -389.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "595-CD74ACT541M96G4"
+			(at 10.16 -489.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Texas-Instruments/CD74ACT541M96G4?qs=QZ5G6pSGt5ou3puft%252BB9Xw%3D%3D"
+			(at 10.16 -589.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "Texas Instruments"
+			(at 10.16 -689.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Part_Number" "CD74ACT541M96G4"
+			(at 10.16 -789.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(symbol "CD74ACT541M96G4_1_1"
+			(rectangle
+				(start -8.89 7.62)
+				(end 8.89 -20.32)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(pin passive line
+				(at -13.97 5.08 0)
+				(length 5.08)
+				(name "A0"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 2.54 0)
+				(length 5.08)
+				(name "A1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 0 0)
+				(length 5.08)
+				(name "A2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 -2.54 0)
+				(length 5.08)
+				(name "A3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 -5.08 0)
+				(length 5.08)
+				(name "A4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 -7.62 0)
+				(length 5.08)
+				(name "A5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "7"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 -10.16 0)
+				(length 5.08)
+				(name "A6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "8"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 -12.7 0)
+				(length 5.08)
+				(name "A7"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "9"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 -17.78 0)
+				(length 5.08)
+				(name "~{OE1}"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 0 12.7 270)
+				(length 5.08)
+				(name "VCC"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "20"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 0 -25.4 90)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "10"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 5.08 180)
+				(length 5.08)
+				(name "Y0"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "18"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 2.54 180)
+				(length 5.08)
+				(name "Y1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "17"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 0 180)
+				(length 5.08)
+				(name "Y2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "16"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -2.54 180)
+				(length 5.08)
+				(name "Y3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "15"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -5.08 180)
+				(length 5.08)
+				(name "Y4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "14"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -7.62 180)
+				(length 5.08)
+				(name "Y5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "13"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -10.16 180)
+				(length 5.08)
+				(name "Y6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "12"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -12.7 180)
+				(length 5.08)
+				(name "Y7"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "11"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -17.78 180)
+				(length 5.08)
+				(name "~{OE2}"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "19"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
 	(symbol "GPS_Patch_25mm"
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3571,7 +4047,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(property "Reference" "J"
-			(at 0 10.16 0)
+			(at 0 11.176 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3579,7 +4055,7 @@
 			)
 		)
 		(property "Value" "USB_C_16P_Stacked"
-			(at 0 -10.16 0)
+			(at 0 -32.004 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3587,7 +4063,7 @@
 			)
 		)
 		(property "Footprint" "Connector_USB:HRO_TYPE-C-31-M-12"
-			(at 0 -12.7 0)
+			(at 0 -34.544 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3615,8 +4091,8 @@
 		)
 		(symbol "USB_C_Receptacle_HRO_16P_Stacked_0_1"
 			(rectangle
-				(start -5.08 8.89)
-				(end 5.08 -8.89)
+				(start -10.16 8.89)
+				(end 10.16 -15.24)
 				(stroke
 					(width 0.254)
 					(type default)
@@ -3626,7 +4102,7 @@
 				)
 			)
 			(text "USB-C"
-				(at 0 1.27 0)
+				(at -0.254 1.27 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -3636,7 +4112,7 @@
 		)
 		(symbol "USB_C_Receptacle_HRO_16P_Stacked_1_1"
 			(pin power_out line
-				(at -7.62 7.62 0)
+				(at -12.7 7.62 0)
 				(length 2.54)
 				(name "VBUS"
 					(effects
@@ -3654,9 +4130,8 @@
 				)
 			)
 			(pin power_out line
-				(at -7.62 7.62 0)
+				(at -12.7 5.08 0)
 				(length 2.54)
-				(hide yes)
 				(name "VBUS"
 					(effects
 						(font
@@ -3673,9 +4148,8 @@
 				)
 			)
 			(pin power_out line
-				(at -7.62 7.62 0)
+				(at -12.7 2.54 0)
 				(length 2.54)
-				(hide yes)
 				(name "VBUS"
 					(effects
 						(font
@@ -3692,9 +4166,8 @@
 				)
 			)
 			(pin power_out line
-				(at -7.62 7.62 0)
+				(at -12.7 0 0)
 				(length 2.54)
-				(hide yes)
 				(name "VBUS"
 					(effects
 						(font
@@ -3711,7 +4184,7 @@
 				)
 			)
 			(pin passive line
-				(at -7.62 -5.08 0)
+				(at -12.7 -5.08 0)
 				(length 2.54)
 				(name "SH"
 					(effects
@@ -3729,9 +4202,8 @@
 				)
 			)
 			(pin passive line
-				(at -7.62 -5.08 0)
+				(at -12.7 -7.62 0)
 				(length 2.54)
-				(hide yes)
 				(name "SH"
 					(effects
 						(font
@@ -3748,9 +4220,8 @@
 				)
 			)
 			(pin passive line
-				(at -7.62 -5.08 0)
+				(at -12.7 -10.16 0)
 				(length 2.54)
-				(hide yes)
 				(name "SH"
 					(effects
 						(font
@@ -3767,9 +4238,8 @@
 				)
 			)
 			(pin passive line
-				(at -7.62 -5.08 0)
+				(at -12.7 -12.7 0)
 				(length 2.54)
-				(hide yes)
 				(name "SH"
 					(effects
 						(font
@@ -3786,7 +4256,7 @@
 				)
 			)
 			(pin power_out line
-				(at -7.62 -7.62 0)
+				(at -5.08 -17.78 90)
 				(length 2.54)
 				(name "GND"
 					(effects
@@ -3795,7 +4265,7 @@
 						)
 					)
 				)
-				(number "A1"
+				(number "B12"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -3804,28 +4274,8 @@
 				)
 			)
 			(pin power_out line
-				(at -7.62 -7.62 0)
+				(at -2.54 -17.78 90)
 				(length 2.54)
-				(hide yes)
-				(name "GND"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "A12"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin power_out line
-				(at -7.62 -7.62 0)
-				(length 2.54)
-				(hide yes)
 				(name "GND"
 					(effects
 						(font
@@ -3842,9 +4292,8 @@
 				)
 			)
 			(pin power_out line
-				(at -7.62 -7.62 0)
+				(at 0 -17.78 90)
 				(length 2.54)
-				(hide yes)
 				(name "GND"
 					(effects
 						(font
@@ -3852,7 +4301,25 @@
 						)
 					)
 				)
-				(number "B12"
+				(number "A12"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin power_out line
+				(at 2.54 -17.78 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A1"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -3861,7 +4328,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 7.62 5.08 180)
+				(at 12.7 5.08 180)
 				(length 2.54)
 				(name "CC1"
 					(effects
@@ -3879,7 +4346,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 7.62 2.54 180)
+				(at 12.7 2.54 180)
 				(length 2.54)
 				(name "D+"
 					(effects
@@ -3897,9 +4364,8 @@
 				)
 			)
 			(pin bidirectional line
-				(at 7.62 2.54 180)
+				(at 12.7 0 180)
 				(length 2.54)
-				(hide yes)
 				(name "D+"
 					(effects
 						(font
@@ -3916,7 +4382,25 @@
 				)
 			)
 			(pin bidirectional line
-				(at 7.62 0 180)
+				(at 12.7 -2.54 180)
+				(length 2.54)
+				(name "D-"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B7"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin bidirectional line
+				(at 12.7 -5.08 180)
 				(length 2.54)
 				(name "D-"
 					(effects
@@ -3934,26 +4418,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 7.62 0 180)
-				(length 2.54)
-				(hide yes)
-				(name "D-"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "B7"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin bidirectional line
-				(at 7.62 -2.54 180)
+				(at 12.7 -7.62 180)
 				(length 2.54)
 				(name "CC2"
 					(effects
@@ -3971,7 +4436,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 7.62 -5.08 180)
+				(at 12.7 -11.43 180)
 				(length 2.54)
 				(name "SBU1"
 					(effects
@@ -3989,7 +4454,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 7.62 -7.62 180)
+				(at 12.7 -13.97 180)
 				(length 2.54)
 				(name "SBU2"
 					(effects
