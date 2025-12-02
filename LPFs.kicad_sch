@@ -1765,7 +1765,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "470pF"
+		(property "Value" "470pF NP0"
 			(at 157.48 41.656 0)
 			(effects
 				(font
@@ -1801,7 +1801,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C106211"
 			(at 157.48 39.37 0)
 			(effects
 				(font
@@ -1930,7 +1930,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C2654768"
 			(at 213.36 54.61 0)
 			(effects
 				(font
@@ -1984,7 +1984,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100pF"
+		(property "Value" "100pF NP0"
 			(at 122.174 98.806 0)
 			(effects
 				(font
@@ -2020,7 +2020,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C14665"
 			(at 121.92 96.52 0)
 			(effects
 				(font
@@ -2149,7 +2149,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C2654768"
 			(at 171.45 52.07 0)
 			(effects
 				(font
@@ -2270,8 +2270,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
-			(at 252.222 58.42 90)
+		(property "Value" "100nF X7R"
+			(at 249.428 61.214 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2306,7 +2306,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C14663"
 			(at 245.11 57.15 90)
 			(effects
 				(font
@@ -2528,7 +2528,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100pF"
+		(property "Value" "100pF NP0"
 			(at 157.734 98.806 0)
 			(effects
 				(font
@@ -2564,7 +2564,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C14665"
 			(at 157.48 96.52 0)
 			(effects
 				(font
@@ -2787,7 +2787,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "470pF"
+		(property "Value" "470pF NP0"
 			(at 140.208 70.866 0)
 			(effects
 				(font
@@ -2823,7 +2823,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C106211"
 			(at 139.7 68.58 0)
 			(effects
 				(font
@@ -3020,7 +3020,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C2654768"
 			(at 68.58 54.61 0)
 			(effects
 				(font
@@ -3187,7 +3187,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1nF"
+		(property "Value" "1nF NP0"
 			(at 139.7 41.656 0)
 			(effects
 				(font
@@ -3223,7 +3223,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C1588"
 			(at 139.7 39.37 0)
 			(effects
 				(font
@@ -3265,8 +3265,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
-			(at 43.18 58.42 90)
+		(property "Value" "100nF X7R"
+			(at 40.894 61.214 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3301,7 +3301,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C14663"
 			(at 35.56 57.15 90)
 			(effects
 				(font
@@ -3569,7 +3569,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220pF"
+		(property "Value" "220pF NP0"
 			(at 122.428 70.866 0)
 			(effects
 				(font
@@ -3605,7 +3605,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C106210"
 			(at 121.92 68.58 0)
 			(effects
 				(font
@@ -3647,7 +3647,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220pF"
+		(property "Value" "220pF NP0"
 			(at 157.988 70.866 0)
 			(effects
 				(font
@@ -3683,7 +3683,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C106210"
 			(at 157.48 68.58 0)
 			(effects
 				(font
@@ -3725,7 +3725,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220pF"
+		(property "Value" "220pF NP0"
 			(at 139.954 98.806 0)
 			(effects
 				(font
@@ -3761,7 +3761,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C106210"
 			(at 139.7 96.52 0)
 			(effects
 				(font
@@ -4050,7 +4050,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "470pF"
+		(property "Value" "470pF NP0"
 			(at 121.92 41.656 0)
 			(effects
 				(font
@@ -4086,7 +4086,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C106211"
 			(at 121.92 39.37 0)
 			(effects
 				(font
@@ -4225,7 +4225,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C2654768"
 			(at 110.49 52.07 0)
 			(effects
 				(font
