@@ -23,14 +23,31 @@ make clean  # Clean build artifacts
 
 ```bash
 make run              # Build and run simulation (with waveforms)
-obj_dir/VTop          # Run simulation directly
-obj_dir/VTop --notrace # Run without waveform tracing (7x faster)
+make fast             # Fast mode without waveforms
+make superfast        # Event-driven fast-forward mode
 make wave             # View waveforms with gtkwave (if installed)
 ```
 
-**Performance:**
-- With tracing: ~50s, generates 5.4GB VCD file
-- Without tracing (`--notrace`): ~7.6s, no VCD file
+**Direct execution:**
+```bash
+obj_dir/VTop                        # With waveforms
+obj_dir/VTop --notrace              # No waveforms
+obj_dir/VTop --notrace --fastforward # Superfast mode
+```
+
+**Performance Comparison:**
+
+| Mode | Command | Time | VCD File | Use Case |
+|------|---------|------|----------|----------|
+| **Full** | `make run` | ~50s | 5.4GB | Detailed waveform analysis |
+| **Fast** | `make fast` | ~7.6s | None | Functional verification |
+| **Superfast** | `make superfast` | ~0.1s | None | Quick regression testing |
+
+**How Superfast Works:**
+- Event-driven simulation: skips clock cycles between SPI transactions
+- Jumps directly to 10µs before each symbol transmission
+- Only evaluates hardware during active periods
+- ~76x faster than fast mode, ~500x faster than full simulation
 
 ## Simulation Output
 
@@ -91,6 +108,10 @@ const uint8_t powerDbm = 23;            // Power level
 vluint64_t maxSimTime = 3000000000000LL; // Max sim time (ps)
 bool fastMode = true;                    // Enable selective tracing
 ```
+
+**Command-line options:**
+- `--notrace` - Disable waveform generation (7x speedup)
+- `--fastforward` - Enable event-driven fast-forward (76x speedup)
 
 ## Dependencies
 

@@ -24,7 +24,7 @@ SW_SOURCES := $(SW_DIR)/transmitter.cpp $(SW_DIR)/wspr-encoder.cpp
 # Output executable
 TARGET := $(OBJ_DIR)/VTop
 
-.PHONY: all clean run sim fast help
+.PHONY: all clean run sim fast superfast help
 
 all: $(TARGET)
 
@@ -54,6 +54,12 @@ fast: $(TARGET)
 	@cd $(OBJ_DIR) && ./VTop --notrace
 	@echo "Fast simulation complete."
 
+# Run superfast simulation (event-driven, no waveforms)
+superfast: $(TARGET)
+	@echo "Running superfast simulation (event-driven fast-forward)..."
+	@cd $(OBJ_DIR) && ./VTop --notrace --fastforward
+	@echo "Superfast simulation complete."
+
 # View waveform with gtkwave (if available)
 wave: $(OBJ_DIR)/waveform.vcd
 	@if command -v gtkwave > /dev/null; then \
@@ -74,13 +80,14 @@ help:
 	@echo "WSPR-ease FPGA Simulation Makefile"
 	@echo ""
 	@echo "Targets:"
-	@echo "  all     - Build the simulation (default)"
-	@echo "  run     - Build and run simulation with waveform tracing"
-	@echo "  fast    - Build and run fast simulation without waveforms (7x faster)"
-	@echo "  sim     - Alias for 'run'"
-	@echo "  wave    - Open waveform viewer (gtkwave)"
-	@echo "  clean   - Remove all build artifacts"
-	@echo "  help    - Show this help message"
+	@echo "  all       - Build the simulation (default)"
+	@echo "  run       - Build and run simulation with waveform tracing (~50s)"
+	@echo "  fast      - Build and run fast simulation without waveforms (~7.6s)"
+	@echo "  superfast - Build and run with event-driven fast-forward (~0.1s)"
+	@echo "  sim       - Alias for 'run'"
+	@echo "  wave      - Open waveform viewer (gtkwave)"
+	@echo "  clean     - Remove all build artifacts"
+	@echo "  help      - Show this help message"
 	@echo ""
 	@echo "The simulation integrates:"
 	@echo "  - FPGA RTL (top.sv, sequencer.sv)"

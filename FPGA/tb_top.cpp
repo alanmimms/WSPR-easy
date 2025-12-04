@@ -12,12 +12,16 @@ int main(int argc, char** argv) {
   Verilated::commandArgs(argc, argv);
   VTop* top = new VTop;
 
-  // Check for --notrace option
+  // Parse command line options
   bool enableTrace = true;
+  bool fastForward = false;
   for (int i = 1; i < argc; i++) {
     if (std::string(argv[i]) == "--notrace") {
       enableTrace = false;
       std::cout << "Tracing disabled for faster simulation" << std::endl;
+    } else if (std::string(argv[i]) == "--fastforward") {
+      fastForward = true;
+      std::cout << "Fast-forward mode enabled (event-driven simulation)" << std::endl;
     }
   }
 
@@ -86,6 +90,20 @@ int main(int argc, char** argv) {
                 << "Symbols sent: " << spiTransactions << ", "
                 << "State: " << (int)tx.getState() << std::endl;
       lastUsPrintTime = mainTime;
+    }
+
+    // Fast-forward mode: Skip to just before next event
+    if (fastForward) {
+      const vluint64_t FF_MARGIN = 10000000LL; // 10us before event
+      vluint64_t timeToNextSymbol = nextSymbolTime - mainTime;
+
+      if (timeToNextSymbol > FF_MARGIN) {
+        // Jump forward without hardware evaluation
+        mainTime = nextSymbolTime - FF_MARGIN;
+        std::cout << "  [Fast-forward to " << (mainTime / 1000000000LL)
+                  << " ms]" << std::endl;
+        continue;
+      }
     }
 
     // Advance the transmitter state machine (call periodically, not every clock)
