@@ -88,5 +88,15 @@ Protection Circuitry (Critical)
  * Transmit: ESP32 computes NCO tuning word for target frequency + WSPR tone shift and updates FPGA over SPI at 1.46 Hz.
 
 
+# Scheduling
+WSPR transmission can be scheduled very flexibly. A set of ham bands
+and times for those bands to be used is configurable. Once this is
+done, the choice of which band to transmit on is made based on a
+selection of random, round-robin, or a list of bands. This last
+selection provides a mechanism to allow a band to be listed e.g., five
+times in a random or round-robin list to make it five times as likely
+to be chosen as the others.
+
+
 # NOTES
 * Web UI needs to support both desktop and phone browser sizes and use cases.

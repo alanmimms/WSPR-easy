@@ -15,7 +15,7 @@ struct WSPRConfig {
   // Station Identity
   std::string callsign = "NOCALL";
   std::string gridSquare = "AA00";  // 4-char Maidenhead
-  uint8_t powerDbm = 23;
+  uint8_t powerDbm = 30;  // 30dBm = 1W (WSPR-ease hardware output)
 
   // Band Configuration (80m, 60m, 40m, 30m, 20m, 17m, 15m, 12m, 10m)
   struct BandConfig {

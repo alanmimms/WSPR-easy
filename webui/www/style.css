@@ -45,10 +45,8 @@ header h1 {
 }
 
 .status-bar {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   margin-bottom: 30px;
   padding: 15px;
   background: var(--card-bg);
@@ -58,17 +56,23 @@ header h1 {
 
 .status-item {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 5px;
 }
 
 .status-item .label {
   font-weight: 600;
   color: var(--secondary);
+  font-size: 0.85rem;
+  margin-bottom: 2px;
 }
 
 .status-item .value {
   color: var(--text);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .status-online {
@@ -310,8 +314,9 @@ header h1 {
   }
 
   .status-bar {
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
     padding: 12px;
+    gap: 8px;
   }
 
   .file-item {
