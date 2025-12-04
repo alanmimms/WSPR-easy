@@ -7,7 +7,7 @@
 #include <array>
 #include <cstdint>
 
-class WsprEncoder {
+class WSPREncoder {
 public:
   // Standard WSPR message length is 162 symbols
   using SymbolBuffer = std::array<uint8_t, 162>;

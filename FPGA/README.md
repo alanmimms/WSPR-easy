@@ -1,0 +1,108 @@
+# WSPR-ease FPGA Simulation
+
+This directory contains the Verilator-based testbench for the WSPR-ease FPGA design, integrated with the ESP32 software stack.
+
+## Architecture
+
+The simulation integrates:
+
+- **FPGA RTL** (`top.sv`, `sequencer.sv`) - The actual iCE40 FPGA design with NCO and 6-step sequencer
+- **ESP32 Software** (`../sw/transmitter.cpp`, `../sw/wspr-encoder.cpp`) - Real transmitter and WSPR encoder code
+- **Simulation HAL** (`sim_hal.hpp`) - Hardware abstraction layer implementations for Verilator
+
+This allows testing the complete signal chain from WSPR encoding through SPI transactions to RF output generation.
+
+## Building
+
+```bash
+make        # Build the simulation
+make clean  # Clean build artifacts
+```
+
+## Running
+
+```bash
+make run              # Build and run simulation (with waveforms)
+obj_dir/VTop          # Run simulation directly
+obj_dir/VTop --notrace # Run without waveform tracing (7x faster)
+make wave             # View waveforms with gtkwave (if installed)
+```
+
+**Performance:**
+- With tracing: ~50s, generates 5.4GB VCD file
+- Without tracing (`--notrace`): ~7.6s, no VCD file
+
+## Simulation Output
+
+The simulation runs for ~2 seconds of real-time transmission, sending 3 WSPR symbols:
+
+- Symbol 1 at ~682 ms
+- Symbol 2 at ~1365 ms
+- Symbol 3 at ~2048 ms
+
+Each symbol period is 682.67 ms (8192/12000 seconds), matching the WSPR standard.
+
+### Example Output
+
+```
+Starting reset...
+Reset complete.
+Transmitter started at 400000 ps
+Running transmission simulation...
+Symbol 1 sent at 682 ms
+Symbol 2 sent at 1365 ms
+Symbol 3 sent at 2048 ms
+
+=== Simulation Summary ===
+Simulation time: 2048 ms
+Transmitter state: 1
+SPI transactions: 3
+RF activity cycles: 102399778
+
+SUCCESS: Transmitted 3+ symbols via SPI to FPGA!
+```
+
+## Waveform Analysis
+
+The generated `obj_dir/waveform.vcd` contains:
+
+- **SPI transactions** - Tuning word updates every symbol period
+- **RF outputs** - Push/Pull Base/Peak signals at 200 Msps
+- **PLL and clock generation** - 25 MHz to 100 MHz conversion
+- **NCO accumulator** - 32-bit phase accumulator operation
+
+Fast mode is enabled by default, tracing only:
+- First 10ms (startup)
+- Periods when SPI is active
+- Periods when RF outputs are active
+
+This reduces VCD file size significantly.
+
+## Modifying Test Parameters
+
+Edit `tb_top.cpp` to change:
+
+```cpp
+const uint32_t dialFreqHz = 14097000;  // Frequency (Hz)
+const char* callsign = "W1ABC";         // Callsign
+const char* grid = "FN42";              // Maidenhead grid
+const uint8_t powerDbm = 23;            // Power level
+
+vluint64_t maxSimTime = 3000000000000LL; // Max sim time (ps)
+bool fastMode = true;                    // Enable selective tracing
+```
+
+## Dependencies
+
+- Verilator 5.x or later
+- C++17 compatible compiler
+- Optional: GTKWave for waveform viewing
+
+## Integration with ESP32 Code
+
+The sw/ directory code is compiled directly into the testbench. The HAL interfaces (`HAL::ISpi`, `HAL::ITimer`) are implemented by:
+
+- `SimSpi` - Drives FPGA SPI signals via Verilator interface
+- `SimTimer` - Tracks simulation time in picoseconds
+
+This ensures the same transmitter logic runs in both simulation and on actual hardware.

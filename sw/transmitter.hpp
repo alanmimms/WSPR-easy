@@ -1,44 +1,45 @@
 /* file: src/radio/Transmitter.hpp */
 #pragma once
 
-#include <zephyr/kernel.h>
-#include <zephyr/drivers/spi.h>
-#include <zephyr/drivers/gpio.h>
+#include "hal/hal.hpp"
+#include "wspr-encoder.hpp"
 #include <cstdint>
-#include <span>
-#include "WsprEncoder.hpp"
+#include <string_view>
 
 class Transmitter {
 public:
-  Transmitter(const struct device* spiDev, const struct gpio_dt_spec* csSpec);
+  enum class State {
+    IDLE,
+    TRANSMITTING,
+    DONE
+  };
 
-  /**
-   * @brief Prepares the transmitter for a specific frequency and message.
-   * Does not start transmission.
-   */
+  Transmitter(HAL::ISpi* spi, HAL::ITimer* timer);
+
   void prepare(uint32_t dialFreqHz, std::string_view call, std::string_view grid, uint8_t dbm);
+  
+  // Starts the transmission process (non-blocking)
+  void start();
 
-  /**
-   * @brief Starts the blocking real-time transmission loop.
-   * This function blocks for ~2 minutes (110.6 seconds).
-   * Run this in a dedicated thread.
-   */
-  void transmit();
+  // Advances the state machine (call this in the simulation loop)
+  void tick();
 
-  bool isTransmitting() const { return transmitting; }
+  State getState() const { return _state; }
 
 private:
-  // Hardware
-  const struct device* spi;
-  const struct gpio_dt_spec* cs;
+  // Hardware Abstraction
+  HAL::ISpi* _spi;
+  HAL::ITimer* _timer;
 
   // Config
   uint32_t baseFreqHz;
-  WsprEncoder::SymbolBuffer currentSymbols;
+  WSPREncoder::SymbolBuffer currentSymbols;
     
-  // State
-  volatile bool transmitting = false;
-  static constexpr uint32_t FPGA_SYS_CLK = 180000000; // 180 MHz
+  // State Machine
+  State _state = State::IDLE;
+  size_t _symbol_index = 0;
+  int64_t _tx_start_time_ps = 0;
+  uint32_t _toneWords[4];
 
   // Helpers
   void sendTuningWord(uint32_t word);
