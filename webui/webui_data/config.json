@@ -1,0 +1,77 @@
+{
+  "callsign": "NOCALL",
+  "gridSquare": "AA00",
+  "powerDbm": 23,
+  "bands": [
+    {
+      "name": "80m",
+      "enabled": false,
+      "freqHz": 3570100,
+      "priority": 100
+    },
+    {
+      "name": "40m",
+      "enabled": false,
+      "freqHz": 7040100,
+      "priority": 100
+    },
+    {
+      "name": "30m",
+      "enabled": false,
+      "freqHz": 10140200,
+      "priority": 100
+    },
+    {
+      "name": "20m",
+      "enabled": true,
+      "freqHz": 14097100,
+      "priority": 100
+    },
+    {
+      "name": "17m",
+      "enabled": false,
+      "freqHz": 18106100,
+      "priority": 100
+    },
+    {
+      "name": "15m",
+      "enabled": false,
+      "freqHz": 21096100,
+      "priority": 100
+    },
+    {
+      "name": "12m",
+      "enabled": false,
+      "freqHz": 24926100,
+      "priority": 100
+    },
+    {
+      "name": "10m",
+      "enabled": false,
+      "freqHz": 28126100,
+      "priority": 100
+    }
+  ],
+  "mode": "sequential",
+  "slotIntervalMin": 10,
+  "dutyCycle": 1,
+  "timeSource": "ntp",
+  "ntpServer": "pool.ntp.org",
+  "timezoneOffset": 0,
+  "locationSource": "manual",
+  "wifi": {
+    "ssid": "",
+    "password": "",
+    "hostname": "wspr-ease"
+  },
+  "webAuth": {
+    "username": "admin",
+    "password": "wspr"
+  },
+  "advanced": {
+    "randomOffset": true,
+    "paTempLimitC": 85,
+    "cooldownSec": 120,
+    "enableBeacon": true
+  }
+}

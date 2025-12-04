@@ -86,3 +86,7 @@ Protection Circuitry (Critical)
  * Band Select: User selects Band (e.g., 20m). ESP32 sets LPF_loON + LPF_lo2ON HIGH.
  * Calibration: ESP32 measures PPS interval vs 25 MHz clock to determine true frequency.
  * Transmit: ESP32 computes NCO tuning word for target frequency + WSPR tone shift and updates FPGA over SPI at 1.46 Hz.
+
+
+# NOTES
+* Web UI needs to support both desktop and phone browser sizes and use cases.
