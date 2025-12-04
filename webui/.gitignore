@@ -1,2 +1,4 @@
 test_fs
 wspr_webui_server
+www-test-data/
+*.log

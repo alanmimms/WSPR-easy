@@ -26,8 +26,8 @@ int main() {
   std::signal(SIGTERM, signalHandler);
 
   // Create mock filesystem
-  MockFilesystem mockFs("./webui_data");
-  std::cout << "Mock filesystem root: ./webui_data" << std::endl;
+  MockFilesystem mockFs("./www-test-data");
+  std::cout << "Mock filesystem root: ./www-test-data" << std::endl;
 
   // Create config manager
   ConfigManager configMgr(&mockFs);
@@ -47,7 +47,7 @@ int main() {
   g_server = &svr;
 
   // Serve static files from /www directory
-  svr.set_mount_point("/", "./webui_data/www");
+  svr.set_mount_point("/", "./www-test-data/www");
 
   // API endpoints - File operations
   svr.Get("/api/files", [&](const httplib::Request& req, httplib::Response& res) {
@@ -186,7 +186,7 @@ int main() {
   int port = 8080;
 
   std::cout << "\nServer starting on http://" << host << ":" << port << std::endl;
-  std::cout << "Static files: ./webui_data/www" << std::endl;
+  std::cout << "Static files: ./www-test-data/www" << std::endl;
   std::cout << "Press Ctrl+C to stop\n" << std::endl;
 
   // Run server in non-blocking mode

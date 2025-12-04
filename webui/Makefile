@@ -9,7 +9,7 @@ SOURCES := src/main.cpp
 TARGET := wspr_webui_server
 
 # Directories
-DATA_DIR := webui_data
+DATA_DIR := www-test-data
 WWW_DIR := $(DATA_DIR)/www
 
 .PHONY: all clean run setup test
@@ -25,6 +25,7 @@ setup:
 	@echo "Setting up directories..."
 	@mkdir -p $(DATA_DIR)
 	@mkdir -p $(WWW_DIR)
+	@cp -r www/* $(WWW_DIR)/
 	@if [ ! -f src/httplib.h ]; then \
 		echo "Downloading cpp-httplib..."; \
 		wget -q https://raw.githubusercontent.com/yhirose/cpp-httplib/master/httplib.h -O src/httplib.h; \

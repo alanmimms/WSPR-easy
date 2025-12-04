@@ -24,7 +24,7 @@ Mock web server environment for developing and testing the WSPR-ease web UI befo
                 │
 ┌───────────────┴─────────────────────────┐
 │  HAL Layer                               │
-│  - MockFilesystem (./webui_data)        │
+│  - MockFilesystem (./www-test-data)        │
 │  - ConfigManager (JSON)                  │
 │  - Mock WSPR encoder/transmitter         │
 └──────────────────────────────────────────┘
@@ -118,7 +118,7 @@ webui/
 │   └── app.js              - JavaScript application
 ├── test/
 │   └── test_api.sh         - API test script
-├── webui_data/             - Runtime data directory
+├── www-test-data/             - Runtime data directory
 │   ├── www/                - Served static files
 │   └── config.json         - Persisted configuration
 ├── Makefile
@@ -127,7 +127,7 @@ webui/
 
 ## Configuration
 
-Configuration is stored as JSON in `webui_data/config.json`:
+Configuration is stored as JSON in `www-test-data/config.json`:
 
 ```json
 {
@@ -174,7 +174,7 @@ The code is designed to be portable:
 
 ## Notes
 
-- Configuration persists across restarts in `webui_data/config.json`
+- Configuration persists across restarts in `www-test-data/config.json`
 - Logs and statistics are mock/in-memory only (no flash wear)
 - File transfer allows rapid web UI iteration without recompiling
 - All endpoints return JSON (except file downloads)
