@@ -2,6 +2,20 @@
 
 const API_BASE = '/api';
 let currentConfig = null;
+let lastStatusTime = 0;
+const OFFLINE_TIMEOUT_MS = 5000;
+
+// Update server online/offline status
+function updateServerStatus(online) {
+  const el = document.getElementById('server-status');
+  if (online) {
+    el.textContent = 'ONLINE';
+    el.className = 'value status-online';
+  } else {
+    el.textContent = 'OFFLINE';
+    el.className = 'value status-offline';
+  }
+}
 
 // Tab switching
 document.querySelectorAll('.tab').forEach(tab => {
@@ -134,6 +148,8 @@ async function loadStatus() {
     if (!response.ok) throw new Error('Failed to load status');
 
     const status = await response.json();
+    lastStatusTime = Date.now();
+    updateServerStatus(true);
 
     // Update status bar
     document.getElementById('tx-status').textContent = status.tx.active ? 'Transmitting' : 'Idle';
@@ -151,6 +167,7 @@ async function loadStatus() {
     document.getElementById('status-json').textContent = JSON.stringify(status, null, 2);
   } catch (error) {
     console.error('Error loading status:', error);
+    updateServerStatus(false);
   }
 }
 

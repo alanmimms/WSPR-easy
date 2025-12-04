@@ -8,14 +8,16 @@
 // Header-only library: https://github.com/yhirose/cpp-httplib
 #include "httplib.h"
 
-static bool running = true;
+static httplib::Server* g_server = nullptr;
 
-void signalHandler(int signal) {
+void signalHandler(int) {
   std::cout << "\nShutting down server..." << std::endl;
-  running = false;
+  if (g_server) {
+    g_server->stop();
+  }
 }
 
-int main(int argc, char* argv[]) {
+int main() {
   std::cout << "WSPR-ease Web UI Mock Server" << std::endl;
   std::cout << "==============================" << std::endl;
 
@@ -42,6 +44,7 @@ int main(int argc, char* argv[]) {
 
   // Create HTTP server
   httplib::Server svr;
+  g_server = &svr;
 
   // Serve static files from /www directory
   svr.set_mount_point("/", "./webui_data/www");

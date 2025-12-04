@@ -101,13 +101,13 @@ public:
     json << "  \"powerDbm\": " << (int)config.powerDbm << ",\n";
 
     json << "  \"bands\": [\n";
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < WSPRConfig::NUM_BANDS; i++) {
       json << "    {\n";
       json << "      \"name\": \"" << WSPRConfig::BAND_NAMES[i] << "\",\n";
       json << "      \"enabled\": " << (config.bands[i].enabled ? "true" : "false") << ",\n";
       json << "      \"freqHz\": " << config.bands[i].freqHz << ",\n";
       json << "      \"priority\": " << (int)config.bands[i].priority << "\n";
-      json << "    }" << (i < 7 ? "," : "") << "\n";
+      json << "    }" << (i < WSPRConfig::NUM_BANDS - 1 ? "," : "") << "\n";
     }
     json << "  ],\n";
 

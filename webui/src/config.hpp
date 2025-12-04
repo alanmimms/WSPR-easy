@@ -17,14 +17,15 @@ struct WSPRConfig {
   std::string gridSquare = "AA00";  // 4-char Maidenhead
   uint8_t powerDbm = 23;
 
-  // Band Configuration (80m, 40m, 30m, 20m, 17m, 15m, 12m, 10m)
+  // Band Configuration (80m, 60m, 40m, 30m, 20m, 17m, 15m, 12m, 10m)
   struct BandConfig {
     bool enabled = false;
     uint32_t freqHz = 0;
     uint8_t priority = 0;  // 0-255, higher = more frequent
   };
 
-  std::array<BandConfig, 8> bands;
+  static constexpr int NUM_BANDS = 9;
+  std::array<BandConfig, NUM_BANDS> bands;
 
   // Scheduling
   enum class Mode {
@@ -73,28 +74,29 @@ struct WSPRConfig {
   bool enableBeacon = true;        // Master enable/disable
 
   // Default band frequencies (dial frequency for WSPR sub-band)
-  static constexpr uint32_t BAND_FREQS[8] = {
-    3570100,   // 80m
-    7040100,   // 40m
-    10140200,  // 30m
-    14097100,  // 20m
-    18106100,  // 17m
-    21096100,  // 15m
-    24926100,  // 12m
-    28126100   // 10m
+  static constexpr uint32_t BAND_FREQS[NUM_BANDS] = {
+    3568600,   // 80m
+    5287200,   // 60m
+    7038600,   // 40m
+    10138700,  // 30m
+    14095600,  // 20m
+    18104600,  // 17m
+    21094600,  // 15m
+    24924600,  // 12m
+    28124600   // 10m
   };
 
-  static constexpr const char* BAND_NAMES[8] = {
-    "80m", "40m", "30m", "20m", "17m", "15m", "12m", "10m"
+  static constexpr const char* BAND_NAMES[NUM_BANDS] = {
+    "80m", "60m", "40m", "30m", "20m", "17m", "15m", "12m", "10m"
   };
 
   /**
    * @brief Initialize with default band frequencies
    */
   void initDefaults() {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < NUM_BANDS; i++) {
       bands[i].freqHz = BAND_FREQS[i];
-      bands[i].enabled = (i == 3);  // Default: 20m only
+      bands[i].enabled = (i == 4);  // Default: 20m only
       bands[i].priority = 100;
     }
   }

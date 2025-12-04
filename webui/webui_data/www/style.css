@@ -71,6 +71,16 @@ header h1 {
   font-weight: 500;
 }
 
+.status-online {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.status-offline {
+  color: var(--danger);
+  font-weight: 600;
+}
+
 .tabs {
   display: flex;
   gap: 5px;
