@@ -102,16 +102,25 @@ public:
 
     json << "  \"bands\": [\n";
     for (int i = 0; i < WSPRConfig::NUM_BANDS; i++) {
+      const auto& band = config.bands[i];
+      const auto& tw = band.timeWindow;
       json << "    {\n";
       json << "      \"name\": \"" << WSPRConfig::BAND_NAMES[i] << "\",\n";
-      json << "      \"enabled\": " << (config.bands[i].enabled ? "true" : "false") << ",\n";
-      json << "      \"freqHz\": " << config.bands[i].freqHz << ",\n";
-      json << "      \"priority\": " << (int)config.bands[i].priority << "\n";
+      json << "      \"enabled\": " << (band.enabled ? "true" : "false") << ",\n";
+      json << "      \"freqHz\": " << band.freqHz << ",\n";
+      json << "      \"timeWindow\": {\n";
+      json << "        \"enabled\": " << (tw.enabled ? "true" : "false") << ",\n";
+      json << "        \"startBase\": \"" << timeBaseToString(tw.startBase) << "\",\n";
+      json << "        \"startOffsetMin\": " << tw.startOffsetMin << ",\n";
+      json << "        \"endBase\": \"" << timeBaseToString(tw.endBase) << "\",\n";
+      json << "        \"endOffsetMin\": " << tw.endOffsetMin << "\n";
+      json << "      }\n";
       json << "    }" << (i < WSPRConfig::NUM_BANDS - 1 ? "," : "") << "\n";
     }
     json << "  ],\n";
 
     json << "  \"mode\": \"" << modeToString(config.mode) << "\",\n";
+    json << "  \"bandList\": \"" << escapeJson(config.bandList) << "\",\n";
     json << "  \"slotIntervalMin\": " << config.slotIntervalMin << ",\n";
     json << "  \"dutyCycle\": " << (int)config.dutyCycle << ",\n";
 
@@ -177,10 +186,20 @@ private:
   static std::string modeToString(WSPRConfig::Mode mode) {
     switch (mode) {
       case WSPRConfig::Mode::MANUAL: return "manual";
-      case WSPRConfig::Mode::SEQUENTIAL: return "sequential";
       case WSPRConfig::Mode::RANDOM: return "random";
-      case WSPRConfig::Mode::PRIORITY: return "priority";
-      default: return "sequential";
+      case WSPRConfig::Mode::ROUND_ROBIN: return "round-robin";
+      case WSPRConfig::Mode::LIST: return "list";
+      default: return "round-robin";
+    }
+  }
+
+  static std::string timeBaseToString(WSPRConfig::TimeWindow::TimeBase base) {
+    switch (base) {
+      case WSPRConfig::TimeWindow::TimeBase::UTC: return "utc";
+      case WSPRConfig::TimeWindow::TimeBase::LOCAL: return "local";
+      case WSPRConfig::TimeWindow::TimeBase::SUNRISE: return "sunrise";
+      case WSPRConfig::TimeWindow::TimeBase::SUNSET: return "sunset";
+      default: return "utc";
     }
   }
 

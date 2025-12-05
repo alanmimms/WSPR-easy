@@ -36,6 +36,15 @@
       </div>
     </div>
 
+    <div class="tx-bar">
+      <button id="trigger-tx" class="btn btn-primary">Trigger TX Now</button>
+    </div>
+
+    <div class="save-bar">
+      <button id="cancel-changes" class="btn btn-secondary" disabled>Cancel</button>
+      <button id="save-all" class="btn btn-primary" disabled>Save</button>
+    </div>
+
     <nav class="tabs">
       <button class="tab active" data-tab="config">Configuration</button>
       <button class="tab" data-tab="schedule">Schedule</button>
@@ -80,32 +89,38 @@
           <div id="bands-list"></div>
         </section>
 
-        <div class="button-group">
-          <button id="save-config" class="btn btn-primary">Save Configuration</button>
-          <button id="export-config" class="btn btn-secondary">Export</button>
-          <button id="import-config" class="btn btn-secondary">Import</button>
-        </div>
       </div>
 
       <!-- Schedule Tab -->
       <div id="schedule-tab" class="tab-content">
         <section class="card">
-          <h2>Transmission Schedule</h2>
+          <h2>Band Selection Mode</h2>
           <div class="form-group">
             <label for="mode">Mode:</label>
             <select id="mode">
-              <option value="manual">Manual</option>
-              <option value="sequential" selected>Sequential</option>
+              <option value="manual">Manual Only</option>
+              <option value="round-robin">Round Robin</option>
               <option value="random">Random</option>
-              <option value="priority">Priority</option>
+              <option value="list">Band List</option>
             </select>
+          </div>
+          <div class="form-group" id="band-list-group" style="display:none;">
+            <label for="band-list-input">Band List (comma-separated, repeats for weighting):</label>
+            <input type="text" id="band-list-input" placeholder="20m,20m,40m,30m">
+            <small class="help-text">Example: "20m,20m,40m" makes 20m twice as likely</small>
           </div>
           <div class="form-group">
             <label for="interval">Interval (minutes):</label>
             <input type="number" id="interval" value="10" min="2" max="60">
           </div>
-          <button id="trigger-tx" class="btn btn-primary">Trigger Transmission Now</button>
         </section>
+
+        <section class="card">
+          <h2>Band Time Windows</h2>
+          <p class="help-text">Configure when each band is eligible for transmission. Disabled windows mean the band is always eligible (if enabled).</p>
+          <div id="time-windows-list"></div>
+        </section>
+
       </div>
 
       <!-- Status Tab -->

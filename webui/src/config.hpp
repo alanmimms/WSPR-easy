@@ -17,27 +17,44 @@ struct WSPRConfig {
   std::string gridSquare = "AA00";  // 4-char Maidenhead
   uint8_t powerDbm = 30;  // 30dBm = 1W (WSPR-ease hardware output)
 
+  // Time window for band eligibility
+  struct TimeWindow {
+    enum class TimeBase : uint8_t {
+      UTC,      // Absolute UTC time
+      LOCAL,    // User's local time (timezone offset applied)
+      SUNRISE,  // Relative to sunrise at location
+      SUNSET    // Relative to sunset at location
+    };
+
+    bool enabled = false;          // If false, band is always eligible (when band enabled)
+    TimeBase startBase = TimeBase::UTC;
+    int16_t startOffsetMin = 0;    // Minutes from base (negative OK for sunrise/sunset)
+    TimeBase endBase = TimeBase::UTC;
+    int16_t endOffsetMin = 1440;   // Minutes from base (1440 = 24h, i.e., end of day)
+  };
+
   // Band Configuration (80m, 60m, 40m, 30m, 20m, 17m, 15m, 12m, 10m)
   struct BandConfig {
     bool enabled = false;
     uint32_t freqHz = 0;
-    uint8_t priority = 0;  // 0-255, higher = more frequent
+    TimeWindow timeWindow;         // When this band is eligible
   };
 
   static constexpr int NUM_BANDS = 9;
   std::array<BandConfig, NUM_BANDS> bands;
 
   // Scheduling
-  enum class Mode {
+  enum class Mode : uint8_t {
     MANUAL,      // Only transmit on manual trigger
-    SEQUENTIAL,  // Rotate through enabled bands
-    RANDOM,      // Random enabled band
-    PRIORITY     // Weight by priority
+    RANDOM,      // Random from eligible bands
+    ROUND_ROBIN, // Sequential through eligible bands
+    LIST         // Use bandList, skipping ineligible bands
   };
 
-  Mode mode = Mode::SEQUENTIAL;
+  Mode mode = Mode::ROUND_ROBIN;
+  std::string bandList;            // For LIST mode: "20m,20m,40m,30m" (repeats for weighting)
   uint16_t slotIntervalMin = 10;   // Minutes between transmissions
-  uint8_t dutyCycle = 1;            // 1 out of N slots (1 = every slot)
+  uint8_t dutyCycle = 1;           // 1 out of N slots (1 = every slot)
 
   // Time Sources
   enum class TimeSource {
@@ -97,8 +114,9 @@ struct WSPRConfig {
     for (int i = 0; i < NUM_BANDS; i++) {
       bands[i].freqHz = BAND_FREQS[i];
       bands[i].enabled = (i == 4);  // Default: 20m only
-      bands[i].priority = 100;
+      bands[i].timeWindow.enabled = false;  // No time restriction by default
     }
+    bandList = "20m";  // Default band list
   }
 
   /**

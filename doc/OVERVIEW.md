@@ -97,6 +97,11 @@ selection provides a mechanism to allow a band to be listed e.g., five
 times in a random or round-robin list to make it five times as likely
 to be chosen as the others.
 
+For time, the UTC, user's local time zone, and/or offset from sunrise
+and sunset at grid square center or GNSS lat/lon. Each sunrise/sunset
+relative time needs to be evaluated at time of scheduling since it
+changes daily.
+
 
 # NOTES
 * Web UI needs to support both desktop and phone browser sizes and use cases.

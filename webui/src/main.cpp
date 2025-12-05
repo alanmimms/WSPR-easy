@@ -1,6 +1,7 @@
 #include "mock_fs.hpp"
 #include "config_manager.hpp"
 #include "api_server.hpp"
+#include "version.hpp"
 #include <iostream>
 #include <csignal>
 
@@ -157,6 +158,11 @@ int main() {
     HttpResponse apiRes;
     apiServer.handleRequest(apiReq, apiRes);
     res.set_content(apiRes.body, "application/json");
+  });
+
+  // Version endpoint
+  svr.Get("/api/version", [&](const httplib::Request&, httplib::Response& res) {
+    res.set_content("{\"version\":\"" WEBUI_VERSION "\"}", "application/json");
   });
 
   // Status endpoint

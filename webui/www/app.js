@@ -1,9 +1,28 @@
 // WSPR-ease Web UI Application
 
 const API_BASE = '/api';
+const APP_VERSION = 'dev';  // Replaced by Makefile during build
 let currentConfig = null;
+let originalConfig = null;  // For cancel/dirty detection
 let lastStatusTime = 0;
 const OFFLINE_TIMEOUT_MS = 5000;
+let isDirty = false;
+
+// Check server version and reload if mismatched
+async function checkVersion() {
+  try {
+    const response = await fetch(`${API_BASE}/version`);
+    if (!response.ok) return;
+
+    const data = await response.json();
+    if (data.version && data.version !== APP_VERSION) {
+      console.log(`Version mismatch: app=${APP_VERSION} server=${data.version}, reloading...`);
+      location.reload(true);
+    }
+  } catch (error) {
+    // Ignore version check errors
+  }
+}
 
 // Update server online/offline status
 function updateServerStatus(online) {
@@ -15,6 +34,18 @@ function updateServerStatus(online) {
     el.textContent = 'OFFLINE';
     el.className = 'value status-offline';
   }
+}
+
+// Update dirty state and button enables
+function setDirty(dirty) {
+  isDirty = dirty;
+  document.getElementById('save-all').disabled = !dirty;
+  document.getElementById('cancel-changes').disabled = !dirty;
+}
+
+// Mark as dirty when any config input changes
+function markDirty() {
+  setDirty(true);
 }
 
 // Tab switching
@@ -39,7 +70,9 @@ async function loadConfig() {
     if (!response.ok) throw new Error('Failed to load config');
 
     currentConfig = await response.json();
+    originalConfig = JSON.parse(JSON.stringify(currentConfig));  // Deep copy
     updateConfigUI(currentConfig);
+    setDirty(false);
   } catch (error) {
     console.error('Error loading config:', error);
     alert('Failed to load configuration');
@@ -53,8 +86,12 @@ function updateConfigUI(config) {
   document.getElementById('power').value = config.powerDbm;
   document.getElementById('mode').value = config.mode;
   document.getElementById('interval').value = config.slotIntervalMin;
+  document.getElementById('band-list-input').value = config.bandList || '';
 
-  // Update bands
+  // Show/hide band list input based on mode
+  updateBandListVisibility();
+
+  // Update bands checkboxes
   const bandsList = document.getElementById('bands-list');
   bandsList.innerHTML = '';
 
@@ -66,29 +103,124 @@ function updateConfigUI(config) {
       <label for="band-${index}">${band.name || `Band ${index}`} (${(band.freqHz / 1000000).toFixed(3)} MHz)</label>
     `;
     bandsList.appendChild(bandItem);
+
+    // Mark dirty when band checkbox changes
+    document.getElementById(`band-${index}`).addEventListener('change', markDirty);
+  });
+
+  // Update time windows
+  updateTimeWindowsUI(config.bands);
+}
+
+// Show/hide band list input based on mode selection
+function updateBandListVisibility() {
+  const mode = document.getElementById('mode').value;
+  const bandListGroup = document.getElementById('band-list-group');
+  bandListGroup.style.display = mode === 'list' ? 'block' : 'none';
+}
+
+document.getElementById('mode').addEventListener('change', () => {
+  updateBandListVisibility();
+  markDirty();
+});
+
+// Mark dirty on config field changes
+['callsign', 'grid', 'power', 'interval', 'band-list-input'].forEach(id => {
+  document.getElementById(id).addEventListener('change', markDirty);
+  document.getElementById(id).addEventListener('input', markDirty);
+});
+
+// Update time windows UI
+function updateTimeWindowsUI(bands) {
+  const container = document.getElementById('time-windows-list');
+  container.innerHTML = '';
+
+  bands.forEach((band, index) => {
+    const tw = band.timeWindow || {};
+    const item = document.createElement('div');
+    item.className = 'time-window-item';
+    item.innerHTML = `
+      <div class="band-name">${band.name} (${(band.freqHz / 1000000).toFixed(3)} MHz)</div>
+      <label>
+        <input type="checkbox" id="tw-enabled-${index}" ${tw.enabled ? 'checked' : ''}>
+        Enable time window
+      </label>
+      <div class="time-window-row" id="tw-row-${index}" style="display: ${tw.enabled ? 'flex' : 'none'};">
+        <label>From:</label>
+        <select id="tw-start-base-${index}">
+          <option value="utc" ${tw.startBase === 'utc' ? 'selected' : ''}>UTC</option>
+          <option value="local" ${tw.startBase === 'local' ? 'selected' : ''}>Local</option>
+          <option value="sunrise" ${tw.startBase === 'sunrise' ? 'selected' : ''}>Sunrise</option>
+          <option value="sunset" ${tw.startBase === 'sunset' ? 'selected' : ''}>Sunset</option>
+        </select>
+        <input type="number" id="tw-start-offset-${index}" value="${tw.startOffsetMin || 0}" style="width:70px;">
+        <span>min</span>
+        <label>To:</label>
+        <select id="tw-end-base-${index}">
+          <option value="utc" ${tw.endBase === 'utc' ? 'selected' : ''}>UTC</option>
+          <option value="local" ${tw.endBase === 'local' ? 'selected' : ''}>Local</option>
+          <option value="sunrise" ${tw.endBase === 'sunrise' ? 'selected' : ''}>Sunrise</option>
+          <option value="sunset" ${tw.endBase === 'sunset' ? 'selected' : ''}>Sunset</option>
+        </select>
+        <input type="number" id="tw-end-offset-${index}" value="${tw.endOffsetMin || 1440}" style="width:70px;">
+        <span>min</span>
+      </div>
+    `;
+    container.appendChild(item);
+
+    // Toggle time window row visibility and mark dirty
+    document.getElementById(`tw-enabled-${index}`).addEventListener('change', (e) => {
+      document.getElementById(`tw-row-${index}`).style.display = e.target.checked ? 'flex' : 'none';
+      markDirty();
+    });
+
+    // Mark dirty on time window changes
+    [`tw-start-base-${index}`, `tw-start-offset-${index}`, `tw-end-base-${index}`, `tw-end-offset-${index}`].forEach(id => {
+      document.getElementById(id).addEventListener('change', markDirty);
+      document.getElementById(id).addEventListener('input', markDirty);
+    });
   });
 }
 
-// Save configuration
-document.getElementById('save-config').addEventListener('click', async () => {
-  try {
-    // Gather config from UI
-    const config = {
-      ...currentConfig,
-      callsign: document.getElementById('callsign').value,
-      gridSquare: document.getElementById('grid').value,
-      powerDbm: parseInt(document.getElementById('power').value),
-      mode: document.getElementById('mode').value,
-      slotIntervalMin: parseInt(document.getElementById('interval').value),
-    };
+// Gather config from UI
+function gatherConfigFromUI() {
+  const config = {
+    ...currentConfig,
+    callsign: document.getElementById('callsign').value,
+    gridSquare: document.getElementById('grid').value,
+    powerDbm: parseInt(document.getElementById('power').value),
+    mode: document.getElementById('mode').value,
+    bandList: document.getElementById('band-list-input').value,
+    slotIntervalMin: parseInt(document.getElementById('interval').value),
+  };
 
-    // Update band enables
-    config.bands.forEach((band, index) => {
-      const checkbox = document.getElementById(`band-${index}`);
-      if (checkbox) {
-        band.enabled = checkbox.checked;
-      }
-    });
+  // Update band enables and time windows
+  config.bands.forEach((band, index) => {
+    const checkbox = document.getElementById(`band-${index}`);
+    if (checkbox) {
+      band.enabled = checkbox.checked;
+    }
+
+    // Update time window
+    const twEnabled = document.getElementById(`tw-enabled-${index}`);
+    if (twEnabled) {
+      band.timeWindow = {
+        enabled: twEnabled.checked,
+        startBase: document.getElementById(`tw-start-base-${index}`).value,
+        startOffsetMin: parseInt(document.getElementById(`tw-start-offset-${index}`).value) || 0,
+        endBase: document.getElementById(`tw-end-base-${index}`).value,
+        endOffsetMin: parseInt(document.getElementById(`tw-end-offset-${index}`).value) || 1440,
+      };
+    }
+  });
+
+  return config;
+}
+
+// Save configuration
+document.getElementById('save-all').addEventListener('click', async () => {
+  try {
+    const config = gatherConfigFromUI();
 
     const response = await fetch(`${API_BASE}/config`, {
       method: 'PUT',
@@ -98,33 +230,19 @@ document.getElementById('save-config').addEventListener('click', async () => {
 
     if (!response.ok) throw new Error('Failed to save config');
 
-    alert('Configuration saved successfully!');
-    loadConfig();  // Reload
+    await loadConfig();  // Reload and reset dirty state
   } catch (error) {
     console.error('Error saving config:', error);
     alert('Failed to save configuration');
   }
 });
 
-// Export configuration
-document.getElementById('export-config').addEventListener('click', async () => {
-  try {
-    const response = await fetch(`${API_BASE}/config/export`);
-    if (!response.ok) throw new Error('Failed to export config');
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'wspr-config.json';
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-  } catch (error) {
-    console.error('Error exporting config:', error);
-    alert('Failed to export configuration');
-  }
+// Cancel changes - restore from originalConfig
+document.getElementById('cancel-changes').addEventListener('click', () => {
+  if (!originalConfig) return;
+  currentConfig = JSON.parse(JSON.stringify(originalConfig));
+  updateConfigUI(currentConfig);
+  setDirty(false);
 });
 
 // Trigger transmission
@@ -283,9 +401,11 @@ function formatBytes(bytes) {
 }
 
 // Initialize
+checkVersion();  // Check version on load
 loadConfig();
 loadStatus();
 loadFiles();
 
-// Auto-refresh status every 2 seconds
+// Auto-refresh status every 2 seconds, check version every 10 seconds
 setInterval(loadStatus, 2000);
+setInterval(checkVersion, 10000);
