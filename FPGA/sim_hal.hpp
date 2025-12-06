@@ -28,7 +28,7 @@ public:
                     ((uint32_t)data[3]);
 
     // Assert CS
-    top->nFpgaCS = 0;
+    top->fpgaNCS = 0;
     advanceClock(2);
 
     // Send 32 bits
@@ -41,7 +41,7 @@ public:
     }
 
     // Deassert CS
-    top->nFpgaCS = 1;
+    top->fpgaNCS = 1;
     advanceClock(2);
   }
 

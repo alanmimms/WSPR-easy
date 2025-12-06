@@ -12,7 +12,7 @@
 module Top (
     input  logic fpgaClk,    // SPI SCK
     input  logic fpgaMOSI,   // SPI MOSI
-    input  logic nFpgaCS,    // SPI CS
+    input  logic fpgaNCS,    // SPI nCS
     output logic fpgaMISO,   // SPI MISO
     input  logic gnssPPS,    // GPS PPS Input
     
@@ -23,9 +23,6 @@ module Top (
     output logic rfPushPeak,
     output logic rfPullBase,
     output logic rfPullPeak,
-    
-    // Debug
-    output logic debugPps
 );
 
     // -------------------------------------------------------------------------
@@ -80,8 +77,8 @@ module Top (
     logic [5:0]  spiBitCount;
 
     // MOSI Capture (Rising Edge)
-    always_ff @(posedge fpgaClk or posedge nFpgaCS) begin
-        if (nFpgaCS) begin
+    always_ff @(posedge fpgaClk or posedge fpgaNCS) begin
+        if (fpgaNCS) begin
             spiBitCount <= '0;
         end else begin
             spiBitCount <= spiBitCount + 1'b1;
@@ -89,8 +86,8 @@ module Top (
     end
     
     // MISO Shift & Register Update (Falling Edge)
-    always_ff @(negedge fpgaClk or posedge nFpgaCS) begin
-        if (nFpgaCS) begin
+    always_ff @(negedge fpgaClk or posedge fpgaNCS) begin
+        if (fpgaNCS) begin
             spiShiftReg <= ppsCapturedPeriod;
         end else begin
             spiShiftReg <= {spiShiftReg[30:0], fpgaMOSI};
@@ -100,7 +97,7 @@ module Top (
     assign fpgaMISO = spiShiftReg[31];
 
     // Tuning Word Latch
-    always_ff @(posedge nFpgaCS) begin
+    always_ff @(posedge fpgaNCS) begin
         if (spiBitCount == 6'd32) begin
             tuningWordShadow <= spiShiftReg;
         end
@@ -230,7 +227,5 @@ module Top (
         .OUTPUT_ENABLE(1'b1),
         .D_IN_0(), .D_IN_1()
     );
-
-    assign debugPps = gnssPPS;
 
 endmodule // Top

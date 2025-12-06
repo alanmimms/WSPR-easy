@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 
   // Initialize inputs
   top->clk25MHz = 0;
-  top->nFpgaCS = 1;
+  top->fpgaNCS = 1;
   top->fpgaClk = 0;
   top->fpgaMOSI = 0;
   top->gnssPPS = 0;
@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
                             (mainTime < 10000000000LL) || // First 10ms
                             (top->rfPushBase || top->rfPushPeak ||
                              top->rfPullBase || top->rfPullPeak) || // RF active
-                            (top->nFpgaCS == 0); // SPI active
+                            (top->fpgaNCS == 0); // SPI active
 
       if (traceThisCycle) {
         tfp->dump(mainTime);
