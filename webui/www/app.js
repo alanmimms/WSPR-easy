@@ -270,12 +270,23 @@ async function loadStatus() {
     updateServerStatus(true);
 
     // Update status bar
-    document.getElementById('tx-status').textContent = status.tx.active ? 'Transmitting' : 'Idle';
-    document.getElementById('gnss-status').textContent = status.gnss.locked ?
-      `Locked (${status.gnss.satellites} sats)` : 'No Lock';
-    document.getElementById('clock-status').textContent = status.clock.source.toUpperCase();
+    // WiFi RSSI
+    if (status.wifi && status.wifi.rssi) {
+      document.getElementById('wifi-rssi').textContent = `${status.wifi.rssi} dBm`;
+    }
+    // TX status
+    const txActive = status.fpga?.transmitting || status.tx?.active;
+    document.getElementById('tx-status').textContent = txActive ? 'Transmitting' : 'Idle';
+    // GNSS status
+    const gnssLocked = status.gnss?.fix || status.gnss?.locked;
+    const sats = status.gnss?.satellites || 0;
+    document.getElementById('gnss-status').textContent = gnssLocked ?
+      `Locked (${sats} sats)` : 'No Lock';
+    // Clock source
+    const clockSource = status.clock?.source || 'TCXO';
+    document.getElementById('clock-status').textContent = clockSource.toUpperCase();
 
-    if (status.tx.nextTxSec) {
+    if (status.tx?.nextTxSec) {
       const minutes = Math.floor(status.tx.nextTxSec / 60);
       const seconds = status.tx.nextTxSec % 60;
       document.getElementById('next-tx').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;

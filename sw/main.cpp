@@ -40,6 +40,7 @@ void main(void) {
   // loadConfigFromFS(gConfig);
   RingBufferLogger::instance().log("Config Loaded. Callsign: " + gConfig.callsign);
 
+
   // 3. Start Subsytems
   // startUsbConsole();
   // startGnss();

@@ -1,5 +1,29 @@
 /* file: app.overlay */
 
+/*
+ * Add LittleFS partition for web UI files
+ *
+ * The ESP32-S3 board DTS defines default partitions:
+ *   boot_partition @0x0 (64KB)
+ *   slot0_partition @0x10000 (1472KB) - main app
+ *   slot1_partition @0x180000 (1472KB) - OTA slot
+ *   scratch_partition @0x2F0000 (64KB)
+ *   storage_partition @0x300000 (64KB) - NVS
+ *
+ * We add LittleFS starting at 0x310000 (after storage), 512KB
+ * This fits comfortably in the 8MB flash.
+ */
+
+&flash0 {
+	partitions {
+		/* LittleFS for web UI files - after all default partitions */
+		littlefs_partition: partition@310000 {
+			label = "littlefs";
+			reg = <0x310000 DT_SIZE_K(512)>;  /* 512KB for web files */
+		};
+	};
+};
+
 / {
 	aliases {
 		/* Aliases for C code access (must be lowercase with hyphens) */

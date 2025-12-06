@@ -57,7 +57,6 @@ void Gnss::update() {
         int64_t sim_time = stub_base_time_ + uptime_sec;
 
         // Convert to broken-down time (simplified)
-        int64_t days = sim_time / 86400;
         int64_t day_sec = sim_time % 86400;
 
         data_.hour = day_sec / 3600;

@@ -79,10 +79,7 @@ static int build_dns_response(uint8_t* request, int req_len,
     uint8_t* qptr = request + sizeof(dns_header);
 
     for (int q = 0; q < qdcount && offset < max_len - 16; q++) {
-        // Skip the QNAME (pointer to question name)
-        uint8_t* name_start = qptr;
-
-        // Skip over the name
+        // Skip over the QNAME
         while (*qptr != 0 && qptr < request + req_len) {
             qptr += (*qptr) + 1;
         }

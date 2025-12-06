@@ -10,6 +10,7 @@
 #include <zephyr/net/net_event.h>
 #include <zephyr/net/net_if.h>
 #include <zephyr/net/dhcpv4_server.h>
+#include <zephyr/net/dhcpv4.h>
 #include <zephyr/settings/settings.h>
 
 #include <cstring>
@@ -56,6 +57,11 @@ void WifiManager::on_wifi_event(uint64_t mgmt_event, struct net_if* iface) {
         }
         k_sem_give(&wifi_connected_sem);
     } else if (mgmt_event == NET_EVENT_WIFI_DISCONNECT_RESULT) {
+        // Ignore disconnect events while connecting - ESP32 driver quirk
+        if (state_ == WifiState::Connecting) {
+            LOG_DBG("Ignoring disconnect during connection attempt");
+            return;
+        }
         LOG_INF("WiFi disconnected");
         state_ = WifiState::Disconnected;
         ip_addr_[0] = '\0';
@@ -119,8 +125,28 @@ int WifiManager::connect(const char* ssid, const char* password) {
         return -ENODEV;
     }
 
+    // If already connected, check if it's to the same network with valid IP
+    if (state_ == WifiState::Connected) {
+        // Check for valid IP (not empty and not 0.0.0.0)
+        bool has_valid_ip = ip_addr_[0] != '\0' && strcmp(ip_addr_, "0.0.0.0") != 0;
+        if (strcmp(current_ssid_, ssid) == 0 && has_valid_ip) {
+            LOG_INF("Already connected to %s with IP %s", ssid, ip_addr_);
+            return 0;
+        }
+        // Disconnect first if no valid IP or connecting to different network
+        LOG_INF("Disconnecting (ssid_match=%s, valid_ip=%s)",
+                (strcmp(current_ssid_, ssid) == 0) ? "yes" : "no",
+                has_valid_ip ? "yes" : "no");
+        disconnect();
+        k_sleep(K_MSEC(500));
+    }
+
     LOG_INF("Connecting to WiFi SSID: %s", ssid);
     state_ = WifiState::Connecting;
+
+    // Reset semaphores before connecting
+    k_sem_reset(&wifi_connected_sem);
+    k_sem_reset(&ip_acquired_sem);
 
     struct wifi_connect_req_params params = {};
     params.ssid = (uint8_t*)ssid;
@@ -154,9 +180,12 @@ int WifiManager::connect(const char* ssid, const char* password) {
         return -ECONNREFUSED;
     }
 
+    // Start DHCP client to get IP address
+    LOG_INF("Starting DHCP client...");
+    net_dhcpv4_start(iface_);
+
     // Wait for DHCP to assign IP address
-    LOG_INF("Waiting for IP address from DHCP...");
-    ret = k_sem_take(&ip_acquired_sem, K_SECONDS(15));
+    ret = k_sem_take(&ip_acquired_sem, K_SECONDS(30));
     if (ret) {
         LOG_WRN("DHCP timeout, no IP address assigned");
         return -ETIMEDOUT;

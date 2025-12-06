@@ -149,10 +149,10 @@ int Fpga::set_lpf_band(WsprBand band) {
     // - lpf_low_master: master enable for low-band filters
     // - lpf_low1, lpf_low2: binary select for low-band filter
 
-    bool use_high_band = (freq >= 14000000);  // 20m and above
-
-    // TODO: Set actual GPIO states
+    // TODO: Set actual GPIO states when hardware is ready
+    // bool use_high_band = (freq >= 14000000);  // 20m and above
     // gpio_pin_set_dt(&lpf_high_spec, use_high_band ? 1 : 0);
+    (void)freq;  // Suppress unused warning until hardware implementation
 
     return 0;
 }

@@ -25,14 +25,12 @@ LOG_MODULE_REGISTER(wspr_ease, LOG_LEVEL_INF);
 static void print_connection_banner(const char* ip)
 {
     printk("\n");
-    printk("╔════════════════════════════════════════════╗\n");
-    printk("║           WSPR-ease Ready                  ║\n");
-    printk("╠════════════════════════════════════════════╣\n");
-    printk("║  Mode: WiFi Client                         ║\n");
-    printk("║  SSID: %-36s ║\n", CONFIG_WSPR_WIFI_SSID);
-    printk("╠════════════════════════════════════════════╣\n");
-    printk("║  Web UI: http://%-26s ║\n", ip);
-    printk("╚════════════════════════════════════════════╝\n");
+    printk("==============================================\n");
+    printk("  WSPR-ease Ready\n");
+    printk("  Mode: WiFi Client\n");
+    printk("  SSID: %s\n", CONFIG_WSPR_WIFI_SSID);
+    printk("  Web UI: http://%s\n", ip);
+    printk("==============================================\n");
     printk("\n");
 }
 
@@ -73,12 +71,14 @@ static bool wifi_connect_with_retry()
     return false;
 }
 
-static void init_subsystems()
+static void init_subsystems(wspr::WebServer& web_server)
 {
     auto& wifi = wspr::WifiManager::instance();
-    auto& web = wspr::WebServer::instance();
     auto& gnss = wspr::Gnss::instance();
     auto& fpga = wspr::Fpga::instance();
+
+    // Mount LittleFS early - doesn't need network
+    web_server.mount_filesystem();
 
     // Initialize GNSS (stub mode)
     if (gnss.init() != 0) {
@@ -100,8 +100,8 @@ static void init_subsystems()
     wifi_connect_with_retry();
 
     // Initialize and start web server
-    if (web.init() == 0) {
-        web.start(80);
+    if (web_server.init() == 0) {
+        web_server.start(80);
         // Print connection banner after everything is ready
         if (wifi.is_connected()) {
             print_connection_banner(wifi.ip_address());
@@ -116,10 +116,13 @@ int main(void)
     LOG_INF("WSPR-ease starting...");
     LOG_INF("Build: %s %s", __DATE__, __TIME__);
 
+    // Create WebServer on main's stack (persists for lifetime of program)
+    wspr::WebServer web_server;
+
     // Wait for network interface to be ready
     k_sleep(K_SECONDS(2));
 
-    init_subsystems();
+    init_subsystems(web_server);
 
     LOG_INF("Entering main loop");
 
@@ -152,9 +155,10 @@ int main(void)
 
         // Periodic status log
         if ((loop_count % 60) == 0) {  // Every 60 seconds
-            LOG_INF("Status: WiFi=%s IP=%s GNSS=%s Freq=%u",
+            LOG_INF("Status: WiFi=%s IP=%s RSSI=%d GNSS=%s Freq=%u",
                     wifi.is_connected() ? "connected" : "disconnected",
                     wifi.ip_address(),
+                    wifi.rssi(),
                     gnss.has_fix() ? "fix" : "no fix",
                     fpga.frequency());
         }
