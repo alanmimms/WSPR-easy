@@ -2,12 +2,10 @@
 
 / {
 	aliases {
-		/* Clean aliases for C code access */
-		fpgaSpi = &spi2;
-		gnssUart = &uart1;
-		
-		/* Direct GPIO aliases if needed, though we use the group below */
-		led0 = &led_blue; 
+		/* Aliases for C code access (must be lowercase with hyphens) */
+		fpga-spi = &spi2;
+		gnss-uart = &uart1;
+		led0 = &led_blue;
 	};
 
 	chosen {

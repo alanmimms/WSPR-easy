@@ -1,0 +1,33 @@
+# WSPR-ease Application Configuration
+
+menu "WSPR-ease Configuration"
+
+config WSPR_WIFI_SSID
+	string "WiFi SSID to connect to"
+	default ""
+	help
+	  The SSID of the WiFi network to connect to as a client.
+	  If empty, the device will start in AP mode.
+
+config WSPR_WIFI_PASSWORD
+	string "WiFi Password"
+	default ""
+	help
+	  The password for the WiFi network.
+	  Leave empty for open networks.
+
+config WSPR_AP_SSID
+	string "AP Mode SSID"
+	default "WSPR-ease"
+	help
+	  The SSID to use when operating as an access point.
+
+config WSPR_AP_PASSWORD
+	string "AP Mode Password"
+	default "wspradmin"
+	help
+	  The password for AP mode. Must be at least 8 characters.
+
+endmenu
+
+source "Kconfig.zephyr"
