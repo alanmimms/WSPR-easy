@@ -22,8 +22,8 @@ PYTHON="$WEST_VENV/bin/python"
 LFS_OFFSET=0x310000   # 3.0625MB offset
 LFS_SIZE=$((512 * 1024))  # 512KB
 
-# Serial port
-PORT="${1:-/dev/ttyACM0}"
+# Serial port (command line arg > ESPTOOL_PORT env var > default)
+PORT="${1:-${ESPTOOL_PORT:-/dev/ttyACM0}}"
 
 # Check for littlefs-python in west venv
 if ! $PYTHON -c "import littlefs" 2>/dev/null; then

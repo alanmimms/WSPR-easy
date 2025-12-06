@@ -271,7 +271,7 @@ async function loadStatus() {
 
     // Update status bar
     // WiFi RSSI
-    if (status.wifi && status.wifi.rssi) {
+    if (status.wifi && typeof status.wifi.rssi === 'number') {
       document.getElementById('wifi-rssi').textContent = `${status.wifi.rssi} dBm`;
     }
     // TX status

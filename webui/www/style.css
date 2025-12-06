@@ -45,34 +45,34 @@ header h1 {
 }
 
 .status-bar {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  margin-bottom: 30px;
-  padding: 15px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 8px 12px;
   background: var(--card-bg);
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  gap: 8px;
 }
 
 .status-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  padding: 5px;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 .status-item .label {
   font-weight: 600;
   color: var(--secondary);
-  font-size: 0.85rem;
-  margin-bottom: 2px;
+  font-size: 0.8rem;
 }
 
 .status-item .value {
   color: var(--text);
   font-weight: 500;
-  white-space: nowrap;
+  font-size: 0.85rem;
 }
 
 .status-online {
@@ -368,9 +368,8 @@ header h1 {
   }
 
   .status-bar {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 12px;
-    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .file-item {
