@@ -1,0 +1,9 @@
+Manufacturer=Texas Instruments
+PartNumber=CD74ACT541SM96
+PartCategory=Integrated Circuit
+PackageCategory=Small Outline Packages
+PinCount=20
+Version=1.1
+Released=2020-11-19 04:56:04
+Downloaded=2025-12-07 19:54:04
+3D=Y
