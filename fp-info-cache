@@ -1,4 +1,4 @@
-26785324243709522
+26787089797640758
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -70604,6 +70604,13 @@ Connector
 Library
 SOIC127P1030X265-20N
 DW0020A _2021
+Integrated Circuit
+0
+20
+20
+Library
+SOP65P780X200-20N
+DB (R-PDSO-G20)
 Integrated Circuit
 0
 20

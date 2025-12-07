@@ -7515,7 +7515,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "293f4f1f-a6f7-42cb-b55b-cec62b1f40e9")
 		(property "Reference" "H3"
 			(at 29.972 198.628 0)
@@ -7604,7 +7604,7 @@
 			)
 		)
 		(property "Value" "100nF X7R 50V"
-			(at 244.602 74.422 90)
+			(at 247.396 80.772 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7972,6 +7972,14 @@
 				(hide yes)
 			)
 		)
+		(property "label" "USBC pwr/ser"
+			(at 227.33 53.848 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "A4"
 			(uuid "45821338-af33-487a-9d63-9045c8c23176")
 		)
@@ -8180,6 +8188,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2836319"
+			(at 184.15 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "c951138d-bc5b-4acc-8c4e-4ef790bb0448")
 		)
@@ -8214,7 +8231,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "42e073c1-4f82-4093-844a-eb98830b13e9")
 		(property "Reference" "H1"
 			(at 17.272 198.628 0)
@@ -8290,7 +8307,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "44c3b8a2-2deb-418b-933c-1bc5decbead3")
 		(property "Reference" "FID1"
@@ -9254,7 +9271,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10uF X7R"
+		(property "Value" "10uF 16V X5R"
 			(at 144.018 194.056 0)
 			(effects
 				(font
@@ -9290,7 +9307,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C32635"
+		(property "LCSC" "C1713"
 			(at 143.51 191.77 0)
 			(effects
 				(font
@@ -9614,7 +9631,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "98d2a3d0-7436-4a16-b9ac-5253c1668790")
 		(property "Reference" "H4"
 			(at 37.592 198.628 0)
@@ -10104,7 +10121,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "b58f7076-aa61-4a57-91e4-5c0cae78877d")
 		(property "Reference" "FID3"
@@ -10190,8 +10207,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10uF X7R 50V"
-			(at 261.62 70.358 0)
+		(property "Value" "10uF 16V X5R"
+			(at 257.048 78.994 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10226,7 +10243,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C32635"
+		(property "LCSC" "C1713"
 			(at 255.27 63.5 0)
 			(effects
 				(font
@@ -10702,7 +10719,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10uF X7R"
+		(property "Value" "10uF 16V X5R"
 			(at 119.888 194.056 0)
 			(effects
 				(font
@@ -10738,7 +10755,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C32635"
+		(property "LCSC" "C1713"
 			(at 119.38 191.77 0)
 			(effects
 				(font
@@ -10924,7 +10941,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10uF X7R"
+		(property "Value" "10uF X5R"
 			(at 91.948 40.64 90)
 			(effects
 				(font
@@ -11069,7 +11086,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "e2126983-e1aa-4d89-b843-3f58fad8fea4")
 		(property "Reference" "FID2"
@@ -11155,7 +11172,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10uF X7R"
+		(property "Value" "10uF 16V X5R"
 			(at 33.782 147.066 0)
 			(effects
 				(font
@@ -11191,7 +11208,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C32635"
+		(property "LCSC" "C1713"
 			(at 34.29 144.78 0)
 			(effects
 				(font
@@ -11711,7 +11728,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "fd163cde-d4cd-429b-a8f1-44c41b47b68f")
 		(property "Reference" "H2"
 			(at 23.622 198.628 0)
@@ -11799,7 +11816,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100uF X7R 25V"
+		(property "Value" "100uF 35V"
 			(at 266.192 74.168 90)
 			(effects
 				(font

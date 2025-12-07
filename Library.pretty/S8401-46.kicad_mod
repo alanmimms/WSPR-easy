@@ -6,7 +6,7 @@
 	(descr "S8401-46")
 	(tags "Connector")
 	(property "Reference" "J**"
-		(at -0.376 -0.036 0)
+		(at -0.09 -5.23 0)
 		(layer "F.SilkS")
 		(uuid "b51aaf44-0659-4eaf-a55d-f6974099ac66")
 		(effects
@@ -191,15 +191,15 @@
 		(uuid "35c30b6d-63fd-49d3-ab1a-51861a04509a")
 	)
 	(embedded_fonts no)
-	(model "S8401-46.stp"
+	(model "${KIPRJMOD}/S8401-46/3D/S8401-46.stp"
 		(offset
-			(xyz -0.05999999776 2.999999955 15.02999951)
+			(xyz 0 3 14)
 		)
 		(scale
 			(xyz 1 1 1)
 		)
 		(rotate
-			(xyz -180 0 0)
+			(xyz -0 -180 -180)
 		)
 	)
 )
