@@ -807,6 +807,12 @@
           "label": "DNP",
           "name": "${DNP}",
           "show": true
+        },
+        {
+          "group_by": false,
+          "label": "label",
+          "name": "label",
+          "show": false
         }
       ],
       "filter_string": "",
