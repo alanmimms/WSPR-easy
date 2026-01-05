@@ -24,7 +24,7 @@
 				(justify left top)
 			)
 		)
-		(property "Footprint" "SOT65P220X110-6N"
+		(property "Footprint" "Library:SOT65P220X110-6N"
 			(at 21.59 -94.92 0)
 			(effects
 				(font
@@ -4285,7 +4285,7 @@
 				(justify left top)
 			)
 		)
-		(property "Footprint" "S8401-46"
+		(property "Footprint" "Library:S8401-46"
 			(at 19.05 -94.92 0)
 			(effects
 				(font
@@ -4708,7 +4708,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_USB:HRO_TYPE-C-31-M-12"
+		(property "Footprint" "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12"
 			(at 0 -34.544 0)
 			(effects
 				(font
@@ -4757,7 +4757,7 @@
 			)
 		)
 		(symbol "USB_C_Receptacle_HRO_16P_Stacked_1_1"
-			(pin power_out line
+			(pin passive line
 				(at -12.7 7.62 0)
 				(length 2.54)
 				(name "VBUS"
@@ -4775,7 +4775,7 @@
 					)
 				)
 			)
-			(pin power_out line
+			(pin passive line
 				(at -12.7 5.08 0)
 				(length 2.54)
 				(name "VBUS"
@@ -4793,7 +4793,7 @@
 					)
 				)
 			)
-			(pin power_out line
+			(pin passive line
 				(at -12.7 2.54 0)
 				(length 2.54)
 				(name "VBUS"
@@ -4811,7 +4811,7 @@
 					)
 				)
 			)
-			(pin power_out line
+			(pin passive line
 				(at -12.7 0 0)
 				(length 2.54)
 				(name "VBUS"
@@ -4901,7 +4901,7 @@
 					)
 				)
 			)
-			(pin power_out line
+			(pin passive line
 				(at -5.08 -17.78 90)
 				(length 2.54)
 				(name "GND"
@@ -4919,7 +4919,7 @@
 					)
 				)
 			)
-			(pin power_out line
+			(pin passive line
 				(at -2.54 -17.78 90)
 				(length 2.54)
 				(name "GND"
@@ -4937,7 +4937,7 @@
 					)
 				)
 			)
-			(pin power_out line
+			(pin passive line
 				(at 0 -17.78 90)
 				(length 2.54)
 				(name "GND"
@@ -4955,7 +4955,7 @@
 					)
 				)
 			)
-			(pin power_out line
+			(pin passive line
 				(at 2.54 -17.78 90)
 				(length 2.54)
 				(name "GND"
