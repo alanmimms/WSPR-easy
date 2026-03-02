@@ -2942,7 +2942,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C703714"
+		(property "LCSC" "C2044063"
 			(at 132.08 34.29 90)
 			(effects
 				(font
@@ -3201,7 +3201,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C703714"
+		(property "LCSC" "C2044063"
 			(at 148.59 34.29 90)
 			(effects
 				(font
