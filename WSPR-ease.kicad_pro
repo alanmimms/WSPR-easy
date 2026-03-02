@@ -48,7 +48,7 @@
         "silk_text_thickness": 0.1,
         "silk_text_upright": false,
         "zones": {
-          "min_clearance": 0.35
+          "min_clearance": 0.2
         }
       },
       "diff_pair_dimensions": [
@@ -58,16 +58,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        [
-          "footprint_type_mismatch|146850000|119830000|6499a2d5-9664-408f-b0a6-812bc890e717|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "lib_footprint_mismatch|147975000|107700000|e94ae2db-a02d-4f7d-8746-081123a007ca|00000000-0000-0000-0000-000000000000",
-          ""
-        ]
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -148,7 +139,7 @@
         "min_track_width": 0.0,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
-        "solder_mask_to_copper_clearance": 0.0,
+        "solder_mask_to_copper_clearance": 0.005,
         "use_height_for_length_calcs": true
       },
       "teardrop_options": [
@@ -197,7 +188,9 @@
       ],
       "track_widths": [
         0.0,
+        0.2,
         0.3,
+        0.4,
         0.5,
         0.7,
         1.0,
@@ -457,7 +450,7 @@
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "error",
       "power_pin_not_driven": "error",
       "same_local_global_label": "warning",
       "similar_label_and_power": "warning",
@@ -504,9 +497,9 @@
       {
         "name": "RF",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "priority": 1,
+        "priority": 2,
         "schematic_color": "rgb(255, 20, 54)",
-        "track_width": 0.32,
+        "track_width": 0.4,
         "wire_width": 12
       },
       {
@@ -514,9 +507,18 @@
         "line_style": 0,
         "name": "diff90",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "priority": 0,
+        "priority": 1,
         "schematic_color": "rgb(25, 22, 255)",
         "wire_width": 12
+      },
+      {
+        "bus_width": 18,
+        "line_style": 0,
+        "name": "power",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgb(19, 112, 25)",
+        "wire_width": 18
       }
     ],
     "meta": {
@@ -599,6 +601,9 @@
       "Net-(S204-J2)": [
         "RF"
       ],
+      "Net-(S204-J3)": [
+        "RF"
+      ],
       "Net-(S3-J1)": [
         "RF"
       ],
@@ -634,6 +639,48 @@
       ],
       "Net-(U104-IO4)": [
         "diff90"
+      ],
+      "Net-(U105-IO3)": [
+        "diff90"
+      ],
+      "Net-(U105-IO4)": [
+        "diff90"
+      ],
+      "Net-(U106-SW)": [
+        "Power"
+      ],
+      "Net-(U1201-SW)": [
+        "Power"
+      ],
+      "Net-(U201-J1)": [
+        "RF"
+      ],
+      "Net-(U201-J2)": [
+        "RF"
+      ],
+      "Net-(U201-J3)": [
+        "RF"
+      ],
+      "Net-(U202-J2)": [
+        "RF"
+      ],
+      "Net-(U202-J3)": [
+        "RF"
+      ],
+      "Net-(U203-J1)": [
+        "RF"
+      ],
+      "Net-(U203-J2)": [
+        "RF"
+      ],
+      "Net-(U203-J3)": [
+        "RF"
+      ],
+      "Net-(U204-J1)": [
+        "RF"
+      ],
+      "Net-(U204-J3)": [
+        "RF"
       ],
       "Net-(U3-RF_IN)": [
         "RF"
@@ -717,6 +764,26 @@
       {
         "netclass": "RF",
         "pattern": "/Low Pass Filters/RFout"
+      },
+      {
+        "netclass": "power",
+        "pattern": "+3.3V"
+      },
+      {
+        "netclass": "power",
+        "pattern": "VBUS"
+      },
+      {
+        "netclass": "diff90",
+        "pattern": "/D+"
+      },
+      {
+        "netclass": "diff90",
+        "pattern": "/D-"
+      },
+      {
+        "netclass": "power",
+        "pattern": "+3.3VFPGAIO"
       }
     ]
   },
@@ -739,13 +806,13 @@
     "bom_export_filename": "${PROJECTNAME}.csv",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
-      "field_delimiter": ",",
+      "field_delimiter": "\t",
       "keep_line_breaks": false,
       "keep_tabs": false,
-      "name": "CSV",
+      "name": "TSV",
       "ref_delimiter": ",",
       "ref_range_delimiter": "",
-      "string_delimiter": "\""
+      "string_delimiter": ""
     },
     "bom_presets": [],
     "bom_settings": {
@@ -869,6 +936,198 @@
           "group_by": false,
           "label": "label",
           "name": "label",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MAXIMUM_PACKAGE_HEIGHT",
+          "name": "MAXIMUM_PACKAGE_HEIGHT",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MF",
+          "name": "MF",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Check_prices",
+          "name": "Check_prices",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MP",
+          "name": "MP",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Core",
+          "name": "Core",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Manufacturer",
+          "name": "Manufacturer",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Description_1",
+          "name": "Description_1",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "JLCPCBpn",
+          "name": "JLCPCBpn",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Mfg",
+          "name": "Mfg",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MfgPart",
+          "name": "MfgPart",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "DigiKey_Part_Number",
+          "name": "DigiKey_Part_Number",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Display",
+          "name": "Display",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Mouser-part-number",
+          "name": "Mouser-part-number",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Mouser_PN",
+          "name": "Mouser_PN",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "PARTREV",
+          "name": "PARTREV",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Package",
+          "name": "Package",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Part Number",
+          "name": "Part Number",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Price",
+          "name": "Price",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "STANDARD",
+          "name": "STANDARD",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Device",
+          "name": "Sim.Device",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Params",
+          "name": "Sim.Params",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Type",
+          "name": "Sim.Type",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "SnapEDA_Link",
+          "name": "SnapEDA_Link",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Specifications",
+          "name": "Specifications",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "cap-type",
+          "name": "cap-type",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MANUFACTURER",
+          "name": "MANUFACTURER",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "r-power",
+          "name": "r-power",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "working-voltage",
+          "name": "working-voltage",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Availability",
+          "name": "Availability",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Display 2",
+          "name": "Display 2",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "LCSC_PN",
+          "name": "LCSC_PN",
           "show": false
         }
       ],
