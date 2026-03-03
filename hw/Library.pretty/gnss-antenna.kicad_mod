@@ -1,0 +1,161 @@
+(footprint "gnss-antenna"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "Ceramic Patch Antenna, 25x25mm, Pin Offset 4mm from Center (Standard LCSC/Cirocomm)")
+	(tags "GPS Patch 25mm")
+	(property "Reference" "REF**"
+		(at 0 -14 0)
+		(layer "F.SilkS")
+		(uuid "95f0ea68-1c54-469e-8c58-30ae41c5974c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "GPS_Patch_25mm"
+		(at 0 14 0)
+		(layer "F.Fab")
+		(uuid "330e832d-9d01-4e9d-8e22-8c31ca4bfcb5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ed6627d0-1d6f-4a3e-8965-bb8628c84e00")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f8cc11a7-caa7-48f8-ae1f-43085bfe750c")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -12.5 -8.5)
+		(end 12.5 -8.5)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "3efc2e19-6f4b-4349-983f-0825e069017b")
+	)
+	(fp_line
+		(start -12.5 16.5)
+		(end -12.5 -8.5)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "ec64f61d-72e9-4574-9f5a-f7245de3f1d0")
+	)
+	(fp_line
+		(start 12.5 -8.5)
+		(end 12.5 16.5)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "32cafc22-9ac2-4a2b-9712-c4e1860c5679")
+	)
+	(fp_line
+		(start 12.5 16.5)
+		(end -12.5 16.5)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "c9823ddf-b69e-4e48-805a-8d0128a1c95a")
+	)
+	(fp_line
+		(start -12.75 -8.75)
+		(end 12.75 -8.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "19ea5ab3-2dc5-4d30-82be-0fd3da9c43a8")
+	)
+	(fp_line
+		(start -12.75 16.75)
+		(end -12.75 -8.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "ab63796f-ea27-4210-bf98-11b02251949f")
+	)
+	(fp_line
+		(start 12.75 -8.75)
+		(end 12.75 16.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "1f672c80-0f86-46a8-bdd0-ea9577efd3a3")
+	)
+	(fp_line
+		(start 12.75 16.75)
+		(end -12.75 16.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "7f8cb55e-edae-49db-bfcd-d31417c7ce19")
+	)
+	(fp_text user "ANTENNA BODY AREA"
+		(at 0 4 0)
+		(layer "F.Fab")
+		(uuid "12d07280-d445-4e81-a44b-5b42c9d59512")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 2 2)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "20d85964-0e6c-4387-a675-6a43d18ba05f")
+	)
+	(pad "2" smd rect
+		(at 0 4)
+		(size 2 2)
+		(layers "F.Cu" "F.Mask")
+		(uuid "21ca37fe-a58c-4834-a42d-81bfd114984a")
+	)
+	(embedded_fonts no)
+)
