@@ -1,4 +1,4 @@
-27129932098237799
+27133550018195570
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -71400,13 +71400,6 @@ Capacitor Polarised
 2
 2
 Library
-DW20
-
-CD74AC244M 
-0
-20
-20
-Library
 ECSTXO201633400TR
 ECS-TXO-2016-33-400-TR-2
 Crystal or Oscillator
@@ -107456,3 +107449,24 @@ Varistor VF
 0
 2
 2
+symbols
+HRO-TYPE-C-31-M-12
+USB Type-C Receptacle, 16-Pin, HRO Electronics TYPE-C-31-M-12 (LCSC C165948)
+USB-C USB 2.0 16-pin HRO
+0
+32
+20
+symbols
+USB_C_Receptacle_HRO_TYPE-C-31-M-12-bursted
+USB Type-C receptacle for USB 2.0 and PD, http://www.krhro.com/uploads/soft/180320/1-1P320120243.pdf
+usb usb-c 2.0 pd
+0
+16
+13
+symbols
+bn-43-202-horizontal
+Fair-Rite BN-43-202 Binocular Core, Horizontal Mount, Wirewound
+BN-43-202 Transformer Ferrite
+0
+8
+8

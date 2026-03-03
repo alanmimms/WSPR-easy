@@ -794,7 +794,7 @@
 			(uuid "4980d294-2161-48e8-a257-1ddcf789648a")
 		)
 		(embedded_fonts no)
-		(model "AS183-92LF.stp"
+		(model "${WSPR_EASE_SYMBOLS}/AS183-92LF.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -1896,7 +1896,7 @@
 			(uuid "504ca66a-e507-434e-bd4d-8c683ec6b314")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/symbols/MAX-M10M-00B/3D/MAX-M10M-00B.stp"
+		(model "/home/alan/ham/WSPR-ease/symbols/MAX-M10M-00B/3D/MAX-M10M-00B.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -5190,7 +5190,7 @@
 			(uuid "eb97285d-0c16-4d52-8e13-b8ec11600cf9")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/85_SMA-50-0-144_111_YH.STEP"
+		(model "/home/alan/ham/WSPR-ease/symbols/85_SMA-50-0-144_111_YH.STEP"
 			(offset
 				(xyz 0 0 6.5)
 			)
@@ -7314,7 +7314,7 @@
 			(uuid "fa30b25c-fa0a-4462-ba27-2c93944fb654")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/symbols/ICE40UP5K-SG48I/3D/ICE40UP5K-SG48I.stp"
+		(model "/home/alan/ham/WSPR-ease/symbols/ICE40UP5K-SG48I/3D/ICE40UP5K-SG48I.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -7837,7 +7837,7 @@
 			(uuid "8be4e68a-4807-4100-9d34-2f7990f75e31")
 		)
 		(embedded_fonts no)
-		(model "AS183-92LF.stp"
+		(model "${WSPR_EASE_SYMBOLS}/AS183-92LF.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -14666,7 +14666,7 @@
 			(uuid "5b3bbd15-40b5-4f40-8e7c-c917b4c9dda1")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/symbols/MAL215097011E3/3D/MAL215097011E3.stp"
+		(model "/home/alan/ham/WSPR-ease/symbols/MAL215097011E3/3D/MAL215097011E3.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -16096,7 +16096,7 @@
 			(uuid "0a2aec52-d0ae-4126-bc5a-b8145bd73f4c")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/symbols/BAT-HLD-014-THM/3D/BAT-HLD-014-THM.stp"
+		(model "/home/alan/ham/WSPR-ease/symbols/BAT-HLD-014-THM/3D/BAT-HLD-014-THM.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -25134,7 +25134,7 @@
 			(uuid "1be44c07-e1b6-4f54-b5c1-a94b0f0b8095")
 		)
 		(embedded_fonts no)
-		(model "AS183-92LF.stp"
+		(model "${WSPR_EASE_SYMBOLS}/AS183-92LF.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -27425,7 +27425,7 @@
 			(uuid "1048cb5d-d76e-47dc-9fcf-0f81e4dd6620")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/CD74ACT541SM96/3D/CD74ACT541SM96.stp"
+		(model "/home/alan/ham/WSPR-ease/symbols/CD74ACT541SM96/3D/CD74ACT541SM96.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -31774,7 +31774,7 @@
 			(uuid "968dece0-0a11-420c-a5a4-277f2475527a")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/85_SMA-50-0-144_111_YH.STEP"
+		(model "/home/alan/ham/WSPR-ease/symbols/85_SMA-50-0-144_111_YH.STEP"
 			(offset
 				(xyz 0 0 6.5)
 			)
@@ -32167,7 +32167,7 @@
 			(uuid "59bc6d6e-e6ff-49df-b9ed-9c24024251a9")
 		)
 		(embedded_fonts no)
-		(model "TPS74612PQWDRBRQ1.stp"
+		(model "/home/alan/ham/WSPR-ease/symbols/TPS74612PQWDRBRQ1/3D/TPS74612PQWDRBRQ1.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -32835,7 +32835,7 @@
 			(uuid "6fc90616-6c33-430a-bdc3-4b54fc4b9b1c")
 		)
 		(embedded_fonts no)
-		(model "AS183-92LF.stp"
+		(model "${WSPR_EASE_SYMBOLS}/AS183-92LF.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -35239,7 +35239,7 @@
 			(uuid "25887f74-98e7-4b2d-8492-91f0dd96bbde")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/symbols/HRO-TYPE-C-31-M-12.step"
+		(model "/home/alan/ham/WSPR-ease/symbols/HRO-TYPE-C-31-M-12.step"
 			(offset
 				(xyz -4.5 -3.5 0)
 			)

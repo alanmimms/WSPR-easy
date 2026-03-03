@@ -271,7 +271,7 @@
 		(uuid "c0bbb05f-74c8-4515-8856-0737364f605f")
 	)
 	(embedded_fonts no)
-	(model "${KIPRJMOD}/symbols/BAT-HLD-014-THM/3D/BAT-HLD-014-THM.stp"
+	(model "/home/alan/ham/WSPR-ease/symbols/BAT-HLD-014-THM/3D/BAT-HLD-014-THM.stp"
 		(offset
 			(xyz 0 0 0)
 		)
