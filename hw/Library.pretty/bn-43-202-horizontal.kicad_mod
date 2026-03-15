@@ -144,7 +144,7 @@
 		(uuid "4494b63d-9e74-458a-994f-787ac461fbd5")
 	)
 	(pad "1" thru_hole circle
-		(at -6.34 -8.77)
+		(at -6.9 -8.8)
 		(size 1.5 1.5)
 		(drill 0.8)
 		(layers "*.Cu" "*.Mask")
@@ -152,7 +152,7 @@
 		(uuid "9b127395-1cdc-4ad9-8b8a-b39eb31ac5c8")
 	)
 	(pad "2" thru_hole circle
-		(at -3.8 -8.77)
+		(at -4.16 -8.77)
 		(size 1.5 1.5)
 		(drill 0.8)
 		(layers "*.Cu" "*.Mask")
@@ -160,7 +160,7 @@
 		(uuid "e8e13f6b-106f-46a5-835e-051c9b40910f")
 	)
 	(pad "3" thru_hole circle
-		(at -1.26 -8.77 90)
+		(at -1.42 -8.77 90)
 		(size 1.6 1.6)
 		(drill 0.8)
 		(layers "*.Cu" "*.Mask")
@@ -168,7 +168,7 @@
 		(uuid "03aff43b-4a2c-43e5-9e1e-8c800d2a4cc9")
 	)
 	(pad "4" thru_hole circle
-		(at 1.23 -8.77)
+		(at 1.32 -8.77)
 		(size 1.5 1.5)
 		(drill 0.8)
 		(layers "*.Cu" "*.Mask")
@@ -176,7 +176,7 @@
 		(uuid "d57d2753-0dc3-481a-b799-27086fe11412")
 	)
 	(pad "5" thru_hole circle
-		(at 3.77 -8.77 90)
+		(at 4.06 -8.77 90)
 		(size 1.5 1.5)
 		(drill 0.8)
 		(layers "*.Cu" "*.Mask")
@@ -184,7 +184,7 @@
 		(uuid "cf9edf94-0750-41cd-b42e-6ac18b304b7e")
 	)
 	(pad "6" thru_hole circle
-		(at 6.31 -8.77)
+		(at 6.8 -8.77)
 		(size 1.5 1.5)
 		(drill 0.8)
 		(layers "*.Cu" "*.Mask")
