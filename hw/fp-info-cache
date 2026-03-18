@@ -1,4 +1,4 @@
-27133550019124583
+27138872687502123
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -71400,6 +71400,13 @@ Capacitor Polarised
 2
 2
 Library
+CX90M-16P_HIR
+
+CX90M-16P 
+0
+18
+18
+Library
 ECSTXO201633400TR
 ECS-TXO-2016-33-400-TR-2
 Crystal or Oscillator
@@ -71434,6 +71441,13 @@ Connector
 0
 3
 3
+Library
+SMA_Amphenol_901-143_Horizontal
+Amphenol RF 901-143 https://www.amphenolrf.com/library/download/link/link_id/593645/parent/901-143/
+SMA THT Female Jack Horizontal
+0
+5
+2
 Library
 SOIC127P1030X265-20N
 DW0020A _2021
@@ -107449,6 +107463,13 @@ Varistor VF
 0
 2
 2
+symbols
+CX90M-16P_HIR
+
+CX90M-16P 
+0
+18
+18
 symbols
 HRO-TYPE-C-31-M-12
 USB Type-C Receptacle, 16-Pin, HRO Electronics TYPE-C-31-M-12 (LCSC C165948)
