@@ -191,7 +191,7 @@
 		(uuid "35c30b6d-63fd-49d3-ab1a-51861a04509a")
 	)
 	(embedded_fonts no)
-	(model "${KIPRJMOD}/S8401-46/3D/S8401-46.stp"
+	(model "${WSPR_EASE_SYMBOLS}/S8401-46/3D/S8401-46.stp"
 		(offset
 			(xyz 0 3 14)
 		)

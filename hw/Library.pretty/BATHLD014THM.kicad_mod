@@ -6,7 +6,7 @@
 	(descr "BAT-HLD-014-THM-2")
 	(tags "Undefined or Miscellaneous")
 	(property "Reference" "BT**"
-		(at 13.8 -9.3 0)
+		(at 14 11.5 0)
 		(layer "F.SilkS")
 		(uuid "a4b5782d-be59-4380-9532-211e56f3d8f7")
 		(effects

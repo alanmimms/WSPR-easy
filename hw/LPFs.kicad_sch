@@ -2219,7 +2219,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "470pF NP0"
+		(property "Value" "470pF NP0 100V"
 			(at 157.48 41.656 0)
 			(effects
 				(font
@@ -2228,7 +2228,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 158.4452 43.18 0)
 			(effects
 				(font
@@ -2256,6 +2256,33 @@
 			)
 		)
 		(property "LCSC" "C106259"
+			(at 157.48 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "muRata"
+			(at 157.48 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM1885C2A471FA6D"
+			(at 157.48 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "81-GCM1885C2A471FA6D"
 			(at 157.48 39.37 0)
 			(effects
 				(font
@@ -2403,6 +2430,24 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Skyworks"
+			(at 213.36 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "873-AS183-92LF"
+			(at 213.36 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "bb3114b2-9318-48e8-8ab4-a8c48c1240cf")
 		)
@@ -2448,7 +2493,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100pF NP0 50V"
+		(property "Value" "100pF NP0 100V"
 			(at 122.174 94.996 0)
 			(effects
 				(font
@@ -2457,7 +2502,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 122.8852 96.52 0)
 			(effects
 				(font
@@ -2485,6 +2530,33 @@
 			)
 		)
 		(property "LCSC" "C106200"
+			(at 121.92 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 121.92 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15ACG2A101FT"
+			(at 121.92 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15ACG2A101FT"
 			(at 121.92 92.71 0)
 			(effects
 				(font
@@ -2629,6 +2701,24 @@
 					(size 1.27 1.27)
 				)
 				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Skyworks"
+			(at 171.45 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "873-AS183-92LF"
+			(at 171.45 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -2789,6 +2879,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 246.38 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 246.38 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
+			(at 246.38 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "b3032175-db34-4b1d-88db-d64f756c70f5")
 		)
@@ -2924,7 +3041,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" ""
+		(property "MFG" "Bourns"
 			(at 132.08 34.29 90)
 			(effects
 				(font
@@ -2933,7 +3050,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CW252016-1R2J"
 			(at 132.08 34.29 90)
 			(effects
 				(font
@@ -2969,6 +3086,15 @@
 				(hide yes)
 			)
 		)
+		(property "Mouser_PN" "652-CW252016-1R2J"
+			(at 132.08 34.29 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "dc4fb237-e1b7-4692-b958-d052b5bf7ed8")
 		)
@@ -2976,7 +3102,7 @@
 			(uuid "ffed1d6f-883f-4851-ace1-fee6b62a26a1")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/ab0ef40e-2ba9-4126-8561-248abf25197d"
 					(reference "L201")
 					(unit 1)
@@ -3002,7 +3128,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100pF NP0 50V"
+		(property "Value" "100pF NP0 100V"
 			(at 157.734 94.996 0)
 			(effects
 				(font
@@ -3011,7 +3137,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 158.4452 96.52 0)
 			(effects
 				(font
@@ -3039,6 +3165,33 @@
 			)
 		)
 		(property "LCSC" "C106200"
+			(at 157.48 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 157.48 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15ACG2A101FT"
+			(at 157.48 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15ACG2A101FT"
 			(at 157.48 92.71 0)
 			(effects
 				(font
@@ -3183,7 +3336,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" ""
+		(property "MFG" "Bourns"
 			(at 148.59 34.29 90)
 			(effects
 				(font
@@ -3192,7 +3345,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CW252016-1R2J"
 			(at 148.59 34.29 90)
 			(effects
 				(font
@@ -3220,6 +3373,15 @@
 			)
 		)
 		(property "Mouser Part Number" "1008LS-222"
+			(at 148.59 34.29 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "652-CW252016-1R2J"
 			(at 148.59 34.29 90)
 			(effects
 				(font
@@ -3261,7 +3423,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "470pF NP0"
+		(property "Value" "470pF NP0 100V"
 			(at 140.208 70.866 0)
 			(effects
 				(font
@@ -3270,7 +3432,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 140.6652 72.39 0)
 			(effects
 				(font
@@ -3298,6 +3460,33 @@
 			)
 		)
 		(property "LCSC" "C106259"
+			(at 139.7 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "muRata"
+			(at 139.7 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM1885C2A471FA6D"
+			(at 139.7 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "81-GCM1885C2A471FA6D"
 			(at 139.7 68.58 0)
 			(effects
 				(font
@@ -3380,7 +3569,7 @@
 			(uuid "c8e9c8ff-67d1-4272-bc2a-df97f1e3d3ee")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/ab0ef40e-2ba9-4126-8561-248abf25197d"
 					(reference "#PWR0203")
 					(unit 1)
@@ -3513,6 +3702,24 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Skyworks"
+			(at 68.58 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "873-AS183-92LF"
+			(at 68.58 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "bbbf17f3-2502-4aa1-92f2-67496a2e26e1")
 		)
@@ -3532,7 +3739,7 @@
 			(uuid "acf21c49-0471-4f97-8ced-bdb5b0fb9bfd")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/ab0ef40e-2ba9-4126-8561-248abf25197d"
 					(reference "U201")
 					(unit 1)
@@ -3566,7 +3773,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_0805_2012Metric"
+		(property "Footprint" "Inductor_SMD:L_1008_2520Metric"
 			(at 148.59 63.5 0)
 			(effects
 				(font
@@ -3593,7 +3800,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" ""
+		(property "MFG" "muRata"
 			(at 148.59 63.5 90)
 			(effects
 				(font
@@ -3602,7 +3809,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "LQW2UASR56G00L"
 			(at 148.59 63.5 90)
 			(effects
 				(font
@@ -3630,6 +3837,15 @@
 			)
 		)
 		(property "Mouser Part Number" "0805CS-391XGLC"
+			(at 148.59 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "81-LQW2UASR56G00L"
 			(at 148.59 63.5 90)
 			(effects
 				(font
@@ -3671,7 +3887,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1nF NP0"
+		(property "Value" "1nF NP0 100V"
 			(at 139.7 41.656 0)
 			(effects
 				(font
@@ -3680,7 +3896,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 140.6652 43.18 0)
 			(effects
 				(font
@@ -3708,6 +3924,33 @@
 			)
 		)
 		(property "LCSC" "C5182455"
+			(at 139.7 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 139.7 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15ACG2A102FT"
+			(at 139.7 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15ACG2A102FT"
 			(at 139.7 39.37 0)
 			(effects
 				(font
@@ -3794,6 +4037,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 35.56 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 35.56 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
+			(at 35.56 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "903af800-3e19-47b1-ba3d-f0b22054819e")
 		)
@@ -3862,7 +4132,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" ""
+		(property "MFG" "Bourns"
 			(at 148.59 87.63 90)
 			(effects
 				(font
@@ -3871,7 +4141,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CW252016-R27J"
 			(at 148.59 87.63 90)
 			(effects
 				(font
@@ -3899,6 +4169,15 @@
 			)
 		)
 		(property "Mouser Part Number" "0805CS-271 XGLC"
+			(at 148.59 87.63 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "652-CW252016-R27J"
 			(at 148.59 87.63 90)
 			(effects
 				(font
@@ -3975,7 +4254,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" ""
+		(property "MFG" "Bourns"
 			(at 132.08 87.63 90)
 			(effects
 				(font
@@ -3984,7 +4263,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CW252016-R27J"
 			(at 132.08 87.63 90)
 			(effects
 				(font
@@ -4012,6 +4291,15 @@
 			)
 		)
 		(property "Mouser Part Number" "0805CS-271 XGLC"
+			(at 132.08 87.63 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "652-CW252016-R27J"
 			(at 132.08 87.63 90)
 			(effects
 				(font
@@ -4053,7 +4341,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220pF NP0"
+		(property "Value" "220pF NP0 100V"
 			(at 122.428 70.866 0)
 			(effects
 				(font
@@ -4062,7 +4350,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 122.8852 72.39 0)
 			(effects
 				(font
@@ -4090,6 +4378,33 @@
 			)
 		)
 		(property "LCSC" "C107001"
+			(at 121.92 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "muRata"
+			(at 121.92 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM1885C2A221FA6D"
+			(at 121.92 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "81-GCM1885C2A221FA6D"
 			(at 121.92 68.58 0)
 			(effects
 				(font
@@ -4131,7 +4446,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220pF NP0"
+		(property "Value" "220pF NP0 100V"
 			(at 157.988 70.866 0)
 			(effects
 				(font
@@ -4140,7 +4455,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 158.4452 72.39 0)
 			(effects
 				(font
@@ -4168,6 +4483,33 @@
 			)
 		)
 		(property "LCSC" "C107001"
+			(at 157.48 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "muRata"
+			(at 157.48 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM1885C2A221FA6D"
+			(at 157.48 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "81-GCM1885C2A221FA6D"
 			(at 157.48 68.58 0)
 			(effects
 				(font
@@ -4209,7 +4551,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220pF NP0"
+		(property "Value" "220pF NP0 100V"
 			(at 139.954 94.996 0)
 			(effects
 				(font
@@ -4218,7 +4560,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 140.6652 96.52 0)
 			(effects
 				(font
@@ -4246,6 +4588,33 @@
 			)
 		)
 		(property "LCSC" "C107001"
+			(at 139.7 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "muRata"
+			(at 139.7 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM1885C2A221FA6D"
+			(at 139.7 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "81-GCM1885C2A221FA6D"
 			(at 139.7 92.71 0)
 			(effects
 				(font
@@ -4362,7 +4731,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_0805_2012Metric"
+		(property "Footprint" "Inductor_SMD:L_1008_2520Metric"
 			(at 132.08 63.5 0)
 			(effects
 				(font
@@ -4389,7 +4758,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" ""
+		(property "MFG" "muRata"
 			(at 132.08 63.5 90)
 			(effects
 				(font
@@ -4398,7 +4767,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "LQW2UASR56G00L"
 			(at 132.08 63.5 90)
 			(effects
 				(font
@@ -4426,6 +4795,15 @@
 			)
 		)
 		(property "Mouser Part Number" "0805CS-391XGLC"
+			(at 132.08 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "81-LQW2UASR56G00L"
 			(at 132.08 63.5 90)
 			(effects
 				(font
@@ -4534,7 +4912,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "470pF NP0"
+		(property "Value" "470pF NP0 100V"
 			(at 121.92 41.656 0)
 			(effects
 				(font
@@ -4543,7 +4921,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 122.8852 43.18 0)
 			(effects
 				(font
@@ -4579,6 +4957,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "muRata"
+			(at 121.92 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM1885C2A471FA6D"
+			(at 121.92 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "81-GCM1885C2A471FA6D"
+			(at 121.92 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "5066529e-b1f3-441e-9da9-0af0a6a8bb47")
 		)
@@ -4586,7 +4991,7 @@
 			(uuid "0a2446ed-27ed-4a7d-b2a7-016fd1cf0432")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/ab0ef40e-2ba9-4126-8561-248abf25197d"
 					(reference "C202")
 					(unit 1)
@@ -4723,6 +5128,24 @@
 					(size 1.27 1.27)
 				)
 				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Skyworks"
+			(at 110.49 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "873-AS183-92LF"
+			(at 110.49 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)

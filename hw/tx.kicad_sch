@@ -7013,6 +7013,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 115.57 138.43 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 115.57 138.43 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
+			(at 115.57 138.43 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "ccb15d12-f7a6-4e02-bc38-922165767d32")
 		)
@@ -7101,6 +7128,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "TI"
+			(at 95.25 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CD74ACT541SM96"
+			(at 95.25 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "595-CD74ACT541SM96"
+			(at 95.25 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "16"
 			(uuid "458b9fd9-467d-4ca0-bfc1-e83cc2b615f6")
 		)
@@ -7162,7 +7216,7 @@
 			(uuid "1ffde769-9207-479b-be49-f9eccee4b874")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/23b3e7ef-2325-4c00-b23e-f86801b0fb79"
 					(reference "U302")
 					(unit 1)
@@ -7228,6 +7282,33 @@
 			)
 		)
 		(property "LCSC" "C28871"
+			(at 130.81 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Diodes inc"
+			(at 130.81 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 130.81 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
 			(at 130.81 52.07 0)
 			(effects
 				(font
@@ -7307,6 +7388,33 @@
 			)
 		)
 		(property "LCSC" "C2907091"
+			(at 146.05 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 146.05 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 146.05 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
 			(at 146.05 80.01 90)
 			(effects
 				(font
@@ -7540,6 +7648,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "onsemi"
+			(at 213.36 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SS14"
+			(at 213.36 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "512-SS14"
+			(at 213.36 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "fc018ef3-0516-4871-8f6a-65691c35dc28")
 		)
@@ -7547,7 +7682,7 @@
 			(uuid "c5bdee7a-fcf8-4a75-969d-60bbfc0ef0a1")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/23b3e7ef-2325-4c00-b23e-f86801b0fb79"
 					(reference "D301")
 					(unit 1)
@@ -7608,6 +7743,33 @@
 			)
 		)
 		(property "LCSC" "C83852"
+			(at 213.36 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "onsemi"
+			(at 213.36 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SS14"
+			(at 213.36 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "512-SS14"
 			(at 213.36 52.07 0)
 			(effects
 				(font
@@ -7758,6 +7920,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 146.05 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 146.05 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
+			(at 146.05 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "58a239cf-b337-4453-b312-2f3b6d108f0e")
 		)
@@ -7826,6 +8015,33 @@
 			)
 		)
 		(property "LCSC" "C2907091"
+			(at 121.92 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 121.92 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 121.92 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
 			(at 121.92 66.04 90)
 			(effects
 				(font
@@ -7913,7 +8129,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "KGM15BR71H104KT"
 			(at 39.37 -101.6 0)
 			(effects
 				(font
@@ -7931,7 +8147,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "80-C0805F104K1RAUTO"
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
 			(at 39.37 -101.6 0)
 			(effects
 				(font
@@ -8164,6 +8380,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 76.2 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "cd8f2ba2-56c1-49c5-bfc0-6a635476fab4")
 		)
@@ -8235,6 +8460,33 @@
 		)
 		(property "LCSC" "C24452"
 			(at 90.17 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 90.17 90.17 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 90.17 90.17 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
+			(at 90.17 90.17 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8522,6 +8774,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 44.45 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCS04020C1002FE000"
+			(at 44.45 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCS04020C1002FE0"
+			(at 44.45 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "e291ed21-a2c7-4c1c-ba95-f31113b75ad4")
 		)
@@ -8592,6 +8871,33 @@
 			)
 		)
 		(property "LCSC" "C60490"
+			(at 38.1 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 38.1 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCS04020C1002FE000"
+			(at 38.1 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCS04020C1002FE0"
 			(at 38.1 31.75 0)
 			(effects
 				(font
@@ -8681,6 +8987,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Diodes inc"
+			(at 130.81 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 130.81 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 130.81 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "a0a3b89f-4aa8-41e9-aa1c-1a8c3404bbae")
 		)
@@ -8762,7 +9095,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "GRM155Z71A105KE1D"
 			(at 39.37 -101.6 0)
 			(effects
 				(font
@@ -8780,7 +9113,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "81-GRM155R61E105KE1D"
+		(property "Mouser_PN" "81-GRM155Z71A105KE1D"
 			(at 39.37 -101.6 0)
 			(effects
 				(font
@@ -9013,6 +9346,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "muRata"
+			(at 69.85 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "4512c1dc-8ca9-4b23-9d2c-3ea3ecdb90a1")
 		)
@@ -9084,6 +9426,33 @@
 			)
 		)
 		(property "LCSC" "C96446"
+			(at 231.14 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 231.14 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 231.14 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
 			(at 231.14 33.02 0)
 			(effects
 				(font
@@ -9165,6 +9534,33 @@
 			)
 		)
 		(property "LCSC" "C28871"
+			(at 177.8 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Diodes inc"
+			(at 177.8 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 177.8 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
 			(at 177.8 72.39 0)
 			(effects
 				(font
@@ -9522,6 +9918,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Lattice"
+			(at 232.41 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "ICE40UP5K-SG48I"
+			(at 232.41 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "842-ICE40UP5K-SG48I"
+			(at 232.41 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "8"
 			(uuid "2c7a7776-c807-4d9a-8d4b-1acf68e1f644")
 		)
@@ -9670,7 +10093,7 @@
 			(uuid "2921f20b-0658-4596-8c79-0ef30b80b72c")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/23b3e7ef-2325-4c00-b23e-f86801b0fb79"
 					(reference "U301")
 					(unit 4)
@@ -9733,6 +10156,33 @@
 			)
 		)
 		(property "LCSC" "C60490"
+			(at 31.75 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 31.75 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCS04020C1002FE000"
+			(at 31.75 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCS04020C1002FE0"
 			(at 31.75 31.75 0)
 			(effects
 				(font
@@ -10089,6 +10539,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 226.06 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 226.06 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 226.06 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "a57f975f-1614-482b-a5c9-b5e87c80bd03")
 		)
@@ -10304,6 +10781,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Diodes inc"
+			(at 200.66 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 200.66 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 200.66 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "1fe27743-8036-46f2-a563-523dc2332e66")
 		)
@@ -10341,7 +10845,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100pF NP0 50V"
+		(property "Value" "100pF NP0 100V"
 			(at 249.428 61.722 90)
 			(effects
 				(font
@@ -10350,7 +10854,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 244.8052 63.5 0)
 			(effects
 				(font
@@ -10378,6 +10882,33 @@
 			)
 		)
 		(property "LCSC" "C106200"
+			(at 243.84 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 243.84 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15ACG2A101FT"
+			(at 243.84 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15ACG2A101FT"
 			(at 243.84 67.31 0)
 			(effects
 				(font
@@ -10529,6 +11060,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 191.77 60.96 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 191.77 60.96 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
+			(at 191.77 60.96 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "ab69edd5-eaa4-44cf-bd03-aee3bf3e66f2")
 		)
@@ -10600,6 +11158,33 @@
 			)
 		)
 		(property "LCSC" "C2678152"
+			(at 48.26 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Lattice"
+			(at 48.26 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "ICE40UP5K-SG48I"
+			(at 48.26 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "842-ICE40UP5K-SG48I"
 			(at 48.26 107.95 0)
 			(effects
 				(font
@@ -10756,7 +11341,7 @@
 			(uuid "2921f20b-0658-4596-8c79-0ef30b80b72d")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/23b3e7ef-2325-4c00-b23e-f86801b0fb79"
 					(reference "U301")
 					(unit 1)
@@ -11046,6 +11631,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Diodes inc"
+			(at 154.94 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 154.94 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 154.94 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "77630c72-26d1-41ad-8d6a-390cc0053909")
 		)
@@ -11194,6 +11806,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 245.11 139.7 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 245.11 139.7 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 245.11 139.7 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "a4ad9c0c-ef74-4a64-9508-a49fd765f095")
 		)
@@ -11265,6 +11904,33 @@
 			)
 		)
 		(property "LCSC" "C24452"
+			(at 33.02 146.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 33.02 146.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 33.02 146.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
 			(at 33.02 146.05 90)
 			(effects
 				(font
@@ -11354,6 +12020,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Diodes inc"
+			(at 200.66 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 200.66 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 200.66 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "900a375a-69cf-465b-aab8-4712be0bc10f")
 		)
@@ -11428,6 +12121,33 @@
 			)
 		)
 		(property "LCSC" "C24452"
+			(at 237.49 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 237.49 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 237.49 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
 			(at 237.49 33.02 0)
 			(effects
 				(font
@@ -11845,6 +12565,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 191.77 74.93 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 191.77 74.93 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
+			(at 191.77 74.93 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "a67da6e6-69ec-4999-b8c0-a49448b98b6f")
 		)
@@ -11913,6 +12660,33 @@
 			)
 		)
 		(property "LCSC" "C2907091"
+			(at 121.92 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 121.92 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 121.92 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
 			(at 121.92 52.07 90)
 			(effects
 				(font
@@ -12115,6 +12889,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Diodes inc"
+			(at 177.8 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 177.8 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 177.8 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "8e13188f-22ef-40e7-99c9-9f25432029b7")
 		)
@@ -12265,6 +13066,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Diodes inc"
+			(at 130.81 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 130.81 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 130.81 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "7de61b93-0ce1-4b2a-93df-c5bc157206c7")
 		)
@@ -12347,6 +13175,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 231.14 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 231.14 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 231.14 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "0bfa89ff-2009-44b0-a53f-4adf44d1f3ec")
 		)
@@ -12416,6 +13271,33 @@
 			)
 		)
 		(property "LCSC" "C2678152"
+			(at 132.08 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Lattice"
+			(at 132.08 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "ICE40UP5K-SG48I"
+			(at 132.08 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "842-ICE40UP5K-SG48I"
 			(at 132.08 167.64 0)
 			(effects
 				(font
@@ -12572,7 +13454,7 @@
 			(uuid "2921f20b-0658-4596-8c79-0ef30b80b72e")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/23b3e7ef-2325-4c00-b23e-f86801b0fb79"
 					(reference "U301")
 					(unit 2)
@@ -12914,6 +13796,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "ECS"
+			(at 77.47 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "ebd01c28-29ba-406d-9729-ec6d6fe87663")
 		)
@@ -13067,6 +13958,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 33.02 78.74 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 33.02 78.74 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
+			(at 33.02 78.74 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "f04fe1ea-3039-46bc-b3ea-4f1c73554860")
 		)
@@ -13143,7 +14061,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CM05X5R475M10AH"
 			(at 54.61 19.05 0)
 			(effects
 				(font
@@ -13161,7 +14079,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "74-298D475X9010M2T"
+		(property "Mouser_PN" "346-CM05X5R475M10AH"
 			(at 54.61 19.05 0)
 			(effects
 				(font
@@ -13394,6 +14312,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 96.52 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "c9da5396-2046-4531-8a76-106a73e771f2")
 		)
@@ -13465,6 +14392,33 @@
 			)
 		)
 		(property "LCSC" "C96446"
+			(at 33.02 83.82 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 33.02 83.82 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 33.02 83.82 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
 			(at 33.02 83.82 90)
 			(effects
 				(font
@@ -13618,6 +14572,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 16.51 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCS04020C1002FE000"
+			(at 16.51 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCS04020C1002FE0"
+			(at 16.51 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "eb3f5f16-2d18-4e21-b3eb-b63e6b87606d")
 		)
@@ -13625,7 +14606,7 @@
 			(uuid "f04ec1ba-6b32-49b0-aa5c-20855ecf71dd")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/23b3e7ef-2325-4c00-b23e-f86801b0fb79"
 					(reference "R301")
 					(unit 1)
@@ -13778,6 +14759,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 237.49 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 237.49 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
+			(at 237.49 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "c6f36165-933f-4434-8502-b1306370822b")
 		)
@@ -13854,6 +14862,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 121.92 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 121.92 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
+			(at 121.92 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "5a520df8-6491-4519-9d74-2462b8fb38ce")
 		)
@@ -13922,6 +14957,33 @@
 			)
 		)
 		(property "LCSC" "C2907091"
+			(at 191.77 88.9 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 191.77 88.9 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 191.77 88.9 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
 			(at 191.77 88.9 90)
 			(effects
 				(font
@@ -14009,6 +15071,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 115.57 143.51 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 115.57 143.51 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 115.57 143.51 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "679ef3f2-ffa8-4108-92dc-d5794056c190")
 		)
@@ -14043,7 +15132,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100pF NP0 50V"
+		(property "Value" "100pF NP0 100V"
 			(at 248.92 25.908 90)
 			(effects
 				(font
@@ -14052,7 +15141,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 244.8052 29.21 0)
 			(effects
 				(font
@@ -14080,6 +15169,33 @@
 			)
 		)
 		(property "LCSC" "C106200"
+			(at 243.84 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 243.84 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15ACG2A101FT"
+			(at 243.84 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15ACG2A101FT"
 			(at 243.84 33.02 0)
 			(effects
 				(font
@@ -14226,6 +15342,33 @@
 			)
 		)
 		(property "LCSC" "C2678152"
+			(at 48.26 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Lattice"
+			(at 48.26 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "ICE40UP5K-SG48I"
+			(at 48.26 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "842-ICE40UP5K-SG48I"
 			(at 48.26 165.1 0)
 			(effects
 				(font
@@ -14382,7 +15525,7 @@
 			(uuid "2921f20b-0658-4596-8c79-0ef30b80b72f")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/23b3e7ef-2325-4c00-b23e-f86801b0fb79"
 					(reference "U301")
 					(unit 3)
@@ -14448,6 +15591,33 @@
 			)
 		)
 		(property "LCSC" "C28871"
+			(at 154.94 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Diodes inc"
+			(at 154.94 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 154.94 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
 			(at 154.94 80.01 0)
 			(effects
 				(font
@@ -14535,6 +15705,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "onsemi"
+			(at 213.36 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SS14"
+			(at 213.36 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "512-SS14"
+			(at 213.36 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "7061008f-8ef2-4657-8977-e70113e6dbcb")
 		)
@@ -14609,7 +15806,7 @@
 			(uuid "2ccc0368-dfe4-4e54-ab85-3a84fe407833")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3/23b3e7ef-2325-4c00-b23e-f86801b0fb79"
 					(reference "#PWR0301")
 					(unit 1)
@@ -14750,6 +15947,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Diodes inc"
+			(at 154.94 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 154.94 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 154.94 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "00df5a5a-e032-43ac-bcfa-c3641c31cc5a")
 		)
@@ -14826,6 +16050,33 @@
 			)
 		)
 		(property "LCSC" "C28871"
+			(at 200.66 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Diodes inc"
+			(at 200.66 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 200.66 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
 			(at 200.66 88.9 0)
 			(effects
 				(font
@@ -14913,6 +16164,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "onsemi"
+			(at 213.36 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SS14"
+			(at 213.36 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "512-SS14"
+			(at 213.36 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "75cfbe46-310e-4aeb-83fa-3aaaf6650ca3")
 		)
@@ -14992,6 +16270,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 226.06 127 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 226.06 127 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
+			(at 226.06 127 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "14a4f8f9-cc9f-4275-bc32-e8b32f43c107")
 		)
@@ -15062,6 +16367,33 @@
 			)
 		)
 		(property "LCSC" "C24452"
+			(at 245.11 133.35 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 245.11 133.35 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 245.11 133.35 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
 			(at 245.11 133.35 90)
 			(effects
 				(font
@@ -15151,6 +16483,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Diodes inc"
+			(at 177.8 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 177.8 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 177.8 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "faed2077-abf2-473d-8022-2629cde03d3e")
 		)
@@ -15230,6 +16589,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 168.91 58.42 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 168.91 58.42 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
+			(at 168.91 58.42 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "99647a5b-c616-4200-bbcb-c299bcb9766c")
 		)
@@ -15300,6 +16686,33 @@
 			)
 		)
 		(property "LCSC" "C60490"
+			(at 25.4 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 25.4 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCS04020C1002FE000"
+			(at 25.4 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCS04020C1002FE0"
 			(at 25.4 31.75 0)
 			(effects
 				(font
@@ -15654,6 +17067,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 33.02 151.13 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 33.02 151.13 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 33.02 151.13 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "b60bda19-9031-4922-9437-b762d7fb366e")
 		)
@@ -15797,6 +17237,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 168.91 72.39 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 168.91 72.39 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
+			(at 168.91 72.39 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "24ae5ee4-12c8-4513-a0c2-c98149844d24")
 		)
@@ -15865,6 +17332,33 @@
 			)
 		)
 		(property "LCSC" "C2907091"
+			(at 146.05 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 146.05 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 146.05 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
 			(at 146.05 52.07 90)
 			(effects
 				(font
@@ -15949,6 +17443,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 168.91 86.36 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 168.91 86.36 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
+			(at 168.91 86.36 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9446086e-84a0-452e-b1f1-9cbbe62ddda7")
 		)
@@ -16025,7 +17546,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CM05X5R475M10AH"
 			(at 54.61 19.05 0)
 			(effects
 				(font
@@ -16043,7 +17564,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "74-298D475X9010M2T"
+		(property "Mouser_PN" "346-CM05X5R475M10AH"
 			(at 54.61 19.05 0)
 			(effects
 				(font
@@ -16276,6 +17797,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 82.55 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "49f233e9-094f-40ac-a7cb-8ac4f210385b")
 		)
@@ -16354,6 +17884,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 90.17 82.55 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 90.17 82.55 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 90.17 82.55 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "554c06e0-558b-4b35-8924-84f20835ece5")
 		)
@@ -16422,6 +17979,33 @@
 			)
 		)
 		(property "LCSC" "C2907091"
+			(at 240.03 128.27 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
+			(at 240.03 128.27 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MCT06030C1009FP500"
+			(at 240.03 128.27 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "594-MCT06030C1009FP5"
 			(at 240.03 128.27 90)
 			(effects
 				(font

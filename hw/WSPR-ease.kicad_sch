@@ -1560,11 +1560,11 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Library:BAT-HLD-014-THM"
+		(symbol "Library:S8401-46"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "BT"
+			(property "Reference" "J"
 				(at 19.05 7.62 0)
 				(effects
 					(font
@@ -1573,7 +1573,7 @@
 					(justify left top)
 				)
 			)
-			(property "Value" "BAT-HLD-014-THM"
+			(property "Value" "S8401-46"
 				(at 19.05 5.08 0)
 				(effects
 					(font
@@ -1582,7 +1582,7 @@
 					(justify left top)
 				)
 			)
-			(property "Footprint" "BATHLD014THM"
+			(property "Footprint" "Library:S8401-46"
 				(at 19.05 -94.92 0)
 				(effects
 					(font
@@ -1592,7 +1592,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://linxtechnologies.com/wp/wp-content/uploads/bat-hld-014-thm-ds.pdf"
+			(property "Datasheet" "https://cdn.harwin.com/pdfs/S8401.pdf"
 				(at 19.05 -194.92 0)
 				(effects
 					(font
@@ -1602,7 +1602,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "BATTERY HOLDER THRU MOUNT CR2032 SOLDER Temp: -25 - +85C"
+			(property "Description" "Coin Cell Battery Retainer, Vertical Throughboard, for CR2032 and BR2032 Coin Cell Batteries"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1611,7 +1611,7 @@
 					(hide yes)
 				)
 			)
-			(property "Height" "6"
+			(property "Height" ""
 				(at 19.05 -394.92 0)
 				(effects
 					(font
@@ -1621,7 +1621,7 @@
 					(hide yes)
 				)
 			)
-			(property "Mouser Part Number" "712-BAT-HLD-014-THM"
+			(property "Mouser Part Number" "855-S8401-46"
 				(at 19.05 -494.92 0)
 				(effects
 					(font
@@ -1631,7 +1631,7 @@
 					(hide yes)
 				)
 			)
-			(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Linx-Technologies/BAT-HLD-014-THM?qs=4ASt3YYao0UFmA5w592XyQ%3D%3D"
+			(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Harwin/S8401-46?qs=Qom7kyPojXaFNoCO9lxVnA%3D%3D"
 				(at 19.05 -594.92 0)
 				(effects
 					(font
@@ -1641,7 +1641,7 @@
 					(hide yes)
 				)
 			)
-			(property "Manufacturer_Name" "TE Connectivity"
+			(property "Manufacturer_Name" "Harwin"
 				(at 19.05 -694.92 0)
 				(effects
 					(font
@@ -1651,7 +1651,7 @@
 					(hide yes)
 				)
 			)
-			(property "Manufacturer_Part_Number" "BAT-HLD-014-THM"
+			(property "Manufacturer_Part_Number" "S8401-46"
 				(at 19.05 -794.92 0)
 				(effects
 					(font
@@ -1661,7 +1661,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "BAT-HLD-014-THM_1_1"
+			(symbol "S8401-46_1_1"
 				(rectangle
 					(start 5.08 2.54)
 					(end 17.78 -5.08)
@@ -1676,25 +1676,7 @@
 				(pin passive line
 					(at 0 0 0)
 					(length 5.08)
-					(name "+_1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -2.54 0)
-					(length 5.08)
-					(name "+_2"
+					(name "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1710,9 +1692,9 @@
 					)
 				)
 				(pin passive line
-					(at 22.86 0 180)
+					(at 0 -2.54 0)
 					(length 5.08)
-					(name "-"
+					(name "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1727,455 +1709,17 @@
 						)
 					)
 				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Library:CX90M-16P"
-			(pin_names
-				(offset 0.254)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "J"
-				(at 6.35 -26.67 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-				)
-			)
-			(property "Value" "CX90M-16P"
-				(at 6.35 -29.21 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-				)
-			)
-			(property "Footprint" "CX90M-16P_HIR"
-				(at 41.91 8.89 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-						(italic yes)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "CX90M-16P"
-				(at 41.91 5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-						(italic yes)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_locked" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "CX90M-16P"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "CX90M-16P_HIR"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "CX90M-16P_0_1"
-				(polyline
-					(pts
-						(xy 7.62 5.08) (xy 7.62 -25.4)
-					)
-					(stroke
-						(width 0.127)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 7.62 -25.4) (xy 33.02 -25.4)
-					)
-					(stroke
-						(width 0.127)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 33.02 5.08) (xy 7.62 5.08)
-					)
-					(stroke
-						(width 0.127)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 33.02 -25.4) (xy 33.02 5.08)
-					)
-					(stroke
-						(width 0.127)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(pin bidirectional line
-					(at 0 -3.81 0)
-					(length 7.62)
-					(name "D-"
+				(pin passive line
+					(at 22.86 0 180)
+					(length 5.08)
+					(name "-VE"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "A7"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 0 -6.35 0)
-					(length 7.62)
-					(name "D-"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "B7"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 0 -15.24 0)
-					(length 7.62)
-					(name "CC1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "A5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 0 -17.78 0)
-					(length 7.62)
-					(name "CC2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "B5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 0 -21.59 0)
-					(length 7.62)
-					(name "SBU1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "A8"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 0 -24.13 0)
-					(length 7.62)
-					(name "SBU2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "B8"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 15.24 12.7 270)
-					(length 7.62)
-					(name "VBUS"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "B9"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 16.51 -33.02 90)
-					(length 7.62)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "A1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 17.78 12.7 270)
-					(length 7.62)
-					(name "VBUS"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "B4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 19.05 -33.02 90)
-					(length 7.62)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "B1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 20.32 12.7 270)
-					(length 7.62)
-					(name "VBUS"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "A9"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 21.59 -33.02 90)
-					(length 7.62)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "B12"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 22.86 12.7 270)
-					(length 7.62)
-					(name "VBUS"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "A4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 24.13 -33.02 90)
-					(length 7.62)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "A12"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(symbol "CX90M-16P_1_1"
-				(pin bidirectional line
-					(at 0 -8.89 0)
-					(length 7.62)
-					(name "D+"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "A6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 0 -11.43 0)
-					(length 7.62)
-					(name "D+"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "B6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin unspecified line
-					(at 27.94 -33.02 90)
-					(length 7.62)
-					(name "MID1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "MID1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin unspecified line
-					(at 30.48 -33.02 90)
-					(length 7.62)
-					(name "MID2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "MID2"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2678,6 +2222,382 @@
 						)
 					)
 					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Library:USB2-C-16pin"
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 6.35 -26.67 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "USB4930-00"
+				(at 6.35 -29.21 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Footprint" "USB4930-00"
+				(at 41.91 8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.mouser.com/datasheet/3/1507/1/usb4930.pdf"
+				(at 64.77 6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "USB type C 2.0, 16p receptacle, horizontal, top mount, SMT & TH stakes"
+				(at 59.69 12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "USB USB2 USB-receptacle top-mount 16-pin"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "CX90M-16P_HIR"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "USB2-C-16pin_0_1"
+				(polyline
+					(pts
+						(xy 7.62 5.08) (xy 7.62 -25.4)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 -25.4) (xy 33.02 -25.4)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 33.02 5.08) (xy 7.62 5.08)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 33.02 -25.4) (xy 33.02 5.08)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin bidirectional line
+					(at 0 -3.81 0)
+					(length 7.62)
+					(name "D-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 0 -6.35 0)
+					(length 7.62)
+					(name "D-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 0 -15.24 0)
+					(length 7.62)
+					(name "CC1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 0 -17.78 0)
+					(length 7.62)
+					(name "CC2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 0 -21.59 0)
+					(length 7.62)
+					(name "SBU1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 0 -24.13 0)
+					(length 7.62)
+					(name "SBU2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "USB2-C-16pin_1_1"
+				(pin bidirectional line
+					(at 0 -8.89 0)
+					(length 7.62)
+					(name "D+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 0 -11.43 0)
+					(length 7.62)
+					(name "D+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 16.51 -33.02 90)
+					(length 7.62)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A1B12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 17.78 12.7 270)
+					(length 7.62)
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B4A9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 19.05 -33.02 90)
+					(length 7.62)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B1A12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 22.86 12.7 270)
+					(length 7.62)
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A4B9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 27.94 -33.02 90)
+					(length 7.62)
+					(name "MID1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "MID1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 30.48 -33.02 90)
+					(length 7.62)
+					(name "MID2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "MID2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -5455,12 +5375,6 @@
 		(uuid "1ffd87fe-6751-49e0-9e0c-1f0e1e54f590")
 	)
 	(junction
-		(at 203.2 27.94)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "306f02ad-f83e-4235-8d4c-e366db424900")
-	)
-	(junction
 		(at 200.66 27.94)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5551,12 +5465,6 @@
 		(uuid "8b96f909-1063-45fd-8422-ebe716bf9a8e")
 	)
 	(junction
-		(at 201.93 91.44)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8eb1a501-dde0-4d2e-9082-a25ea3e1df94")
-	)
-	(junction
 		(at 152.4 147.32)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5573,12 +5481,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "99c2589e-197e-4088-b587-87e08c630bce")
-	)
-	(junction
-		(at 198.12 27.94)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "9aa151e7-3652-4822-9cc8-242b46730d7c")
 	)
 	(junction
 		(at 180.34 63.5)
@@ -5651,12 +5553,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "db718222-6c88-48c0-8c4c-5b9821f2821c")
-	)
-	(junction
-		(at 204.47 91.44)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "dcaced44-8952-476f-b316-6a4e5b8a6f9d")
 	)
 	(junction
 		(at 152.4 182.88)
@@ -5830,16 +5726,6 @@
 	)
 	(wire
 		(pts
-			(xy 203.2 44.45) (xy 203.2 27.94)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "03fea9ff-90c5-4c65-a97f-e66502f0d31e")
-	)
-	(wire
-		(pts
 			(xy 179.07 156.21) (xy 179.07 157.48)
 		)
 		(stroke
@@ -5940,16 +5826,6 @@
 	)
 	(wire
 		(pts
-			(xy 207.01 91.44) (xy 204.47 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0e1d14d9-ab4a-4d98-8bae-6fc91283c3df")
-	)
-	(wire
-		(pts
 			(xy 251.46 160.02) (xy 241.3 160.02)
 		)
 		(stroke
@@ -6037,16 +5913,6 @@
 			(type default)
 		)
 		(uuid "1646c8ff-a1a1-42ae-aba6-876eeeb7e957")
-	)
-	(wire
-		(pts
-			(xy 204.47 91.44) (xy 201.93 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "16dcfb5f-2592-4711-90a1-2d62e72d2f3d")
 	)
 	(wire
 		(pts
@@ -6307,16 +6173,6 @@
 			(type default)
 		)
 		(uuid "2c7c9642-945f-4cb9-b129-f40557f8a597")
-	)
-	(wire
-		(pts
-			(xy 207.01 90.17) (xy 207.01 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2ce86e86-4cb0-4661-944c-665fc81cd704")
 	)
 	(wire
 		(pts
@@ -6807,16 +6663,6 @@
 			(type default)
 		)
 		(uuid "66303bef-0cf1-41c3-a0be-c25a9dbce31d")
-	)
-	(wire
-		(pts
-			(xy 203.2 27.94) (xy 205.74 27.94)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "66b8ef1f-f05d-41f2-a329-389315c6fc11")
 	)
 	(wire
 		(pts
@@ -7360,16 +7206,6 @@
 	)
 	(wire
 		(pts
-			(xy 204.47 90.17) (xy 204.47 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a41f1024-3490-48e9-8430-445f569354e0")
-	)
-	(wire
-		(pts
 			(xy 57.15 93.98) (xy 58.42 93.98)
 		)
 		(stroke
@@ -7417,16 +7253,6 @@
 			(type default)
 		)
 		(uuid "ae73abfa-e485-49a5-8000-2cddcb6b0a02")
-	)
-	(wire
-		(pts
-			(xy 198.12 27.94) (xy 198.12 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b2886b33-b3d3-444f-a187-9ff24465919d")
 	)
 	(wire
 		(pts
@@ -7820,7 +7646,7 @@
 	)
 	(wire
 		(pts
-			(xy 194.31 27.94) (xy 198.12 27.94)
+			(xy 194.31 27.94) (xy 200.66 27.94)
 		)
 		(stroke
 			(width 0)
@@ -7940,23 +7766,13 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 27.94) (xy 203.2 27.94)
+			(xy 200.66 27.94) (xy 205.74 27.94)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "fcc9b4fa-ca39-48b9-8f45-bd563606996c")
-	)
-	(wire
-		(pts
-			(xy 198.12 27.94) (xy 200.66 27.94)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ff6a6b5b-1db9-4b75-9bb3-a257ed06f0f0")
 	)
 	(label "fpgaSCLK"
 		(at 106.68 123.19 180)
@@ -8509,7 +8325,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1nF X7R"
+		(property "Value" "1nF NP0 100V"
 			(at 32.258 86.106 0)
 			(effects
 				(font
@@ -8518,7 +8334,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 32.7152 87.63 0)
 			(effects
 				(font
@@ -8545,7 +8361,34 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106205"
+		(property "LCSC" "C5182455"
+			(at 31.75 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 31.75 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15ACG2A102FT"
+			(at 31.75 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15ACG2A102FT"
 			(at 31.75 83.82 0)
 			(effects
 				(font
@@ -8960,6 +8803,33 @@
 			)
 		)
 		(property "LCSC" "C60491"
+			(at 27.94 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Bourns"
+			(at 27.94 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CRT0402-FZ-1003GLF"
+			(at 27.94 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "652-CRT0402FZ1003GLF"
 			(at 27.94 73.66 0)
 			(effects
 				(font
@@ -9390,6 +9260,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 190.5 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 190.5 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
+			(at 190.5 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "4626fb9e-1488-48a5-84c7-b2334a5f3a73")
 		)
@@ -9499,7 +9396,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_0805_2012Metric"
+		(property "Footprint" "Inductor_SMD:L_1008_2520Metric"
 			(at 226.06 148.59 0)
 			(effects
 				(font
@@ -9535,7 +9432,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "AIML-1008HC-2R2M-T"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -9553,7 +9450,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" ""
+		(property "Mouser_PN" "815-AIML-1008HC2R2MT"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -9785,6 +9682,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Abracon"
+			(at 226.06 148.59 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f601ea54-8c17-4782-8181-6e0f45d0d30c")
 		)
@@ -9818,7 +9724,7 @@
 				)
 			)
 		)
-		(property "Value" "100pF NP0 50V"
+		(property "Value" "100pF NP0 100V"
 			(at 76.962 138.938 90)
 			(effects
 				(font
@@ -9826,7 +9732,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 82.55 143.2052 0)
 			(effects
 				(font
@@ -9862,6 +9768,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 78.74 142.24 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15ACG2A101FT"
+			(at 78.74 142.24 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15ACG2A101FT"
+			(at 78.74 142.24 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "938dcaeb-1142-4414-ba29-d4f4349c77f0")
 		)
@@ -9869,7 +9802,7 @@
 			(uuid "3eeb6fc2-2d99-4f36-9878-08aaf675e1de")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "C103")
 					(unit 1)
@@ -9941,7 +9874,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "LMR51430YDDCR"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -9959,7 +9892,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" ""
+		(property "Mouser_PN" "595-LMR51430YDDCR"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -10146,6 +10079,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "TI"
+			(at 199.39 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "1a6b66fa-0f4e-4c4c-b384-683c801a8334")
 		)
@@ -10174,7 +10116,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Library:BAT-HLD-014-THM")
+		(lib_id "Library:S8401-46")
 		(at 36.83 125.73 0)
 		(mirror x)
 		(unit 1)
@@ -10200,7 +10142,7 @@
 				)
 			)
 		)
-		(property "Footprint" "BATHLD014THM"
+		(property "Footprint" "Library:S8401-46"
 			(at 55.88 30.81 0)
 			(effects
 				(font
@@ -10210,7 +10152,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://linxtechnologies.com/wp/wp-content/uploads/bat-hld-014-thm-ds.pdf"
+		(property "Datasheet" "https://cdn.harwin.com/pdfs/S8401.pdf"
 			(at 55.88 -69.19 0)
 			(effects
 				(font
@@ -10220,7 +10162,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "BATTERY HOLDER THRU MOUNT CR2032 SOLDER Temp: -25 - +85C"
+		(property "Description" "Coin Cell Battery Retainer, Vertical Throughboard, for CR2032 and BR2032 Coin Cell Batteries"
 			(at 36.83 125.73 0)
 			(effects
 				(font
@@ -10248,7 +10190,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser Part Number" "712-BAT-HLD-014-THM"
+		(property "Mouser Part Number" "855-S8401-46"
 			(at 55.88 -369.19 0)
 			(effects
 				(font
@@ -10258,7 +10200,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Linx-Technologies/BAT-HLD-014-THM?qs=4ASt3YYao0UFmA5w592XyQ%3D%3D"
+		(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Harwin/S8401-46?qs=Qom7kyPojXaFNoCO9lxVnA%3D%3D"
 			(at 55.88 -469.19 0)
 			(effects
 				(font
@@ -10268,7 +10210,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_Name" "TE Connectivity"
+		(property "Manufacturer_Name" "Harwin"
 			(at 55.88 -569.19 0)
 			(effects
 				(font
@@ -10278,13 +10220,40 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_Part_Number" "BAT-HLD-014-THM"
+		(property "Manufacturer_Part_Number" "S8401-46"
 			(at 55.88 -669.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Harwin"
+			(at 36.83 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "S8401-46 "
+			(at 36.83 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "855-S8401-46 "
+			(at 36.83 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -10298,7 +10267,7 @@
 			(uuid "88d5255b-978b-471f-a7c2-97fa6227aa44")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "BT101")
 					(unit 1)
@@ -10365,6 +10334,33 @@
 		)
 		(property "LCSC" "C28871"
 			(at 41.91 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Diodes inc"
+			(at 41.91 76.2 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MMBF170Q-13-F"
+			(at 41.91 76.2 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "621-MMBF170Q-13-F"
+			(at 41.91 76.2 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10454,6 +10450,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Semtech"
+			(at 140.97 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SRV05-4.TCT"
+			(at 140.97 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "947-SRV05-4.TCT"
+			(at 140.97 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "c951138d-bc5b-4acc-8c4e-4ef790bb0448")
 		)
@@ -10473,7 +10496,7 @@
 			(uuid "f6fd4c4b-999f-4778-bb44-b0a276212c14")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "U105")
 					(unit 1)
@@ -10549,7 +10572,7 @@
 			(uuid "49fe0716-f689-44d6-acdc-c70202bc3493")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "H101")
 					(unit 1)
@@ -10623,7 +10646,7 @@
 			)
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "FID103")
 					(unit 1)
@@ -10684,7 +10707,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Teseo-LIV3R"
+		(property "MPN" "TESEO-LIV3R"
 			(at 52.07 151.13 0)
 			(effects
 				(font
@@ -10694,6 +10717,24 @@
 			)
 		)
 		(property "LCSC" "C90770"
+			(at 52.07 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "STMicro"
+			(at 52.07 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "511-TESEO-LIV3R"
 			(at 52.07 151.13 0)
 			(effects
 				(font
@@ -10757,7 +10798,7 @@
 			(uuid "b2060cbf-b4f6-49a8-9bf1-494b57f4b3dd")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "U101")
 					(unit 1)
@@ -10909,7 +10950,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "MCS04020C5101FE000"
 			(at 52.07 -96.52 0)
 			(effects
 				(font
@@ -10927,7 +10968,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" ""
+		(property "Mouser_PN" "594-MCS04020C5101FE0"
 			(at 52.07 -96.52 0)
 			(effects
 				(font
@@ -11151,6 +11192,15 @@
 			)
 		)
 		(property "LCSC" "C105872"
+			(at 176.53 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Vishay"
 			(at 176.53 87.63 0)
 			(effects
 				(font
@@ -11532,6 +11582,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 241.3 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 241.3 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 241.3 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "bb143a44-4048-45c2-8edc-643fa80c348a")
 		)
@@ -11611,7 +11688,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "GRM155Z71A105KE1D"
 			(at -102.87 114.3 0)
 			(effects
 				(font
@@ -11629,7 +11706,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "81-GRM155R61E105KE1D"
+		(property "Mouser_PN" "81-GRM155Z71A105KE1D"
 			(at -102.87 114.3 0)
 			(effects
 				(font
@@ -11870,6 +11947,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "muRata"
+			(at 152.4 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "e486c911-d522-4184-9a64-fb2b1a8dc53b")
 		)
@@ -12013,7 +12099,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "KGM15BR71H104KT"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -12031,7 +12117,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "80-C0805F104K1RAUTO"
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -12272,6 +12358,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 214.63 146.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "baaba13c-ef94-4bad-ab8d-6281b62c13e9")
 		)
@@ -12351,7 +12446,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "RT0402FRD0722K1L"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -12369,7 +12464,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" ""
+		(property "Mouser_PN" "603-RT0402FRD0722K1L"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -12601,6 +12696,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Yageo"
+			(at 231.14 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "5164c814-8394-4bf4-a76a-a9bd36677ee9")
 		)
@@ -12677,7 +12781,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CM105X5R106M25AT"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -12695,7 +12799,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "963-MLAST168BB5106MT"
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -12937,6 +13041,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 170.18 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "7e6196e1-4826-413e-b8dd-5638d0851b36")
 		)
@@ -12977,7 +13090,7 @@
 				)
 			)
 		)
-		(property "Footprint" "SON65P300X300X100-9N-D"
+		(property "Footprint" "Library:SON65P300X300X100-9N-D"
 			(at 156.21 239.7 0)
 			(effects
 				(font
@@ -13095,6 +13208,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "TI"
+			(at 129.54 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "5"
 			(uuid "04ff531d-a56e-4cc3-bc33-b86a59b6587b")
 		)
@@ -13193,6 +13315,33 @@
 			)
 		)
 		(property "label" "GNSS Ant"
+			(at 87.63 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Samtec"
+			(at 87.63 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SMA-J-P-H-RA-TH1"
+			(at 87.63 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "200-SMAJPHRATH1"
 			(at 87.63 142.24 0)
 			(effects
 				(font
@@ -13811,7 +13960,7 @@
 			(uuid "f9301f13-824e-4e77-a5c7-5375a1098283")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "#PWR0131")
 					(unit 1)
@@ -14243,6 +14392,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 251.46 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 251.46 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 251.46 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "f090e344-c294-4336-b73c-0a9f0f746932")
 		)
@@ -14580,6 +14756,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "TI"
+			(at 124.46 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "0b4ba4f9-8911-49f9-aa49-535119cc74ce")
 		)
@@ -14738,6 +14923,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Abracon"
+			(at 74.93 133.35 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "AIMC-0603-47NJ-T "
+			(at 74.93 133.35 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "815-AIMC-0603-47NJT"
+			(at 74.93 133.35 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "f98352dd-cf6b-4a32-b99f-e4937d03b108")
 		)
@@ -14745,7 +14957,7 @@
 			(uuid "d812bee1-db66-47ec-b1dc-3b6bf9cc1a27")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "L101")
 					(unit 1)
@@ -14817,7 +15029,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "GRM155Z71A105KE1D"
 			(at -102.87 114.3 0)
 			(effects
 				(font
@@ -14835,7 +15047,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "81-GRM155R61E105KE1D"
+		(property "Mouser_PN" "81-GRM155Z71A105KE1D"
 			(at -102.87 114.3 0)
 			(effects
 				(font
@@ -15068,6 +15280,15 @@
 			)
 		)
 		(property "LCSC" "C14445"
+			(at 152.4 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "muRata"
 			(at 152.4 187.96 0)
 			(effects
 				(font
@@ -15366,7 +15587,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CRT0402-FZ-1003GLF"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -15384,7 +15605,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" ""
+		(property "Mouser_PN" "652-CRT0402FZ1003GLF"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -15600,6 +15821,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Bourns"
+			(at 231.14 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "b61616f0-29b8-4864-ae42-7c81345e6fff")
 		)
@@ -15765,6 +15995,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Espressif"
+			(at 73.66 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "ESP32-S3-WROOM-1-N8R8"
+			(at 73.66 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "356-EP32S3WROOM1N8R8"
+			(at 73.66 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "21"
 			(uuid "7af04257-3121-4cc6-b315-f3ea6bbcadad")
 		)
@@ -15889,7 +16146,7 @@
 			(uuid "0dda890d-edda-4d19-ba8e-1c4d515e6348")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "U102")
 					(unit 1)
@@ -16246,7 +16503,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "CM105X7R105K25AT"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -16264,7 +16521,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "81-GRM155R61E105KE1D"
+		(property "Mouser_PN" "346-CM105X7R105K25AT"
 			(at 124.46 115.57 0)
 			(effects
 				(font
@@ -16498,6 +16755,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 179.07 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5dd57629-657d-43b9-91fb-ca311fe491b2")
 		)
@@ -16650,6 +16916,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 184.15 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 184.15 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 184.15 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "d26ee038-efcc-4f8f-a41e-6fca49ec2e69")
 		)
@@ -16666,7 +16959,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Library:CX90M-16P")
+		(lib_id "Library:USB2-C-16pin")
 		(at 182.88 57.15 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -16676,22 +16969,24 @@
 		(fields_autoplaced yes)
 		(uuid "c343a558-5002-4178-a506-44da25e85875")
 		(property "Reference" "J103"
-			(at 224.79 50.7298 0)
+			(at 217.17 64.7699 0)
 			(effects
 				(font
 					(size 1.524 1.524)
 				)
+				(justify left)
 			)
 		)
-		(property "Value" "CX90M-16P"
-			(at 224.79 53.2698 0)
+		(property "Value" "640-USB4930-00-A"
+			(at 217.17 67.3099 0)
 			(effects
 				(font
 					(size 1.524 1.524)
 				)
+				(justify left)
 			)
 		)
-		(property "Footprint" "CX90M-16P_HIR"
+		(property "Footprint" "Library:USB_C_Receptacle_HRO_TYPE-C-31-M-12-bursted"
 			(at 224.79 48.26 0)
 			(effects
 				(font
@@ -16701,8 +16996,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "CX90M-16P"
-			(at 224.79 52.07 0)
+		(property "Datasheet" "https://www.mouser.com/datasheet/3/1507/1/usb4930.pdf"
+			(at 247.65 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16711,8 +17006,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 182.88 57.15 0)
+		(property "Description" "USB type C 2.0, 16p receptacle, horizontal, top mount, SMT & TH stakes"
+			(at 242.57 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16721,17 +17016,45 @@
 			)
 		)
 		(property "label" "USB2 data+pwr"
+			(at 217.17 69.8499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MFG" "GCT"
 			(at 182.88 57.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "USB4930-00-A"
+			(at 182.88 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "640-USB4930-00-A"
+			(at 182.88 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "MID1"
 			(uuid "55c7e5f9-0a30-4643-a381-5c9d762f09f1")
 		)
-		(pin "A9"
+		(pin "A4B9"
 			(uuid "2a518f4f-5327-4403-a3a1-4ded75a5f648")
 		)
 		(pin "A6"
@@ -16740,17 +17063,14 @@
 		(pin "A5"
 			(uuid "d6768fdd-63f8-456c-9ebb-aa65c99b5275")
 		)
-		(pin "B12"
+		(pin "B1A12"
 			(uuid "5b04a9c9-75b6-42d9-9203-e4343ad6bd6b")
 		)
 		(pin "B5"
 			(uuid "e111445d-965f-4490-9772-7314f0c89c80")
 		)
-		(pin "B9"
+		(pin "B4A9"
 			(uuid "27c293dd-4465-4002-b2a8-5c9da867541a")
-		)
-		(pin "B1"
-			(uuid "a5f97ef5-2051-41d1-9242-9b7635157650")
 		)
 		(pin "B8"
 			(uuid "388031ff-10f4-4681-8698-4c1216042fbe")
@@ -16764,26 +17084,17 @@
 		(pin "A7"
 			(uuid "23a18ca4-6015-43a8-a0b7-cfdf2a4ab956")
 		)
-		(pin "A12"
+		(pin "A1B12"
 			(uuid "5f381c38-097d-4734-ab39-dfa60a141588")
 		)
 		(pin "A8"
 			(uuid "6a5eefc1-ce08-4dfd-8f02-c8346200b5b1")
 		)
-		(pin "B4"
-			(uuid "fedd01b4-0465-46cb-ab55-6aea27446bee")
-		)
-		(pin "A1"
-			(uuid "484320c1-dc2b-4012-96df-9c2b2c05b27a")
-		)
 		(pin "MID2"
 			(uuid "5fed1a6f-2dfb-4990-a44a-ca7155593b23")
 		)
-		(pin "A4"
-			(uuid "9a0d2f03-1893-4359-bf78-81132cddecb8")
-		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "J103")
 					(unit 1)
@@ -16810,7 +17121,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1nF X7R"
+		(property "Value" "1nF NP0 100V"
 			(at 141.732 195.072 0)
 			(effects
 				(font
@@ -16819,7 +17130,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 141.2748 196.85 0)
 			(effects
 				(font
@@ -16855,7 +17166,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "KGM15ACG2A102FT"
 			(at -102.87 114.3 0)
 			(effects
 				(font
@@ -16873,7 +17184,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" "81-GRM155R61E105KE1D"
+		(property "Mouser_PN" "581-KGM15ACG2A102FT"
 			(at -102.87 114.3 0)
 			(effects
 				(font
@@ -17105,7 +17416,16 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106205"
+		(property "LCSC" "C5182455"
+			(at 142.24 193.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
 			(at 142.24 193.04 0)
 			(effects
 				(font
@@ -17260,6 +17580,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Bourns"
+			(at 27.94 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CRT0402-FZ-1003GLF"
+			(at 27.94 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "652-CRT0402FZ1003GLF"
+			(at 27.94 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "b70f3ec3-f95c-439e-b0cc-d5c386a7b5e2")
 		)
@@ -17406,7 +17753,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "MCS04020C5101FE000"
 			(at 72.39 -96.52 0)
 			(effects
 				(font
@@ -17424,7 +17771,7 @@
 				(hide yes)
 			)
 		)
-		(property "Mouser_PN" ""
+		(property "Mouser_PN" "594-MCS04020C5101FE0"
 			(at 72.39 -96.52 0)
 			(effects
 				(font
@@ -17656,6 +18003,15 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Vishay"
+			(at 180.34 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "33685bd5-63d9-4c75-abb2-718a7601b372")
 		)
@@ -17801,6 +18157,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 80.01 41.91 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 80.01 41.91 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 80.01 41.91 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "1a04b305-3e97-499a-94a8-cf1f2e4ab89e")
 		)
@@ -17871,6 +18254,33 @@
 			)
 		)
 		(property "LCSC" "C24452"
+			(at 80.01 35.56 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MFG" "Kyocera AVX"
+			(at 80.01 35.56 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "KGM15BR71H104KT"
+			(at 80.01 35.56 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "581-KGM15BR71H104KT"
 			(at 80.01 35.56 90)
 			(effects
 				(font
@@ -18101,6 +18511,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Kyocera AVX"
+			(at 27.94 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CM105X5R106M25AT"
+			(at 27.94 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "346-CM105X5R106M25AT"
+			(at 27.94 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "1ae0d2b0-a4ff-4570-ba3c-81acca8ed6d1")
 		)
@@ -18186,6 +18623,33 @@
 				(hide yes)
 			)
 		)
+		(property "MFG" "Samtec"
+			(at 165.1 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SMA-J-P-H-RA-TH1"
+			(at 165.1 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "200-SMAJPHRATH1"
+			(at 165.1 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "41947243-62e3-4b73-bc39-0c4fd6fd5ac7")
 		)
@@ -18193,7 +18657,7 @@
 			(uuid "e7cacc99-96da-423a-a776-d7920693308c")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "J102")
 					(unit 1)
@@ -18638,7 +19102,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_Elec_6.3x7.7"
+		(property "Footprint" "Capacitor_SMD:C_Elec_8x6.2"
 			(at 176.53 33.02 0)
 			(effects
 				(font
@@ -18674,7 +19138,7 @@
 				(hide yes)
 			)
 		)
-		(property "MFG" ""
+		(property "MFG" "Vishay"
 			(at 176.53 33.02 0)
 			(effects
 				(font
@@ -18683,7 +19147,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "MAL214297007E3"
 			(at 176.53 33.02 0)
 			(effects
 				(font
@@ -18702,6 +19166,15 @@
 			)
 		)
 		(property "Mouser Part Number" "MAL215097011E3"
+			(at 176.53 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser_PN" "71-MAL214297007E3"
 			(at 176.53 33.02 0)
 			(effects
 				(font
@@ -18784,7 +19257,7 @@
 			(uuid "a08cd245-cc75-4da2-a191-f16e8fbc0191")
 		)
 		(instances
-			(project ""
+			(project "WSPR-ease"
 				(path "/31075357-d7d2-474d-bd47-511c83e129b3"
 					(reference "#FLG0103")
 					(unit 1)
