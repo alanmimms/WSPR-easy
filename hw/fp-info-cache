@@ -1,4 +1,4 @@
-27239338115503121
+27241114647136989
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -71483,6 +71483,13 @@ Switch
 0
 6
 6
+Library
+UHD111AFKAC3K23E1L3VG5ZB3Z3
+0404 (1010)
+LED (Multiple)
+0
+4
+4
 Library
 UJ20CHGMSMT4P16TR
 UJ20-C-H-G-MSMT-4-P16-TR-2

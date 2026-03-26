@@ -9302,7 +9302,7 @@
 				(hide yes)
 			)
 		)
-		(property "cap-type" "X5R"
+		(property "cap-type" "X7R"
 			(at 69.85 40.64 0)
 			(effects
 				(font
@@ -9310,7 +9310,7 @@
 				)
 			)
 		)
-		(property "working-voltage" "25V"
+		(property "working-voltage" "10V"
 			(at 69.85 40.64 0)
 			(effects
 				(font
