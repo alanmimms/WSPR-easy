@@ -13,9 +13,15 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 WEBUI_DIR="$(dirname "$PROJECT_DIR")/webui/www"
 BUILD_DIR="$PROJECT_DIR/build"
 
-# Use west's Python venv
+# Use west's Python venv or system python
 WEST_VENV="$HOME/.local/share/pipx/venvs/west"
-PYTHON="$WEST_VENV/bin/python"
+if [ -d "$WEST_VENV" ]; then
+    PYTHON="$WEST_VENV/bin/python"
+    ESPTOOL="$WEST_VENV/bin/esptool.py"
+else
+    PYTHON="python3"
+    ESPTOOL="python3 -m esptool"
+fi
 
 # LittleFS partition info from app.overlay
 # After ESP32-S3 default partitions: boot(64KB) + slot0(1472KB) + slot1(1472KB) + scratch(64KB) + storage(64KB)
@@ -68,17 +74,12 @@ echo ""
 echo "Flashing LittleFS image to $PORT at offset $LFS_OFFSET"
 
 # Use esptool to flash (same tool used by west)
-ESPTOOL="$HOME/.local/share/pipx/venvs/west/bin/esptool.py"
-if [ ! -f "$ESPTOOL" ]; then
-    ESPTOOL="esptool.py"
-fi
-
 $ESPTOOL --chip esp32s3 \
     --port "$PORT" \
     --baud 921600 \
     write_flash \
-    --flash_mode dio \
-    --flash_freq 80m \
+    --flash-mode dio \
+    --flash-freq 80m \
     $LFS_OFFSET "$BUILD_DIR/littlefs.bin"
 
 echo ""
