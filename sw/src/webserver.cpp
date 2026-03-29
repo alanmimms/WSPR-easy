@@ -31,16 +31,19 @@ LOG_MODULE_REGISTER(webserver, LOG_LEVEL_INF);
 namespace wspr {
 
 #define HTTP_PORT 80
-#define MAX_REQUEST_SIZE 1024
-#define MAX_RESPONSE_SIZE 2048
+#define MAX_REQUEST_SIZE 4096
+#define MAX_RESPONSE_SIZE 4096
 #define WEBROOT "/lfs"
 
-static K_THREAD_STACK_DEFINE(server_stack, 8192);
+static K_THREAD_STACK_DEFINE(server_stack, 16384);
 static struct k_thread server_thread;
 
 static int server_sock = -1;
 static bool server_running = false;
 static bool littlefs_mounted = false;
+
+// Global request buffer to save stack space
+static char request_buf[MAX_REQUEST_SIZE];
 
 
 // LittleFS mount configuration
@@ -152,36 +155,146 @@ static void handle_api_version(int client_sock) {
     send_json(client_sock, buf);
 }
 
+// Application configuration state
+struct AppConfig {
+    char callsign[16] = "N0CALL";
+    char gridSquare[8] = "AA00";
+    int powerDbm = 23;
+    char mode[16] = "round-robin";
+    int slotIntervalMin = 10;
+    char bandList[128] = "";
+
+    struct Band {
+        const char* name;
+        uint32_t freqHz;
+        bool enabled;
+    } bands[10] = {
+        {"160m", 1836600, false},
+        {"80m", 3568600, false},
+        {"40m", 7038600, false},
+        {"30m", 10138700, false},
+        {"20m", 14095600, true},
+        {"17m", 18104600, false},
+        {"15m", 21094600, false},
+        {"12m", 24924600, false},
+        {"10m", 28124600, false},
+        {"6m", 50293000, false}
+    };
+};
+
+static AppConfig global_config;
+
 // API handler: GET /api/config
 static void handle_api_config_get(int client_sock) {
-    // TODO: Load from NVS - for now return a complete config matching web UI expectations
-    const char* config_json =
-        "{"
-        "\"callsign\":\"N0CALL\","
-        "\"gridSquare\":\"AA00\","
-        "\"powerDbm\":23,"
-        "\"mode\":\"round-robin\","
-        "\"slotIntervalMin\":10,"
-        "\"bandList\":\"\","
-        "\"bands\":["
-            "{\"name\":\"80m\",\"freqHz\":3570100,\"enabled\":false},"
-            "{\"name\":\"40m\",\"freqHz\":7040100,\"enabled\":true},"
-            "{\"name\":\"30m\",\"freqHz\":10140200,\"enabled\":true},"
-            "{\"name\":\"20m\",\"freqHz\":14097100,\"enabled\":true},"
-            "{\"name\":\"17m\",\"freqHz\":18106100,\"enabled\":false},"
-            "{\"name\":\"15m\",\"freqHz\":21096100,\"enabled\":false},"
-            "{\"name\":\"12m\",\"freqHz\":24926100,\"enabled\":false},"
-            "{\"name\":\"10m\",\"freqHz\":28126100,\"enabled\":false}"
-        "]"
-        "}";
+    char buf[2560]; // Increased buffer for 10 bands
+    int pos = 0;
 
-    send_json(client_sock, config_json);
+    pos += snprintf(buf + pos, sizeof(buf) - pos,
+        "{"
+        "\"callsign\":\"%s\","
+        "\"gridSquare\":\"%s\","
+        "\"powerDbm\":%d,"
+        "\"mode\":\"%s\","
+        "\"slotIntervalMin\":%d,"
+        "\"bandList\":\"%s\","
+        "\"bands\":[",
+        global_config.callsign, global_config.gridSquare, global_config.powerDbm,
+        global_config.mode, global_config.slotIntervalMin, global_config.bandList
+    );
+
+    for (int i = 0; i < 10; i++) {
+        pos += snprintf(buf + pos, sizeof(buf) - pos,
+            "{\"name\":\"%s\",\"freqHz\":%u,\"enabled\":%s}%s",
+            global_config.bands[i].name, global_config.bands[i].freqHz,
+            global_config.bands[i].enabled ? "true" : "false",
+            (i < 9) ? "," : ""
+        );
+    }
+
+    pos += snprintf(buf + pos, sizeof(buf) - pos, "]}");
+
+    send_json(client_sock, buf);
+}
+
+// Simple JSON field extractor (helper for PUT handler)
+static bool get_json_string(const char* json, const char* key, char* out, size_t max_len) {
+    char search_key[64];
+    snprintf(search_key, sizeof(search_key), "\"%s\"", key);
+    const char* ptr = strstr(json, search_key);
+    if (!ptr) return false;
+    
+    ptr += strlen(search_key);
+    // Skip optional whitespace and colon
+    while (*ptr && (*ptr == ' ' || *ptr == ':')) ptr++;
+    // Must start with quote
+    if (*ptr != '\"') return false;
+    ptr++;
+    
+    const char* end = strchr(ptr, '\"');
+    if (!end) return false;
+    size_t len = end - ptr;
+    if (len >= max_len) len = max_len - 1;
+    memcpy(out, ptr, len);
+    out[len] = '\0';
+    return true;
+}
+
+static bool get_json_int(const char* json, const char* key, int* out) {
+    char search_key[64];
+    snprintf(search_key, sizeof(search_key), "\"%s\"", key);
+    const char* ptr = strstr(json, search_key);
+    if (!ptr) return false;
+
+    ptr += strlen(search_key);
+    // Skip optional whitespace and colon
+    while (*ptr && (*ptr == ' ' || *ptr == ':')) ptr++;
+    
+    *out = atoi(ptr);
+    return true;
 }
 
 // API handler: PUT /api/config
 static void handle_api_config_put(int client_sock, const char* body) {
-    // TODO: Parse JSON and save to NVS
-    LOG_INF("Config update received: %.100s...", body);
+    LOG_INF("Saving configuration update. Body len: %zu", strlen(body));
+    
+    // Log body for debugging (safely)
+    if (strlen(body) > 0) {
+        char debug_body[64];
+        snprintf(debug_body, sizeof(debug_body), "%.60s", body);
+        LOG_INF("Body start: %s...", debug_body);
+    }
+
+    // Extract basic fields
+    bool cs_found = get_json_string(body, "callsign", global_config.callsign, sizeof(global_config.callsign));
+    bool gs_found = get_json_string(body, "gridSquare", global_config.gridSquare, sizeof(global_config.gridSquare));
+    get_json_int(body, "powerDbm", &global_config.powerDbm);
+    get_json_string(body, "mode", global_config.mode, sizeof(global_config.mode));
+    get_json_int(body, "slotIntervalMin", &global_config.slotIntervalMin);
+    get_json_string(body, "bandList", global_config.bandList, sizeof(global_config.bandList));
+
+    // Handle band enables (crude but effective)
+    const char* bands_start = strstr(body, "\"bands\":[");
+    if (bands_start) {
+        for (int i = 0; i < 10; i++) {
+            char band_search[64];
+            snprintf(band_search, sizeof(band_search), "\"name\":\"%s\"", global_config.bands[i].name);
+            const char* band_ptr = strstr(bands_start, band_search);
+            if (band_ptr) {
+                const char* enabled_ptr = strstr(band_ptr, "\"enabled\":");
+                if (enabled_ptr) {
+                    const char* val_ptr = enabled_ptr + 10;
+                    while (*val_ptr == ' ' || *val_ptr == ':') val_ptr++;
+                    global_config.bands[i].enabled = (strncmp(val_ptr, "true", 4) == 0);
+                }
+            }
+        }
+    }
+
+    // TODO: Save to NVS
+    LOG_INF("Config updated: Callsign=%s (%s) Grid=%s (%s)", 
+            global_config.callsign, cs_found ? "found" : "not found",
+            global_config.gridSquare, gs_found ? "found" : "not found");
+
     send_json(client_sock, "{\"status\":\"ok\"}");
 }
 
@@ -408,10 +521,13 @@ static void handle_static(int client_sock, const char* path) {
     LOG_DBG("Sent %zu bytes for %s", total_sent, full_path);
 }
 
-// Find HTTP body start (after \r\n\r\n)
+// Find HTTP body start (after \r\n\r\n or \n\n)
 static const char* find_body(const char* request) {
     const char* body = strstr(request, "\r\n\r\n");
-    return body ? body + 4 : nullptr;
+    if (body) return body + 4;
+    body = strstr(request, "\n\n");
+    if (body) return body + 2;
+    return nullptr;
 }
 
 // Parse HTTP request and route to handlers
@@ -495,9 +611,7 @@ static void server_thread_fn(void* p1, void* p2, void* p3) {
     ARG_UNUSED(p2);
     ARG_UNUSED(p3);
 
-    char request_buf[MAX_REQUEST_SIZE];
-
-    LOG_INF("HTTP server thread started, waiting for connections on sock %d", server_sock);
+    LOG_INF("HTTP server thread started, waiting for connections on port %d", HTTP_PORT);
 
     while (server_running) {
         struct sockaddr_in client_addr;
@@ -522,12 +636,40 @@ static void server_thread_fn(void* p1, void* p2, void* p3) {
         zsock_setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
         // Read request
-        int len = zsock_recv(client_sock, request_buf, sizeof(request_buf) - 1, 0);
-        if (len > 0) {
-            request_buf[len] = '\0';
-            handle_request(client_sock, request_buf, len);
+        int total_len = 0;
+        int ret = zsock_recv(client_sock, request_buf, sizeof(request_buf) - 1, 0);
+        if (ret > 0) {
+            total_len = ret;
+            request_buf[total_len] = '\0';
+
+            // Check if we need to read more (for PUT/POST with body)
+            if (strncmp(request_buf, "PUT", 3) == 0 || strncmp(request_buf, "POST", 4) == 0) {
+                const char* cl_ptr = strstr(request_buf, "Content-Length:");
+                if (cl_ptr) {
+                    int content_length = atoi(cl_ptr + 15);
+                    const char* body_start = find_body(request_buf);
+                    int current_body_len = 0;
+                    if (body_start) {
+                        current_body_len = total_len - (body_start - request_buf);
+                    }
+
+                    LOG_INF("Expect body: %d bytes, already have: %d", content_length, current_body_len);
+
+                    while (current_body_len < content_length && total_len < (int)sizeof(request_buf) - 1) {
+                        ret = zsock_recv(client_sock, request_buf + total_len,
+                                         sizeof(request_buf) - 1 - total_len, 0);
+                        if (ret <= 0) break;
+                        total_len += ret;
+                        current_body_len += ret;
+                        request_buf[total_len] = '\0';
+                    }
+                }
+            }
+
+            LOG_INF("Received %d bytes total", total_len);
+            handle_request(client_sock, request_buf, total_len);
         } else {
-            LOG_WRN("HTTP recv failed or empty: %d (errno=%d)", len, errno);
+            LOG_WRN("HTTP recv failed or empty: %d (errno=%d)", ret, errno);
         }
 
         zsock_close(client_sock);

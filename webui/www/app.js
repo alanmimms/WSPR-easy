@@ -100,7 +100,7 @@ function updateConfigUI(config) {
     bandItem.className = 'band-item';
     bandItem.innerHTML = `
       <input type="checkbox" id="band-${index}" ${band.enabled ? 'checked' : ''}>
-      <label for="band-${index}">${band.name || `Band ${index}`} (${(band.freqHz / 1000000).toFixed(3)} MHz)</label>
+      <label for="band-${index}">${band.name || `Band ${index}`} (${ (band.freqHz / 1000000).toFixed(6) } MHz)</label>
     `;
     bandsList.appendChild(bandItem);
 
@@ -140,13 +140,13 @@ function updateTimeWindowsUI(bands) {
     const item = document.createElement('div');
     item.className = 'time-window-item';
     item.innerHTML = `
-      <div class="band-name">${band.name} (${(band.freqHz / 1000000).toFixed(3)} MHz)</div>
+      <div class="band-name">${band.name} (${ (band.freqHz / 1000000).toFixed(6) } MHz)</div>
       <label>
         <input type="checkbox" id="tw-enabled-${index}" ${tw.enabled ? 'checked' : ''}>
         Enable time window
       </label>
       <div class="time-window-row" id="tw-row-${index}" style="display: ${tw.enabled ? 'flex' : 'none'};">
-        <label>From:</label>
+        <label for="tw-start-base-${index}">From:</label>
         <select id="tw-start-base-${index}">
           <option value="utc" ${tw.startBase === 'utc' ? 'selected' : ''}>UTC</option>
           <option value="local" ${tw.startBase === 'local' ? 'selected' : ''}>Local</option>
@@ -155,7 +155,7 @@ function updateTimeWindowsUI(bands) {
         </select>
         <input type="number" id="tw-start-offset-${index}" value="${tw.startOffsetMin || 0}" style="width:70px;">
         <span>min</span>
-        <label>To:</label>
+        <label for="tw-end-base-${index}">To:</label>
         <select id="tw-end-base-${index}">
           <option value="utc" ${tw.endBase === 'utc' ? 'selected' : ''}>UTC</option>
           <option value="local" ${tw.endBase === 'local' ? 'selected' : ''}>Local</option>
@@ -184,10 +184,19 @@ function updateTimeWindowsUI(bands) {
 
 // Gather config from UI
 function gatherConfigFromUI() {
+  const callsign = document.getElementById('callsign').value.trim().toUpperCase();
+  const gridSquare = document.getElementById('grid').value.trim().toUpperCase();
+
+  // Basic Maidenhead validation (4 or 6 chars)
+  if (!/^[A-R]{2}[0-9]{2}([A-X]{2})?$/.test(gridSquare)) {
+    alert('Invalid Maidenhead grid square (e.g., AA00 or AA00XX)');
+    throw new Error('Invalid grid square');
+  }
+
   const config = {
     ...currentConfig,
-    callsign: document.getElementById('callsign').value,
-    gridSquare: document.getElementById('grid').value,
+    callsign: callsign,
+    gridSquare: gridSquare,
     powerDbm: parseInt(document.getElementById('power').value),
     mode: document.getElementById('mode').value,
     bandList: document.getElementById('band-list-input').value,
