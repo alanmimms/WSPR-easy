@@ -1,0 +1,4 @@
+allowed_directorys:
+  - "~/zephyr-projects"
+  - "."
+recursive: true

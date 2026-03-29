@@ -28,7 +28,7 @@
       "text": true,
       "tracks": true,
       "vias": true,
-      "zones": false
+      "zones": true
     },
     "visible_items": [
       "vias",
@@ -94,8 +94,6 @@
       11
     ],
     "col_widths": [
-      0,
-      0,
       0,
       0,
       0,
