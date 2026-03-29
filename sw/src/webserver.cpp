@@ -16,6 +16,8 @@
 #include <zephyr/fs/fs.h>
 #include <zephyr/fs/littlefs.h>
 #include <zephyr/storage/flash_map.h>
+#include <zephyr/drivers/flash.h>
+#include <zephyr/fs/nvs.h>
 
 #include <cstring>
 #include <cstdio>
@@ -44,6 +46,13 @@ static bool littlefs_mounted = false;
 
 // Global request buffer to save stack space
 static char request_buf[MAX_REQUEST_SIZE];
+
+static struct nvs_fs fs;
+#define CONFIG_NVS_ID 1
+
+// Forward declarations
+static void load_config_from_nvs();
+static void save_config_to_nvs();
 
 
 // LittleFS mount configuration
@@ -184,6 +193,58 @@ struct AppConfig {
 
 static AppConfig global_config;
 
+// Load configuration from NVS
+static void load_config_from_nvs() {
+    const struct flash_area *fa;
+    int rc;
+
+    rc = flash_area_open(FIXED_PARTITION_ID(storage_partition), &fa);
+    if (rc) {
+        LOG_ERR("Flash area open failed: %d", rc);
+        return;
+    }
+
+    fs.flash_device = fa->fa_dev;
+    fs.offset = fa->fa_off;
+    struct flash_pages_info info;
+    rc = flash_get_page_info_by_offs(fa->fa_dev, fs.offset, &info);
+    if (rc) {
+        LOG_ERR("Flash get page info failed: %d", rc);
+        flash_area_close(fa);
+        return;
+    }
+
+    fs.sector_size = info.size;
+    fs.sector_count = fa->fa_size / info.size;
+
+    rc = nvs_mount(&fs);
+    if (rc) {
+        LOG_ERR("NVS mount failed: %d", rc);
+        flash_area_close(fa);
+        return;
+    }
+
+    rc = nvs_read(&fs, CONFIG_NVS_ID, &global_config, sizeof(global_config));
+    if (rc > 0) {
+        LOG_INF("Configuration loaded from flash: Callsign=%s Grid=%s", 
+                global_config.callsign, global_config.gridSquare);
+    } else {
+        LOG_INF("No configuration found in flash, using defaults (N0CALL)");
+    }
+    
+    flash_area_close(fa);
+}
+
+// Save configuration to NVS
+static void save_config_to_nvs() {
+    int rc = nvs_write(&fs, CONFIG_NVS_ID, &global_config, sizeof(global_config));
+    if (rc < 0) {
+        LOG_ERR("Failed to save config to NVS: %d", rc);
+    } else {
+        LOG_INF("Configuration saved to flash (%d bytes)", rc);
+    }
+}
+
 // API handler: GET /api/config
 static void handle_api_config_get(int client_sock) {
     char buf[2560]; // Increased buffer for 10 bands
@@ -290,7 +351,9 @@ static void handle_api_config_put(int client_sock, const char* body) {
         }
     }
 
-    // TODO: Save to NVS
+    // Save updated config to flash
+    save_config_to_nvs();
+    
     LOG_INF("Config updated: Callsign=%s (%s) Grid=%s (%s)", 
             global_config.callsign, cs_found ? "found" : "not found",
             global_config.gridSquare, gs_found ? "found" : "not found");
@@ -713,6 +776,9 @@ int WebServer::init() {
 
     // Mount filesystem if not already done
     mount_filesystem();
+
+    // Load configuration from flash
+    load_config_from_nvs();
 
     return 0;
 }
