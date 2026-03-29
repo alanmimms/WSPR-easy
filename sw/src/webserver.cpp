@@ -130,7 +130,10 @@ static void handle_api_status(int client_sock) {
             "\"satellites\":%d,"
             "\"latitude\":%.6f,"
             "\"longitude\":%.6f,"
-            "\"time\":\"%s\""
+            "\"time\":\"%s\","
+            "\"grid\":\"%s\","
+            "\"hdop\":%.2f,"
+            "\"snr\":%.1f"
         "},"
         "\"fpga\":{"
             "\"initialized\":%s,"
@@ -148,6 +151,9 @@ static void handle_api_status(int client_sock) {
         gnss.latitude(),
         gnss.longitude(),
         gnss.time_string(),
+        gnss.grid_locator(),
+        (double)gnss.hdop(),
+        (double)gnss.avg_snr(),
         fpga.is_initialized() ? "true" : "false",
         fpga.is_transmitting() ? "true" : "false",
         fpga.frequency(),
@@ -164,7 +170,27 @@ static void handle_api_version(int client_sock) {
     send_json(client_sock, buf);
 }
 
-// Application configuration state
+// Band metadata (hardcoded constants)
+struct BandMeta {
+    const char* name;
+    uint32_t freqHz;
+};
+
+static const BandMeta band_metadata[10] = {
+    {"160m", 1836600},
+    {"80m", 3568600},
+    {"40m", 7038600},
+    {"30m", 10138700},
+    {"20m", 14095600},
+    {"17m", 18104600},
+    {"15m", 21094600},
+    {"12m", 24924600},
+    {"10m", 28124600},
+    {"6m", 50293000}
+};
+
+// Application configuration state (persisted to flash)
+// NO POINTERS ALLOWED HERE
 struct AppConfig {
     char callsign[16] = "N0CALL";
     char gridSquare[8] = "AA00";
@@ -172,23 +198,7 @@ struct AppConfig {
     char mode[16] = "round-robin";
     int slotIntervalMin = 10;
     char bandList[128] = "";
-
-    struct Band {
-        const char* name;
-        uint32_t freqHz;
-        bool enabled;
-    } bands[10] = {
-        {"160m", 1836600, false},
-        {"80m", 3568600, false},
-        {"40m", 7038600, false},
-        {"30m", 10138700, false},
-        {"20m", 14095600, true},
-        {"17m", 18104600, false},
-        {"15m", 21094600, false},
-        {"12m", 24924600, false},
-        {"10m", 28124600, false},
-        {"6m", 50293000, false}
-    };
+    bool bandEnabled[10] = {false, false, false, false, true, false, false, false, false, false};
 };
 
 static AppConfig global_config;
@@ -225,11 +235,11 @@ static void load_config_from_nvs() {
     }
 
     rc = nvs_read(&fs, CONFIG_NVS_ID, &global_config, sizeof(global_config));
-    if (rc > 0) {
+    if (rc == sizeof(global_config)) {
         LOG_INF("Configuration loaded from flash: Callsign=%s Grid=%s", 
                 global_config.callsign, global_config.gridSquare);
     } else {
-        LOG_INF("No configuration found in flash, using defaults (N0CALL)");
+        LOG_INF("No valid configuration found in flash (rc=%d), using defaults", rc);
     }
     
     flash_area_close(fa);
@@ -247,7 +257,7 @@ static void save_config_to_nvs() {
 
 // API handler: GET /api/config
 static void handle_api_config_get(int client_sock) {
-    char buf[2560]; // Increased buffer for 10 bands
+    char buf[2560]; 
     int pos = 0;
 
     pos += snprintf(buf + pos, sizeof(buf) - pos,
@@ -266,8 +276,8 @@ static void handle_api_config_get(int client_sock) {
     for (int i = 0; i < 10; i++) {
         pos += snprintf(buf + pos, sizeof(buf) - pos,
             "{\"name\":\"%s\",\"freqHz\":%u,\"enabled\":%s}%s",
-            global_config.bands[i].name, global_config.bands[i].freqHz,
-            global_config.bands[i].enabled ? "true" : "false",
+            band_metadata[i].name, band_metadata[i].freqHz,
+            global_config.bandEnabled[i] ? "true" : "false",
             (i < 9) ? "," : ""
         );
     }
@@ -338,14 +348,14 @@ static void handle_api_config_put(int client_sock, const char* body) {
     if (bands_start) {
         for (int i = 0; i < 10; i++) {
             char band_search[64];
-            snprintf(band_search, sizeof(band_search), "\"name\":\"%s\"", global_config.bands[i].name);
+            snprintf(band_search, sizeof(band_search), "\"name\":\"%s\"", band_metadata[i].name);
             const char* band_ptr = strstr(bands_start, band_search);
             if (band_ptr) {
                 const char* enabled_ptr = strstr(band_ptr, "\"enabled\":");
                 if (enabled_ptr) {
                     const char* val_ptr = enabled_ptr + 10;
                     while (*val_ptr == ' ' || *val_ptr == ':') val_ptr++;
-                    global_config.bands[i].enabled = (strncmp(val_ptr, "true", 4) == 0);
+                    global_config.bandEnabled[i] = (strncmp(val_ptr, "true", 4) == 0);
                 }
             }
         }
@@ -604,7 +614,7 @@ static void handle_request(int client_sock, const char* request, size_t request_
         return;
     }
 
-    LOG_INF("HTTP %s %s", method, path);
+    LOG_DBG("HTTP %s %s", method, path);
 
     // Route request
     if (strcmp(method, "GET") == 0) {
@@ -692,7 +702,7 @@ static void server_thread_fn(void* p1, void* p2, void* p3) {
         // Log client connection
         char client_ip[16];
         net_addr_ntop(AF_INET, &client_addr.sin_addr, client_ip, sizeof(client_ip));
-        LOG_INF("HTTP connection from %s", client_ip);
+        LOG_DBG("HTTP connection from %s", client_ip);
 
         // Set receive timeout (shorter to handle concurrent requests faster)
         struct zsock_timeval tv = { .tv_sec = 2, .tv_usec = 0 };
@@ -729,7 +739,7 @@ static void server_thread_fn(void* p1, void* p2, void* p3) {
                 }
             }
 
-            LOG_INF("Received %d bytes total", total_len);
+            LOG_DBG("Received %d bytes total", total_len);
             handle_request(client_sock, request_buf, total_len);
         } else {
             LOG_WRN("HTTP recv failed or empty: %d (errno=%d)", ret, errno);

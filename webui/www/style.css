@@ -75,6 +75,17 @@ header h1 {
   font-size: 0.85rem;
 }
 
+.gnss-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.value-small {
+  font-size: 0.7rem;
+  color: var(--secondary);
+  line-height: 1;
+}
+
 .status-online {
   color: var(--success);
   font-weight: 600;

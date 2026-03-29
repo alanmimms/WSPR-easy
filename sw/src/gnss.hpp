@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <zephyr/kernel.h>
 
 namespace wspr {
 
@@ -14,6 +15,8 @@ struct GnssData {
     double latitude;
     double longitude;
     double altitude;
+    float hdop;       // Horizontal Dilution of Precision (lower is better)
+    float avg_snr;    // Average Signal-to-Noise Ratio (dB-Hz)
     uint8_t satellites;
     uint8_t hour;
     uint8_t minute;
@@ -28,13 +31,18 @@ public:
     static Gnss& instance();
 
     int init();
-    void update();
+    
+    // Start/Stop processing (thread-safe)
+    void start();
+    void stop();
 
     bool has_fix() const { return data_.valid; }
     int satellites() const { return data_.satellites; }
     double latitude() const { return data_.latitude; }
     double longitude() const { return data_.longitude; }
     double altitude() const { return data_.altitude; }
+    float hdop() const { return data_.hdop; }
+    float avg_snr() const { return data_.avg_snr; }
 
     const char* time_string() const { return time_str_; }
     const char* grid_locator() const { return grid_; }
@@ -50,14 +58,25 @@ private:
 
     void compute_grid();
     void format_time();
+    void process_loop();
+    void parse_nmea(char* line);
+
+    // Thread management
+    static void thread_fn(void* p1, void* p2, void* p3);
+    struct k_thread thread_data_;
+    bool running_ = false;
 
     GnssData data_ = {};
-    char time_str_[20] = "00:00:00";
+    char time_str_[20] = "n/a";
     char grid_[7] = "AA00aa";
 
-    // For stub mode simulation
-    bool stub_mode_ = true;
-    int64_t stub_base_time_ = 0;
+    // UART device
+    const struct device* uart_dev_ = nullptr;
+    char nmea_buf_[128];
+    int nmea_pos_ = 0;
+
+    // Synchronization
+    mutable struct k_mutex mutex_;
 };
 
 } // namespace wspr

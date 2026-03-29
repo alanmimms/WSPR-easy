@@ -1962,7 +1962,7 @@
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "Y"
-				(at 5.334 7.112 0)
+				(at 5.08 7.62 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1971,7 +1971,7 @@
 				)
 			)
 			(property "Value" "ECS-TXO-2016-33-400-TR"
-				(at 5.334 4.572 0)
+				(at 5.08 5.08 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1979,7 +1979,7 @@
 					(justify left top)
 				)
 			)
-			(property "Footprint" "Library:ECSTXO201633400TR"
+			(property "Footprint" "ECSTXO201633400TR"
 				(at 34.29 -94.92 0)
 				(effects
 					(font
@@ -2000,7 +2000,7 @@
 				)
 			)
 			(property "Description" "TCXO Oscillators 40MHz 3.3V 2.5ppm -40C +85C"
-				(at 0 0 0)
+				(at 17.78 12.7 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -2061,7 +2061,7 @@
 			(symbol "ECS-TXO-2016-33-400-TR_1_1"
 				(rectangle
 					(start 5.08 2.54)
-					(end 21.59 -5.08)
+					(end 22.86 -5.08)
 					(stroke
 						(width 0.254)
 						(type default)
@@ -2070,7 +2070,7 @@
 						(type background)
 					)
 				)
-				(pin passive line
+				(pin power_in line
 					(at 0 0 0)
 					(length 5.08)
 					(name "VDD"
@@ -2088,7 +2088,7 @@
 						)
 					)
 				)
-				(pin passive line
+				(pin input line
 					(at 0 -2.54 0)
 					(length 5.08)
 					(name "TRI-STATE"
@@ -2106,8 +2106,8 @@
 						)
 					)
 				)
-				(pin passive line
-					(at 26.67 0 180)
+				(pin output line
+					(at 27.94 0 180)
 					(length 5.08)
 					(name "OUTPUT"
 						(effects
@@ -2125,7 +2125,7 @@
 					)
 				)
 				(pin passive line
-					(at 26.67 -2.54 180)
+					(at 27.94 -2.54 180)
 					(length 5.08)
 					(name "GND"
 						(effects
@@ -4724,7 +4724,7 @@
 	)
 	(wire
 		(pts
-			(xy 104.14 31.75) (xy 106.68 31.75)
+			(xy 105.41 31.75) (xy 107.95 31.75)
 		)
 		(stroke
 			(width 0)
@@ -5114,7 +5114,7 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 34.29) (xy 105.41 35.56)
+			(xy 106.68 34.29) (xy 106.68 35.56)
 		)
 		(stroke
 			(width 0)
@@ -5271,6 +5271,16 @@
 			(type default)
 		)
 		(uuid "8501104f-1387-4d11-afdd-5024feeddafa")
+	)
+	(wire
+		(pts
+			(xy 58.42 115.57) (xy 59.69 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8686417e-7f52-42d1-a0d3-0e74031f13db")
 	)
 	(wire
 		(pts
@@ -5864,16 +5874,6 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 115.57) (xy 59.69 115.57)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d00a8762-efa4-43e3-9a59-dac62a9d82cc")
-	)
-	(wire
-		(pts
 			(xy 110.49 116.84) (xy 109.22 116.84)
 		)
 		(stroke
@@ -5904,7 +5904,7 @@
 	)
 	(wire
 		(pts
-			(xy 104.14 34.29) (xy 105.41 34.29)
+			(xy 105.41 34.29) (xy 106.68 34.29)
 		)
 		(stroke
 			(width 0)
@@ -6413,7 +6413,7 @@
 		(uuid "70edeb53-0660-4180-ba5b-03dd15ab0e01")
 	)
 	(label "FPGACLK"
-		(at 106.68 31.75 0)
+		(at 107.95 31.75 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7795,7 +7795,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 105.41 35.56 0)
+		(at 106.68 35.56 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7803,7 +7803,7 @@
 		(dnp no)
 		(uuid "13369397-3fa7-4522-bbe0-cebc7a4cceac")
 		(property "Reference" "#PWR0319"
-			(at 105.41 41.91 0)
+			(at 106.68 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7812,7 +7812,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 105.156 39.37 0)
+			(at 106.426 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7821,7 +7821,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 105.41 35.56 0)
+			(at 106.68 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7830,7 +7830,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 105.41 35.56 0)
+			(at 106.68 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7839,7 +7839,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 105.41 35.56 0)
+			(at 106.68 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13473,7 +13473,7 @@
 		(fields_autoplaced yes)
 		(uuid "9372cc9e-c4b6-41ca-af38-bdfc2b722ccf")
 		(property "Reference" "Y301"
-			(at 90.805 24.13 0)
+			(at 91.44 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13481,7 +13481,7 @@
 			)
 		)
 		(property "Value" "40MHz"
-			(at 90.805 26.67 0)
+			(at 91.44 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13802,6 +13802,36 @@
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "520-TXO-2016-33-400T"
+			(at 111.76 526.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "ECS"
+			(at 111.76 726.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Part_Number" "ECS-TXO-2016-33-400-TR"
+			(at 111.76 826.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
 				(hide yes)
 			)
 		)

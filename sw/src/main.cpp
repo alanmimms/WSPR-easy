@@ -134,9 +134,6 @@ int main(void)
     bool was_connected = wifi.is_connected();
 
     while (1) {
-        // Update GNSS data
-        gnss.update();
-
         // Check for scheduled WSPR transmission
         // (In real implementation, this would check schedule and start TX)
         if (gnss.is_tx_slot() && !fpga.is_transmitting()) {

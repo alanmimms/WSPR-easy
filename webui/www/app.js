@@ -289,8 +289,29 @@ async function loadStatus() {
     // GNSS status
     const gnssLocked = status.gnss?.fix || status.gnss?.locked;
     const sats = status.gnss?.satellites || 0;
-    document.getElementById('gnss-status').textContent = gnssLocked ?
-      `Locked (${sats} sats)` : 'No Lock';
+    const gnssStatus = document.getElementById('gnss-status');
+    const gnssPos = document.getElementById('gnss-pos');
+    const gnssQuality = document.getElementById('gnss-quality');
+    const utcTime = document.getElementById('utc-time');
+    
+    gnssStatus.textContent = gnssLocked ? `Locked (${sats} sats)` : 'No Lock';
+    
+    if (gnssLocked && status.gnss) {
+      const lat = status.gnss.latitude?.toFixed(4);
+      const lon = status.gnss.longitude?.toFixed(4);
+      const grid = status.gnss.grid || '----';
+      gnssPos.textContent = `${lat}, ${lon} [${grid}]`;
+      
+      const hdop = status.gnss.hdop?.toFixed(2);
+      const snr = status.gnss.snr?.toFixed(1);
+      gnssQuality.textContent = `HDOP: ${hdop}, SNR: ${snr}dB`;
+      
+      utcTime.textContent = status.gnss.time || '--:--:--';
+    } else {
+      gnssPos.textContent = '';
+      gnssQuality.textContent = '';
+      utcTime.textContent = '--:--:--';
+    }
     // Clock source
     const clockSource = status.clock?.source || 'TCXO';
     document.getElementById('clock-status').textContent = clockSource.toUpperCase();

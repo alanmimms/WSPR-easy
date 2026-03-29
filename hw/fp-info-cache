@@ -1,4 +1,4 @@
-27241114647190046
+27249988498531942
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -71407,6 +71407,13 @@ CX90M-16P
 18
 18
 Library
+DBV6_TEX
+
+TPS22918DBVR 
+0
+6
+6
+Library
 ECSTXO201633400TR
 ECS-TXO-2016-33-400-TR-2
 Crystal or Oscillator
@@ -71480,6 +71487,13 @@ Library
 SOT65P220X110-6N
 6-Pin SC-70
 Switch
+0
+6
+6
+Library
+SOT95P280X145-6N
+DBV0006A
+Integrated Circuit
 0
 6
 6
@@ -107477,6 +107491,27 @@ CX90M-16P
 0
 18
 18
+symbols
+DBV6_TEX
+
+TPS22918DBVR 
+0
+6
+6
+symbols
+DBV6_TEX-L
+
+TPS22918DBVR 
+0
+6
+6
+symbols
+DBV6_TEX-M
+
+TPS22918DBVR 
+0
+6
+6
 symbols
 HRO-TYPE-C-31-M-12
 USB Type-C Receptacle, 16-Pin, HRO Electronics TYPE-C-31-M-12 (LCSC C165948)

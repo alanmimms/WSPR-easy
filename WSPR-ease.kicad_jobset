@@ -1,0 +1,17 @@
+{
+  "jobs": [],
+  "meta": {
+    "version": 1
+  },
+  "outputs": [
+    {
+      "description": "",
+      "id": "defad95f-3fdd-4afe-96e9-17d565fb350a",
+      "only": [],
+      "settings": {
+        "output_path": "WSPR-ease"
+      },
+      "type": "folder"
+    }
+  ]
+}
