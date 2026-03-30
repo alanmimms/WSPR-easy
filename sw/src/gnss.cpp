@@ -8,6 +8,7 @@
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/drivers/uart.h>
+#include <zephyr/drivers/gpio.h>
 
 #include <cstdio>
 #include <cmath>
@@ -31,6 +32,22 @@ Gnss& Gnss::instance() {
 int Gnss::init() {
     LOG_INF("Initializing GNSS module");
     k_mutex_init(&mutex_);
+
+    // GNSS Reset sequence
+    static const struct gpio_dt_spec gnss_reset = GPIO_DT_SPEC_GET(DT_NODELABEL(gnss_reset), gpios);
+    if (device_is_ready(gnss_reset.port)) {
+        LOG_INF("Pulsing GNSS reset (GPIO 15)");
+        gpio_pin_configure_dt(&gnss_reset, GPIO_OUTPUT_INACTIVE); // Start High (Inactive)
+        
+        gpio_pin_set_dt(&gnss_reset, 0); // Physical High
+        k_msleep(10);
+        
+        gpio_pin_set_dt(&gnss_reset, 1); // Physical Low (Active Reset)
+        k_msleep(50);
+        
+        gpio_pin_set_dt(&gnss_reset, 0); // Physical High (Release Reset)
+        LOG_INF("GNSS reset released");
+    }
 
     uart_dev_ = DEVICE_DT_GET(DT_ALIAS(gnss_uart));
     if (!device_is_ready(uart_dev_)) {
@@ -64,13 +81,12 @@ void Gnss::thread_fn(void* p1, void* p2, void* p3) {
 }
 
 void Gnss::process_loop() {
-    LOG_INF("GNSS worker thread started");
+    LOG_INF("GNSS worker thread started (fixed 9600 baud)");
     
     uint8_t c;
     uint32_t last_log_time = 0;
     uint32_t last_data_time = k_uptime_get_32();
     bool first_data_received = false;
-    uint32_t current_baud = 9600;
 
     while (running_) {
         // Skip processing during transmission to avoid affecting realtime modulation
@@ -102,22 +118,6 @@ void Gnss::process_loop() {
                 }
             }
         } else {
-            // No data, check if we've been silent too long
-            uint32_t now = k_uptime_get_32();
-            if (now - last_data_time > 30000) { // 30 seconds
-                // Try switching baud rate
-                current_baud = (current_baud == 9600) ? 115200 : 9600;
-                LOG_WRN("GNSS: No data for 30s, switching to %u baud", current_baud);
-                
-                struct uart_config cfg;
-                if (uart_config_get(uart_dev_, &cfg) == 0) {
-                    cfg.baudrate = current_baud;
-                    uart_configure(uart_dev_, &cfg);
-                }
-                
-                last_data_time = now; // Reset timer for next attempt
-                first_data_received = false;
-            }
             k_sleep(K_MSEC(10));
         }
 
@@ -126,7 +126,7 @@ void Gnss::process_loop() {
         if (now - last_log_time >= 10000) {
             k_mutex_lock(&mutex_, K_FOREVER);
             if (!first_data_received) {
-                LOG_WRN("GNSS Status: NO DATA RECEIVED ON UART YET (baud=%u)", current_baud);
+                LOG_WRN("GNSS Status: NO DATA RECEIVED ON UART (fixed 9600 baud)");
             } else {
                 LOG_INF("GNSS Status: lock=%s, sats=%d, snr=%.1f, time=%s",
                         data_.valid ? "YES" : "NO", data_.satellites, (double)data_.avg_snr, time_str_);

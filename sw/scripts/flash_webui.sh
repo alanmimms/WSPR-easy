@@ -77,7 +77,7 @@ echo "Flashing LittleFS image to $PORT at offset $LFS_OFFSET"
 $ESPTOOL --chip esp32s3 \
     --port "$PORT" \
     --baud 921600 \
-    write_flash \
+    write-flash \
     --flash-mode dio \
     --flash-freq 80m \
     $LFS_OFFSET "$BUILD_DIR/littlefs.bin"

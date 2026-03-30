@@ -28,7 +28,7 @@
 	aliases {
 		/* Aliases for C code access (must be lowercase with hyphens) */
 		fpga-spi = &spi2;
-		gnss-uart = &uart1;
+		gnss-uart = &uart0;
 		led0 = &led_blue;
 	};
 
@@ -67,10 +67,14 @@
 			label = "FPGA CS";
 		};
 
-		/* GNSS Timing */
+		/* GNSS Timing and Control */
 		pps_in: pps-in {
 			gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>; /* IO 48 (Bank 1, pin 16) */
 			label = "GNSS PPS";
+		};
+		gnss_reset: gnss-reset {
+			gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+			label = "GNSS Reset";
 		};
 
 		/* Low Pass Filter Switching */
@@ -105,11 +109,12 @@
 		};
 	};
 
-	/* UART1 for GNSS */
-	uart1_default: uart1_default {
+	/* UART0 for GNSS (Physically RXD0/TXD0) */
+	uart0_default: uart0_default {
 		group1 {
-			pinmux = <UART1_TX_GPIO44>,
-			         <UART1_RX_GPIO43>;
+			pinmux = <UART0_TX_GPIO43>,
+			         <UART0_RX_GPIO44>;
+			bias-pull-up;
 		};
 	};
 };
@@ -130,11 +135,15 @@
 	};
 };
 
-&uart1 {
+&uart0 {
 	status = "okay";
-	current-speed = <9600>; /* Default GNSS baud */
-	pinctrl-0 = <&uart1_default>;
+	current-speed = <9600>;
+	pinctrl-0 = <&uart0_default>;
 	pinctrl-names = "default";
+};
+
+&uart1 {
+	status = "disabled";
 };
 
 &usb_serial {

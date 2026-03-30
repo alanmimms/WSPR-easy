@@ -8929,7 +8929,7 @@
 		(uuid "0c5451b7-9374-4fdc-8918-ac222a325130")
 	)
 	(label "gnssRx"
-		(at 38.1 149.86 180)
+		(at 38.1 147.32 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9159,7 +9159,7 @@
 		(uuid "97811eb6-ceb2-4bd1-831f-9c073742e828")
 	)
 	(label "gnssTx"
-		(at 38.1 147.32 180)
+		(at 38.1 149.86 180)
 		(effects
 			(font
 				(size 1.27 1.27)
