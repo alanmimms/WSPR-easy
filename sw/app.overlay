@@ -125,13 +125,12 @@
 	status = "okay";
 	pinctrl-0 = <&spi2_default>;
 	pinctrl-names = "default";
-	cs-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>; /* Hardware CS managed by driver if needed */
 	
-	/* FPGA is the only device on this bus */
+	/* FPGA is the only device on this bus. CS managed manually during config. */
 	fpga_dev: fpga@0 {
 		compatible = "vnd,spi-device";
 		reg = <0>;
-		spi-max-frequency = <40000000>; /* Start 40MHz, can go 80MHz */
+		spi-max-frequency = <20000000>; /* 20MHz for reliable config */
 	};
 };
 

@@ -16,29 +16,32 @@ module Top (
     output logic fpgaMISO,   // SPI MISO
     input  logic gnssPPS,    // GPS PPS Input
     
-    input  logic clk25MHz,   // 25 MHz TCXO
+    input  logic clk40MHz,   // 40 MHz TCXO (Drives PLL on pin 35)
     
     // RF Power Amplifier Drive (DDR Outputs)
     output logic rfPushBase,
     output logic rfPushPeak,
     output logic rfPullBase,
-    output logic rfPullPeak,
+    output logic rfPullPeak
 );
 
     // -------------------------------------------------------------------------
-    // 1. Clock Generation (100 MHz from 25 MHz)
+    // 1. Clock Generation (100 MHz from 40 MHz Pad)
     // -------------------------------------------------------------------------
     logic clk100MHz;
     logic pllLocked;
 
-    SB_PLL40_CORE #(
+    // 40 MHz -> 100 MHz
+    // F_out = F_ref * (DIVF+1) / (2^DIVQ * (DIVR+1))
+    // 100 = 40 * (4+1) / (2^1 * (0+1)) = 40 * 5 / 2 = 100
+    SB_PLL40_PAD #(
         .FEEDBACK_PATH("SIMPLE"),
-        .DIVR(4'b0000),      // RefDiv = 1
-        .DIVF(7'b0000011),   // FeedbackDiv = 4
-        .DIVQ(3'b100),       // VCO Div = 1
+        .DIVR(4'b0000),      // DIVR = 0
+        .DIVF(7'b0000100),   // DIVF = 4
+        .DIVQ(3'b001),       // DIVQ = 1
         .FILTER_RANGE(3'b001)
     ) pllInst (
-        .REFERENCECLK(clk25MHz),
+        .PACKAGEPIN(clk40MHz),
         .PLLOUTCORE(clk100MHz),
         .LOCK(pllLocked),
         .RESETB(1'b1),
@@ -46,7 +49,7 @@ module Top (
     );
 
     // -------------------------------------------------------------------------
-    // 2. PPS Measurement (TCXO Calibration)
+    // 2. PPS Measurement (TCXO Calibration) - Now at 100 MHz
     // -------------------------------------------------------------------------
     logic [31:0] ppsLiveCounter;
     logic [31:0] ppsCapturedPeriod; 
@@ -54,13 +57,13 @@ module Top (
     logic [2:0] ppsSync;
     logic ppsRisingEdge;
 
-    always_ff @(posedge clk25MHz) begin
+    always_ff @(posedge clk100MHz) begin
         ppsSync <= {ppsSync[1:0], gnssPPS};
     end
 
     assign ppsRisingEdge = (ppsSync[0] && !ppsSync[1]);
 
-    always_ff @(posedge clk25MHz) begin
+    always_ff @(posedge clk100MHz) begin
         if (ppsRisingEdge) begin
             ppsCapturedPeriod <= ppsLiveCounter;
             ppsLiveCounter <= 32'd0;
@@ -70,36 +73,55 @@ module Top (
     end
 
     // -------------------------------------------------------------------------
-    // 3. Bidirectional SPI Slave
+    // 3. Synchronous SPI Slave (sampled by clk100MHz)
     // -------------------------------------------------------------------------
     logic [31:0] spiShiftReg;
-    logic [31:0] tuningWordShadow;
+    logic [31:0] tuningWordShadow = 32'd0;
     logic [5:0]  spiBitCount;
+    
+    logic [2:0] sclkSync, mosiSync, ncsSync;
+    
+    always_ff @(posedge clk100MHz) begin
+        sclkSync <= {sclkSync[1:0], fpgaClk};
+        mosiSync <= {mosiSync[1:0], fpgaMOSI};
+        ncsSync  <= {ncsSync[1:0], fpgaNCS};
+    end
+    
+    wire sclkRise = (sclkSync[1] && !sclkSync[2]);
+    wire sclkFall = (!sclkSync[1] && sclkSync[2]);
+    wire ncsActive = !ncsSync[1];
+    wire ncsFallingEdge = (!ncsSync[1] && ncsSync[2]);
 
-    // MOSI Capture (Rising Edge)
-    always_ff @(posedge fpgaClk or posedge fpgaNCS) begin
-        if (fpgaNCS) begin
+    logic spiMisoOut;
+
+    always_ff @(posedge clk100MHz) begin
+        if (!ncsActive) begin
             spiBitCount <= '0;
+            spiMisoOut <= 1'b0;
         end else begin
-            spiBitCount <= spiBitCount + 1'b1;
+            if (ncsFallingEdge) begin
+                spiShiftReg <= ppsCapturedPeriod;
+                spiBitCount <= '0;
+                spiMisoOut <= ppsCapturedPeriod[31];
+            end else if (sclkRise) begin
+                spiShiftReg <= {spiShiftReg[30:0], mosiSync[1]};
+                spiBitCount <= spiBitCount + 1'b1;
+            end else if (sclkFall) begin
+                // Shift out the next bit on falling edge
+                spiMisoOut <= spiShiftReg[31];
+            end
         end
     end
     
-    // MISO Shift & Register Update (Falling Edge)
-    always_ff @(negedge fpgaClk or posedge fpgaNCS) begin
-        if (fpgaNCS) begin
-            spiShiftReg <= ppsCapturedPeriod;
-        end else begin
-            spiShiftReg <= {spiShiftReg[30:0], fpgaMOSI};
-        end
-    end
-    
-    assign fpgaMISO = spiShiftReg[31];
+    // MISO Output
+    assign fpgaMISO = ncsActive ? spiMisoOut : 1'bz;
 
     // Tuning Word Latch
-    always_ff @(posedge fpgaNCS) begin
-        if (spiBitCount == 6'd32) begin
-            tuningWordShadow <= spiShiftReg;
+    always_ff @(posedge clk100MHz) begin
+        if (!ncsActive && ncsSync[2]) begin // NCS rising edge
+            if (spiBitCount == 6'd32) begin
+                tuningWordShadow <= spiShiftReg;
+            end
         end
     end
 

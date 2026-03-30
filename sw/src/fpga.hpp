@@ -30,6 +30,7 @@ public:
 
     int init();
     int reset();
+    int load_bitstream(const char* path);
 
     // Frequency control
     int set_frequency(uint32_t freq_hz);
@@ -45,6 +46,9 @@ public:
 
     // LPF band switching
     int set_lpf_band(WsprBand band);
+    WsprBand get_band() const { return current_band_; }
+
+    uint32_t get_counter();
 
     bool is_initialized() const { return initialized_; }
 
@@ -58,9 +62,6 @@ private:
     bool transmitting_ = false;
     uint32_t current_freq_ = 0;
     WsprBand current_band_ = WsprBand::Band20m;
-
-    // Stub mode
-    bool stub_mode_ = true;
 };
 
 } // namespace wspr

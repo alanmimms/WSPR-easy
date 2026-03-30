@@ -85,7 +85,7 @@ The generated `obj_dir/waveform.vcd` contains:
 
 - **SPI transactions** - Tuning word updates every symbol period
 - **RF outputs** - Push/Pull Base/Peak signals at 200 Msps
-- **PLL and clock generation** - 25 MHz to 100 MHz conversion
+- **PLL and clock generation** - 40 MHz to 100 MHz conversion
 - **NCO accumulator** - 32-bit phase accumulator operation
 
 Fast mode is enabled by default, tracing only:

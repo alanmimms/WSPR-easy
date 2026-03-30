@@ -51,9 +51,9 @@ private:
 
   void advanceClock(int cycles) {
     for (int i = 0; i < cycles; i++) {
-      top->clk25MHz = !top->clk25MHz;
+      top->clk40MHz = !top->clk40MHz;
       top->eval();
-      *simTime += 20000; // 20ns = 20000ps
+      *simTime += 12500; // 12.5ns = 12500ps (40 MHz)
     }
   }
 };

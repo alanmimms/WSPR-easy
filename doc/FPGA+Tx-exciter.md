@@ -80,7 +80,7 @@ For 10m Band (30 MHz), the update rate is $6 \times 30 \text{ MHz} = \mathbf{180
 
 Can iCE40 do it?
 
-Yes, but it's tight.
+Yes, easily with the 40 MHz TCXO and internal PLL.
 
 - The iCE40LP/HX series logic fabric is typically rated for ~200-250 MHz max toggle rate for simple logic.
     
@@ -89,50 +89,33 @@ Yes, but it's tight.
 
 The Workaround: Pipelining or PLL Phase Shift
 
-To hit 180 MHz output with a slower NCO, you can cheat:
+To hit 180 MHz+ output with a slower NCO, we use:
 
 1. **DDR Output:** The iCE40 I/O cells support **DDR (Double Data Rate)**.
     
-    - You clock the logic at **90 MHz**.
+    - We clock the logic at **100 MHz**.
         
-    - You output data on both the Rising and Falling edge.
+    - We output data on both the Rising and Falling edge.
         
-    - Result: Effective update rate of **180 MHz**.
+    - Result: Effective update rate of **200 Msps**.
         
-2. **PLL Multiplier:** The iCE40 has an internal PLL. You can feed it 25 MHz and multiply up to 180 MHz easily. The simple counter/lookup logic _will_ run at 180 MHz if the routing is short. The bottleneck is the NCO accumulator.
+2. **PLL Multiplier:** The iCE40 has an internal PLL. You feed it 40 MHz (on Pin 35) and multiply up to 100 MHz. The simple counter/lookup logic runs at 100 MHz. The NCO accumulator also runs at 100 MHz.
     
-    - _Solution:_ Run the NCO accumulator at 90 MHz. Use the output to drive a "Doubler" logic block or just accept that the phase updates every 2 output steps (which is fine, it just means your frequency granularity is slightly coarser, but still sub-Hz).
-        
 
 Verdict:
 
-Yes, the iCE40LP384 can generate the 10m band signal (180 Msps) cleanly, likely using the PLL to generate a fast clock for the I/O shift register, while running the main NCO logic at half-rate (90 MHz). This eliminates the "4x Limitation" entirely. You can have 6x harmonic cancellation on all bands.
+Yes, the iCE40UP5K can generate the 10m band signal (200 Msps) cleanly using the PLL to generate a 100 MHz clock for the DDR I/O, while running the main NCO logic at the same 100 MHz rate.
 
 ### 4. FPGA Implementation Plan
 
-1. **Clock:** 25 MHz Crystal $\rightarrow$ FPGA PLL $\rightarrow$ 180 MHz (System Clock).
+1. **Clock:** 40 MHz TCXO (Pin 35) $\rightarrow$ FPGA PLL $\rightarrow$ 100 MHz (System Clock).
     
-2. **NCO:** 32-bit Accumulator running at 180 MHz.
+2. **NCO:** 32-bit Accumulator running at 100 MHz.
     
     - `acc <= acc + tuning_word`
         
 3. **Sequencer:**
-    
-    - Take top 3 bits of `acc`.
-        
-    - Map `0..5` to the gate pins.
-        
-    - Map `6..7` to "Wait/Hold" (or handle the overflow math to skip these states).
-        
-    - _Actually:_ It's better to make the NCO wrap at a value divisible by 6 (like a Modulo-6 counter) rather than a binary $2^{32}$ counter, OR just use the binary counter and map the top range 0-255 to 0-5.
-        
-    - _Better Math:_ Use the NCO to generate the _pulse_ that advances a separate 0-5 counter.
-        
-        - NCO generates a "Tick" pulse at $6 \times F_{carrier}$.
-            
-        - Counter `0->1->2->3->4->5->0` increments on every "Tick".
-            
-        - Combinatorial Logic decodes `0..5` to the MOSFET pins.
-            
+    - The sequencer uses a 6-step cycle to generate the "1-2-1" waveform.
+    - Since it's DDR, each 100 MHz clock cycle produces two 200 Msps steps.
 
 This is definitely the superior technical path for signal purity.

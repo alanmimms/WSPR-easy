@@ -6,7 +6,7 @@ High-Level Data Flow
 [GNSS/PPS] -> [ESP32-S3] --(SPI)--> [iCE40 FPGA] --(DDR IO)--> [74ACT Buffer] -> [MOSFET PA] -> [Transformer] -> [Switched LPF] -> [ANT]
  * Controller: ESP32-S3-WROOM-1 (N16R8). Manages Wi-Fi, Web UI, WSPR Encoding, Frequency Scheduling, and Band Switching.
  * RF Synthesis: Lattice iCE40UP5K. Implements a 32-bit NCO and 6-step sequencer running at 200 Msps (effective).
- * Timing: "Software GPSDO". A standard 25 MHz TCXO provides the clock, which is continuously calibrated against the GNSS PPS signal to achieve <0.1 Hz accuracy.
+ * Timing: "Software GPSDO". A standard 40 MHz TCXO provides the clock, which is continuously calibrated against the GNSS PPS signal to achieve <0.1 Hz accuracy.
  * Wideband PA: A transformer-coupled Class D/E amplifier designed to operate from 3.5 MHz to 30 MHz.
 2. Hardware Specifications
 Core Components
@@ -17,7 +17,7 @@ Core Components
 | RF Buffer | 74ACT244 | TSSOP-20 | "T" (TTL) variant required for 3.3V logic translation. |
 | MOSFETs | BS170 (x12) | SOT-23 | 3x Parallel per phase (Total 12). Low V_{GS(th)}. |
 | Transformer | BN-43-202 | Core | Binocular. 4T Primary / 4T Secondary. Safe for 80m. |
-| Oscillator | TCXO 25MHz | 3225 | 0.5ppm stability. |
+| Oscillator | TCXO 40MHz | 3225 | 0.5ppm stability. |
 | GNSS | ATGM336H / NEO-6M | Module | Must output PPS. |
 | Diodes | 1N5817 / SS14 | SMA | Schottky. Required for Push1/Pull1 drain protection. |
 Power Architecture
@@ -55,7 +55,7 @@ The relays/switches actuate based on the target frequency to select the appropri
 | LPF_lo2ON | IO 7 | Low Band 2 (e.g., 30m - 20m) |
 4. FPGA Logic (Wideband NCO)
 The FPGA logic is frequency-agnostic. It simply steps through the "1-2-1" sequence at a rate determined by the Tuning Word.
- * Clock: 100 MHz PLL (derived from 25 MHz TCXO).
+ * Clock: 100 MHz PLL (derived from 40 MHz TCXO).
  * Update Rate: 200 Msps (using DDR I/O).
  * Coverage:
    * 80m (3.5 MHz): Oversampling ratio ~57x. Extremely clean waveform.
@@ -84,7 +84,7 @@ Protection Circuitry (Critical)
 7. Firmware Operation (Zephyr)
  * Boot: ESP32 loads bitstream to FPGA via SPI.
  * Band Select: User selects Band (e.g., 20m). ESP32 sets LPF_loON + LPF_lo2ON HIGH.
- * Calibration: ESP32 measures PPS interval vs 25 MHz clock to determine true frequency.
+ * Calibration: ESP32 measures PPS interval vs 40 MHz clock to determine true frequency.
  * Transmit: ESP32 computes NCO tuning word for target frequency + WSPR tone shift and updates FPGA over SPI at 1.46 Hz.
 
 

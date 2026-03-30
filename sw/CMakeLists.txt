@@ -19,4 +19,5 @@ target_sources(app PRIVATE
   src/captive_dns.cpp
   src/gnss.cpp
   src/fpga.cpp
+  shellcmds.cpp
 )

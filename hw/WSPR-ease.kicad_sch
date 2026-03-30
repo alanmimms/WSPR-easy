@@ -6244,16 +6244,6 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "13.3mm common drive length."
-		(exclude_from_sim no)
-		(at 199.39 121.158 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "3eb4aea9-afed-4469-b479-a360a04df26e")
-	)
 	(text "VFPGACORE LDO 1.2V"
 		(exclude_from_sim no)
 		(at 140.716 163.83 0)
@@ -6273,16 +6263,6 @@
 			)
 		)
 		(uuid "7e9dc506-c17b-4e23-9998-665853ead60d")
-	)
-	(text "24.5mm gate drive length."
-		(exclude_from_sim no)
-		(at 199.39 117.348 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "e04b04da-8fbf-423f-a669-f929daa345a8")
 	)
 	(junction
 		(at 154.94 30.48)

@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
     }
 
     // Advance simulation clock
-    top->clk25MHz = !top->clk25MHz;
+    top->clk40MHz = !top->clk40MHz;
     top->eval();
 
     // Only trace interesting periods to reduce file size
@@ -136,7 +136,8 @@ int main(int argc, char** argv) {
       }
     }
 
-    mainTime += 20000; // 20ns per half-cycle = 25 MHz
+    // 40 MHz = 25ns period = 12.5ns half-cycle
+    mainTime += 12500; // 12.5ns per half-cycle = 40 MHz
 
     // Monitor RF outputs (count active cycles)
     if (top->rfPushBase || top->rfPushPeak || top->rfPullBase || top->rfPullPeak) {

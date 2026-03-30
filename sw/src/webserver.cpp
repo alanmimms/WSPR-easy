@@ -116,7 +116,7 @@ static void handle_api_status(int client_sock) {
     auto& gnss = Gnss::instance();
     auto& fpga = Fpga::instance();
 
-    char buf[512];
+    char buf[600];
     snprintf(buf, sizeof(buf),
         "{"
         "\"wifi\":{"
@@ -130,6 +130,7 @@ static void handle_api_status(int client_sock) {
             "\"satellites\":%d,"
             "\"latitude\":%.6f,"
             "\"longitude\":%.6f,"
+            "\"altitude\":%.1f,"
             "\"time\":\"%s\","
             "\"grid\":\"%s\","
             "\"hdop\":%.2f,"
@@ -150,6 +151,7 @@ static void handle_api_status(int client_sock) {
         gnss.satellites(),
         gnss.latitude(),
         gnss.longitude(),
+        gnss.altitude(),
         gnss.time_string(),
         gnss.grid_locator(),
         (double)gnss.hdop(),

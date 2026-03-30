@@ -291,6 +291,7 @@ async function loadStatus() {
     const sats = status.gnss?.satellites || 0;
     const gnssStatus = document.getElementById('gnss-status');
     const gnssPos = document.getElementById('gnss-pos');
+    const gnssAlt = document.getElementById('gnss-alt');
     const gnssQuality = document.getElementById('gnss-quality');
     const utcTime = document.getElementById('utc-time');
     
@@ -302,6 +303,9 @@ async function loadStatus() {
       const grid = status.gnss.grid || '----';
       gnssPos.textContent = `${lat}, ${lon} [${grid}]`;
       
+      const alt = status.gnss.altitude?.toFixed(1) || '0.0';
+      gnssAlt.textContent = `Alt: ${alt} m`;
+
       const hdop = status.gnss.hdop?.toFixed(2);
       const snr = status.gnss.snr?.toFixed(1);
       gnssQuality.textContent = `HDOP: ${hdop}, SNR: ${snr}dB`;
@@ -309,12 +313,10 @@ async function loadStatus() {
       utcTime.textContent = status.gnss.time || '--:--:--';
     } else {
       gnssPos.textContent = '';
+      gnssAlt.textContent = '';
       gnssQuality.textContent = '';
       utcTime.textContent = '--:--:--';
     }
-    // Clock source
-    const clockSource = status.clock?.source || 'TCXO';
-    document.getElementById('clock-status').textContent = clockSource.toUpperCase();
 
     if (status.tx?.nextTxSec) {
       const minutes = Math.floor(status.tx.nextTxSec / 60);
