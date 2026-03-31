@@ -15,16 +15,16 @@ public:
     WebServer() = default;
 
     // Mount LittleFS - can be called early, before network is ready
-    int mount_filesystem();
+    int mountFilesystem();
 
     int init();
     int start(uint16_t port = 80);
     void stop();
 
-    bool is_running() const { return running_; }
+    bool isRunning() const { return running; }
 
 private:
-    bool running_ = false;
+    bool running = false;
 };
 
 } // namespace wspr

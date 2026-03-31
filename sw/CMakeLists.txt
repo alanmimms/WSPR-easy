@@ -14,10 +14,10 @@ target_include_directories(app PRIVATE
 # Source files
 target_sources(app PRIVATE
   src/main.cpp
-  src/wifi_manager.cpp
+  src/wifiManager.cpp
   src/webserver.cpp
-  src/captive_dns.cpp
+  src/captiveDNS.cpp
   src/gnss.cpp
   src/fpga.cpp
-  shellcmds.cpp
+  src/shellcmds.cpp
 )

@@ -9,20 +9,20 @@
 
 namespace wspr {
 
-class CaptiveDns {
+class CaptiveDNS {
 public:
-    static CaptiveDns& instance();
+    static CaptiveDNS& instance();
 
-    int start(const char* redirect_ip);
+    int start(const char* redirectIP);
     void stop();
 
-    bool is_running() const { return running_; }
+    bool isRunning() const { return running; }
 
 private:
-    CaptiveDns() = default;
+    CaptiveDNS() = default;
 
-    bool running_ = false;
-    uint32_t redirect_ip_ = 0;
+    bool running = false;
+    uint32_t redirectIP = 0;
 };
 
 } // namespace wspr

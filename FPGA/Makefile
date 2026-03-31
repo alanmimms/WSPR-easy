@@ -5,7 +5,7 @@
 FPGA_DIR := .
 SW_DIR := ../sw
 SIM_DIR := sim
-OBJ_DIR := obj_dir
+OBJDIR := build
 
 # Verilator configuration
 VERILATOR := verilator
@@ -16,52 +16,71 @@ VERILATOR_FLAGS += -LDFLAGS "-lm"
 
 # Source files
 RTL_SOURCES := top.sv sequencer.sv
-RTL_SOURCES += $(SIM_DIR)/SB_IO.sv $(SIM_DIR)/SB_PLL40_CORE.sv
+RTL_SIM_SOURCES += $(SIM_DIR)/sbIO.sv $(SIM_DIR)/sbPLL40Core.sv
 
-CPP_SOURCES := tb_top.cpp
+CPP_SOURCES := tbTop.cpp
 SW_SOURCES := $(SW_DIR)/transmitter.cpp $(SW_DIR)/wspr-encoder.cpp
 
-# Output executable
-TARGET := $(OBJ_DIR)/VTop
+PROJECT=wspr_ease
+TOP=Top
+PCF=pins.pcf
+DEVICE=up5k
+PACKAGE=sg48
+
+# Output image and sim executable
+TARGET := $(OBJDIR)/fpga.img
+SIMTARGET := $(OBJDIR)/VTop
 
 .PHONY: all clean run sim fast superfast help
 
 all: $(TARGET)
 
+# The FPGA image
+$(TARGET):	$(RTL_SOURCES)
+	echo "--- Building FPGA Bitstream ---"
+	mkdir -p $(OBJDIR)
+	yosys -p "read_verilog -sv $(RTL_SOURCES); synth_ice40 -top $(TOP) -json $(PROJECT).json"
+	nextpnr-ice40 --$(DEVICE) --package $(PACKAGE) \
+		--json $(PROJECT).json --pcf $(PCF) --asc $(PROJECT).asc
+	icepack $(PROJECT).asc $(PROJECT).bin
+	mv -f $(PROJECT).bin $(TARGET)
+
 # Build the Verilator simulation
-$(TARGET): $(RTL_SOURCES) $(CPP_SOURCES) $(SW_SOURCES) sim_hal.hpp
+$(SIMTARGET): $(RTL_SOURCES) $(RTL_SIM_SOURCES) $(CPP_SOURCES) $(SW_SOURCES) simHAL.hpp
 	@echo "Building Verilator simulation with integrated SW code..."
+	mkdir -p $(OBJDIR)
 	$(VERILATOR) $(VERILATOR_FLAGS) \
-		-o $(notdir $(TARGET)) \
+		-o $(notdir $(SIMTARGET)) \
 		--top-module Top \
 		$(RTL_SOURCES) \
+		$(RTL_SIM_SOURCES) \
 		$(CPP_SOURCES) \
 		$(SW_SOURCES)
 	@echo "Build complete: $@"
 
 # Run the simulation
-run: $(TARGET)
+run: $(SIMTARGET)
 	@echo "Running simulation..."
-	@cd $(OBJ_DIR) && ./VTop
-	@echo "Simulation complete. Waveform saved to $(OBJ_DIR)/waveform.vcd"
+	@cd $(OBJDIR) && ./VTop
+	@echo "Simulation complete. Waveform saved to $(OBJDIR)/waveform.vcd"
 
 # Alias for run
 sim: run
 
 # Run fast simulation (no waveforms)
-fast: $(TARGET)
+fast: $(SIMTARGET)
 	@echo "Running fast simulation (no waveform trace)..."
-	@cd $(OBJ_DIR) && ./VTop --notrace
+	@cd $(OBJDIR) && ./VTop --notrace
 	@echo "Fast simulation complete."
 
 # Run superfast simulation (event-driven, no waveforms)
-superfast: $(TARGET)
+superfast: $(SIMTARGET)
 	@echo "Running superfast simulation (event-driven fast-forward)..."
-	@cd $(OBJ_DIR) && ./VTop --notrace --fastforward
+	@cd $(OBJDIR) && ./VTop --notrace --fastforward
 	@echo "Superfast simulation complete."
 
 # View waveform with gtkwave (if available)
-wave: $(OBJ_DIR)/waveform.vcd
+wave: $(OBJDIR)/waveform.vcd
 	@if command -v gtkwave > /dev/null; then \
 		gtkwave $< & \
 	else \
@@ -71,7 +90,7 @@ wave: $(OBJ_DIR)/waveform.vcd
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJDIR)
 	@rm -f waveform.vcd
 	@echo "Clean complete."
 
@@ -92,4 +111,4 @@ help:
 	@echo "The simulation integrates:"
 	@echo "  - FPGA RTL (top.sv, sequencer.sv)"
 	@echo "  - ESP32 SW code (transmitter.cpp, wspr-encoder.cpp)"
-	@echo "  - Simulation HAL (sim_hal.hpp)"
+	@echo "  - Simulation HAL (simHAL.hpp)"

@@ -1,14 +1,14 @@
 # file: pins.pcf
 
 # --- System Clock ---
-# 25 MHz TCXO Input
-set_io clk25 20 
+# 40 MHz TCXO Input
+set_io clk40 20 
 
 # --- SPI Interface (Matches ESP32 Map) ---
 set_io spiClk 15
-set_io spiMosi 17
-set_io nSpiCs 16
-# nFpgaReset is Pin 8 (CRESET_B) - Hardwired, no PCF needed usually
+set_io spiMOSI 17
+set_io spiNCS 16
+# nFPGAReset is Pin 8 (CRESET_B) - Hardwired, no PCF needed usually
 
 # --- RF PA Outputs (Arbitrary assignment to Bank 0/2) ---
 # Adjust these to match your PCB traces!

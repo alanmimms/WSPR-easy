@@ -9,9 +9,9 @@
 #include <zephyr/net/net_if.h>
 #include <zephyr/net/net_mgmt.h>
 
-#include "wifi_manager.hpp"
+#include "wifiManager.hpp"
 #include "webserver.hpp"
-#include "captive_dns.hpp"
+#include "captiveDNS.hpp"
 #include "gnss.hpp"
 #include "fpga.hpp"
 
@@ -22,7 +22,7 @@ LOG_MODULE_REGISTER(wspr_ease, LOG_LEVEL_INF);
 #define WIFI_MAX_RETRIES          0   // 0 = infinite retries
 
 // Print a banner with connection info
-static void print_connection_banner(const char* ip)
+static void printConnectionBanner(const char* ip)
 {
     printk("\n");
     printk("==============================================\n");
@@ -36,7 +36,7 @@ static void print_connection_banner(const char* ip)
 
 // Try to connect to WiFi with retries
 // Returns true if connected, false if no SSID configured
-static bool wifi_connect_with_retry()
+static bool wifiConnectWithRetry()
 {
     auto& wifi = wspr::WifiManager::instance();
 
@@ -48,37 +48,37 @@ static bool wifi_connect_with_retry()
         return false;
     }
 
-    int retry_count = 0;
+    int retryCount = 0;
 
-    while (WIFI_MAX_RETRIES == 0 || retry_count < WIFI_MAX_RETRIES) {
-        if (retry_count > 0) {
+    while (WIFI_MAX_RETRIES == 0 || retryCount < WIFI_MAX_RETRIES) {
+        if (retryCount > 0) {
             LOG_INF("WiFi retry %d, waiting %d seconds...",
-                    retry_count, WIFI_RETRY_DELAY_SECONDS);
+                    retryCount, WIFI_RETRY_DELAY_SECONDS);
             k_sleep(K_SECONDS(WIFI_RETRY_DELAY_SECONDS));
         }
 
         LOG_INF("Connecting to WiFi: %s", ssid);
 
         if (wifi.connect(ssid, pass) == 0) {
-            LOG_INF("WiFi connected, IP: %s", wifi.ip_address());
+            LOG_INF("WiFi connected, IP: %s", wifi.getIPAddress());
             return true;
         }
 
         LOG_WRN("WiFi connection failed");
-        retry_count++;
+        retryCount++;
     }
 
     return false;
 }
 
-static void init_subsystems(wspr::WebServer& web_server)
+static void initSubsystems(wspr::WebServer& webServer)
 {
     auto& wifi = wspr::WifiManager::instance();
-    auto& gnss = wspr::Gnss::instance();
-    auto& fpga = wspr::Fpga::instance();
+    auto& gnss = wspr::GNSS::instance();
+    auto& fpga = wspr::FPGA::instance();
 
     // Mount LittleFS early - doesn't need network
-    web_server.mount_filesystem();
+    webServer.mountFilesystem();
 
     // Initialize GNSS (stub mode)
     if (gnss.init() != 0) {
@@ -97,14 +97,14 @@ static void init_subsystems(wspr::WebServer& web_server)
     }
 
     // Connect to WiFi (with retries)
-    wifi_connect_with_retry();
+    wifiConnectWithRetry();
 
     // Initialize and start web server
-    if (web_server.init() == 0) {
-        web_server.start(80);
+    if (webServer.init() == 0) {
+        webServer.start(80);
         // Print connection banner after everything is ready
-        if (wifi.is_connected()) {
-            print_connection_banner(wifi.ip_address());
+        if (wifi.isConnected()) {
+            printConnectionBanner(wifi.getIPAddress());
         }
     } else {
         LOG_ERR("Web server init failed");
@@ -117,50 +117,50 @@ int main(void)
     LOG_INF("Build: %s %s", __DATE__, __TIME__);
 
     // Create WebServer on main's stack (persists for lifetime of program)
-    wspr::WebServer web_server;
+    wspr::WebServer webServer;
 
     // Wait for network interface to be ready
     k_sleep(K_SECONDS(2));
 
-    init_subsystems(web_server);
+    initSubsystems(webServer);
 
     LOG_INF("Entering main loop");
 
     auto& wifi = wspr::WifiManager::instance();
-    auto& gnss = wspr::Gnss::instance();
-    auto& fpga = wspr::Fpga::instance();
+    auto& gnss = wspr::GNSS::instance();
+    auto& fpga = wspr::FPGA::instance();
 
-    uint32_t loop_count = 0;
-    bool was_connected = wifi.is_connected();
+    uint32_t loopCount = 0;
+    bool wasConnected = wifi.isConnected();
 
     while (1) {
         // Check for scheduled WSPR transmission
         // (In real implementation, this would check schedule and start TX)
-        if (gnss.is_tx_slot() && !fpga.is_transmitting()) {
+        if (gnss.isTXSlot() && !fpga.isTransmitting()) {
             LOG_INF("TX slot detected (not transmitting in stub mode)");
         }
 
         // Monitor WiFi connection and reconnect if needed
-        bool is_connected = wifi.is_connected();
-        if (was_connected && !is_connected) {
+        bool isConnected = wifi.isConnected();
+        if (wasConnected && !isConnected) {
             LOG_WRN("WiFi disconnected! Attempting to reconnect...");
-            if (wifi_connect_with_retry()) {
-                print_connection_banner(wifi.ip_address());
+            if (wifiConnectWithRetry()) {
+                printConnectionBanner(wifi.getIPAddress());
             }
         }
-        was_connected = wifi.is_connected();
+        wasConnected = wifi.isConnected();
 
         // Periodic status log
-        if ((loop_count % 60) == 0) {  // Every 60 seconds
+        if ((loopCount % 60) == 0) {  // Every 60 seconds
             LOG_INF("Status: WiFi=%s IP=%s RSSI=%d GNSS=%s Freq=%u",
-                    wifi.is_connected() ? "connected" : "disconnected",
-                    wifi.ip_address(),
-                    wifi.rssi(),
-                    gnss.has_fix() ? "fix" : "no fix",
+                    wifi.isConnected() ? "connected" : "disconnected",
+                    wifi.getIPAddress(),
+                    wifi.getRSSI(),
+                    gnss.hasFix() ? "fix" : "no fix",
                     fpga.frequency());
         }
 
-        loop_count++;
+        loopCount++;
         k_sleep(K_SECONDS(1));
     }
 

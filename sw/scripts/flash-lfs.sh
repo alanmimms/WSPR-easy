@@ -23,10 +23,38 @@ else
     ESPTOOL="python3 -m esptool"
 fi
 
-# LittleFS partition info from app.overlay
-# After ESP32-S3 default partitions: boot(64KB) + slot0(1472KB) + slot1(1472KB) + scratch(64KB) + storage(64KB)
-LFS_OFFSET=0x310000   # 3.0625MB offset
-LFS_SIZE=$((512 * 1024))  # 512KB
+# LittleFS partition info from devicetree (the source of truth)
+ZEPHYR_DTS="$BUILD_DIR/zephyr/zephyr.dts"
+
+if [ ! -f "$ZEPHYR_DTS" ]; then
+    echo "Error: $ZEPHYR_DTS not found. Please build the project first ('west build')."
+    exit 1
+fi
+
+# Use Python to extract values from the final devicetree
+# We look for the node with label "littlefs" and extract its reg property
+LFS_INFO=$($PYTHON -c '
+import re, sys
+dts = sys.argv[1]
+with open(dts, "r") as f:
+    content = f.read()
+# Match partition that has label "littlefs"
+match = re.search(r"partition@[0-9a-fA-F]+\s*\{[^}]*label\s*=\s*\"littlefs\";[^}]*reg\s*=\s*<\s*(0x[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]+)\s*>;", content, re.DOTALL)
+if match:
+    print(f"{match.group(1)} {int(match.group(2), 16)}")
+else:
+    sys.exit(1)
+' "$ZEPHYR_DTS" || true)
+
+if [ -z "$LFS_INFO" ]; then
+    echo "Error: Could not find 'littlefs' partition in $ZEPHYR_DTS"
+    exit 1
+fi
+
+LFS_OFFSET=$(echo "$LFS_INFO" | awk '{print $1}')
+LFS_SIZE=$(echo "$LFS_INFO" | awk '{print $2}')
+
+echo "Using LittleFS partition from devicetree: offset $LFS_OFFSET, size $LFS_SIZE bytes"
 
 # Serial port (command line arg > ESPTOOL_PORT env var > default)
 PORT="${1:-${ESPTOOL_PORT:-/dev/ttyACM0}}"
@@ -46,7 +74,7 @@ from littlefs import LittleFS
 
 # Paths
 webui_dir = "$WEBUI_DIR"
-fpga_img = os.path.join(os.path.dirname(os.path.dirname(webui_dir)), "FPGA", "fpga.img")
+fpga_img = os.path.join(os.path.dirname(os.path.dirname(webui_dir)), "FPGA", "build", "fpga.img")
 image_path = "$BUILD_DIR/littlefs.bin"
 
 # LittleFS config matching Zephyr defaults

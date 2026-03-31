@@ -9,8 +9,8 @@
 
 namespace wspr {
 
-// WSPR band definitions (dial frequencies in Hz)
-enum class WsprBand : uint32_t {
+  // WSPR band definitions (dial frequencies in Hz)
+  enum class WSPRBand : uint32_t {
     Band160m = 1836600,
     Band80m  = 3568600,
     Band60m  = 5287200,
@@ -22,46 +22,51 @@ enum class WsprBand : uint32_t {
     Band12m  = 24924600,
     Band10m  = 28124600,
     Band6m   = 50293000,
-};
+  };
 
-class Fpga {
-public:
-    static Fpga& instance();
+  class FPGA {
+  public:
+    static FPGA& instance();
+
+    static const int tcxoFreqHz = 40*1000*1000;
 
     int init();
     int reset();
-    int load_bitstream(const char* path);
+    int loadBitstream(const char* path);
 
     // Frequency control
-    int set_frequency(uint32_t freq_hz);
-    uint32_t frequency() const { return current_freq_; }
+    int setFrequency(uint32_t freq_hz);
+    uint32_t frequency() const { return currentFreq; }
 
     // Transmission control
-    int start_tx();
-    int stop_tx();
-    bool is_transmitting() const { return transmitting_; }
+    int startTX();
+    int stopTX();
+    bool isTransmitting() const { return transmitting; }
+
+    // Power control (0-255)
+    int setPowerLevel(uint8_t level);
 
     // Send WSPR symbol (0-3) - 4-FSK modulation
-    int send_symbol(uint8_t symbol);
+    int sendSymbol(uint8_t symbol);
 
     // LPF band switching
-    int set_lpf_band(WsprBand band);
-    WsprBand get_band() const { return current_band_; }
+    int setLPFBand(WSPRBand band);
+    WSPRBand getBand() const { return currentBand; }
 
-    uint32_t get_counter();
+    uint32_t getCounter();
 
-    bool is_initialized() const { return initialized_; }
+    bool isInitialized() const { return initialized; }
 
-private:
-    Fpga() = default;
+  private:
+    FPGA() = default;
 
-    int spi_write_reg(uint8_t reg, uint32_t value);
-    int spi_read_reg(uint8_t reg, uint32_t* value);
+    int spiWriteReg(uint8_t reg, uint32_t value);
+    int spiReadReg(uint8_t reg, uint32_t* value);
 
-    bool initialized_ = false;
-    bool transmitting_ = false;
-    uint32_t current_freq_ = 0;
-    WsprBand current_band_ = WsprBand::Band20m;
-};
+    bool initialized = false;
+    bool transmitting = false;
+    uint32_t currentFreq = 0;
+    WSPRBand currentBand = WSPRBand::Band20m;
+  };
 
 } // namespace wspr

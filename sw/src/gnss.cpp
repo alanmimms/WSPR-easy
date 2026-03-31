@@ -22,35 +22,35 @@ LOG_MODULE_REGISTER(gnss, LOG_LEVEL_INF);
 
 namespace wspr {
 
-static K_THREAD_STACK_DEFINE(gnss_stack, 4096);
+static K_THREAD_STACK_DEFINE(gnssStack, 4096);
 
-Gnss& Gnss::instance() {
-    static Gnss inst;
+GNSS& GNSS::instance() {
+    static GNSS inst;
     return inst;
 }
 
-int Gnss::init() {
+int GNSS::init() {
     LOG_INF("Initializing GNSS module");
-    k_mutex_init(&mutex_);
+    k_mutex_init(&mutex);
 
     // GNSS Reset sequence
-    static const struct gpio_dt_spec gnss_reset = GPIO_DT_SPEC_GET(DT_NODELABEL(gnss_reset), gpios);
-    if (device_is_ready(gnss_reset.port)) {
+    static const struct gpio_dt_spec gnssReset = GPIO_DT_SPEC_GET(DT_NODELABEL(gnss_reset), gpios);
+    if (device_is_ready(gnssReset.port)) {
         LOG_INF("Pulsing GNSS reset (GPIO 15)");
-        gpio_pin_configure_dt(&gnss_reset, GPIO_OUTPUT_INACTIVE); // Start High (Inactive)
+        gpio_pin_configure_dt(&gnssReset, GPIO_OUTPUT_INACTIVE); // Start High (Inactive)
         
-        gpio_pin_set_dt(&gnss_reset, 0); // Physical High
+        gpio_pin_set_dt(&gnssReset, 0); // Physical High
         k_msleep(10);
         
-        gpio_pin_set_dt(&gnss_reset, 1); // Physical Low (Active Reset)
+        gpio_pin_set_dt(&gnssReset, 1); // Physical Low (Active Reset)
         k_msleep(50);
         
-        gpio_pin_set_dt(&gnss_reset, 0); // Physical High (Release Reset)
+        gpio_pin_set_dt(&gnssReset, 0); // Physical High (Release Reset)
         LOG_INF("GNSS reset released");
     }
 
-    uart_dev_ = DEVICE_DT_GET(DT_ALIAS(gnss_uart));
-    if (!device_is_ready(uart_dev_)) {
+    uartDev = DEVICE_DT_GET(DT_ALIAS(gnss_uart));
+    if (!device_is_ready(uartDev)) {
         LOG_ERR("GNSS UART device not ready");
         return -ENODEV;
     }
@@ -61,60 +61,60 @@ int Gnss::init() {
     return 0;
 }
 
-void Gnss::start() {
-    if (running_) return;
+void GNSS::start() {
+    if (running) return;
     
-    running_ = true;
-    k_thread_create(&thread_data_, gnss_stack, K_THREAD_STACK_SIZEOF(gnss_stack),
-                    thread_fn, this, NULL, NULL,
+    running = true;
+    k_thread_create(&threadData, gnssStack, K_THREAD_STACK_SIZEOF(gnssStack),
+                    threadFn, this, NULL, NULL,
                     K_PRIO_PREEMPT(10), 0, K_NO_WAIT);
-    k_thread_name_set(&thread_data_, "gnss_worker");
+    k_thread_name_set(&threadData, "gnssWorker");
 }
 
-void Gnss::stop() {
-    running_ = false;
+void GNSS::stop() {
+    running = false;
 }
 
-void Gnss::thread_fn(void* p1, void* p2, void* p3) {
-    Gnss* inst = static_cast<Gnss*>(p1);
-    inst->process_loop();
+void GNSS::threadFn(void* p1, void* p2, void* p3) {
+    GNSS* inst = static_cast<GNSS*>(p1);
+    inst->processLoop();
 }
 
-void Gnss::process_loop() {
+void GNSS::processLoop() {
     LOG_INF("GNSS worker thread started (fixed 9600 baud)");
     
     uint8_t c;
-    uint32_t last_log_time = 0;
-    uint32_t last_data_time = k_uptime_get_32();
-    bool first_data_received = false;
+    uint32_t lastLogTime = 0;
+    uint32_t lastDataTime = k_uptime_get_32();
+    bool firstDataReceived = false;
 
-    while (running_) {
+    while (running) {
         // Skip processing during transmission to avoid affecting realtime modulation
-        if (Fpga::instance().is_transmitting()) {
-            while (uart_poll_in(uart_dev_, &c) == 0) { /* flush */ }
+        if (FPGA::instance().isTransmitting()) {
+            while (uart_poll_in(uartDev, &c) == 0) { /* flush */ }
             k_sleep(K_MSEC(1000));
             continue;
         }
 
         // Read from UART
-        if (uart_poll_in(uart_dev_, &c) == 0) {
-            last_data_time = k_uptime_get_32();
-            if (!first_data_received) {
+        if (uart_poll_in(uartDev, &c) == 0) {
+            lastDataTime = k_uptime_get_32();
+            if (!firstDataReceived) {
                 LOG_INF("GNSS: Data received from UART (byte: 0x%02x '%c')", c, (c >= 32 && c <= 126) ? c : '.');
-                first_data_received = true;
+                firstDataReceived = true;
             }
 
             if (c == '\n' || c == '\r') {
-                if (nmea_pos_ > 0) {
-                    nmea_buf_[nmea_pos_] = '\0';
-                    parse_nmea(nmea_buf_);
-                    nmea_pos_ = 0;
+                if (nmeaPos > 0) {
+                    nmeaBuf[nmeaPos] = '\0';
+                    parseNMEA(nmeaBuf);
+                    nmeaPos = 0;
                 }
             } else {
-                if (nmea_pos_ < (int)sizeof(nmea_buf_) - 1) {
-                    nmea_buf_[nmea_pos_++] = c;
+                if (nmeaPos < (int)sizeof(nmeaBuf) - 1) {
+                    nmeaBuf[nmeaPos++] = c;
                 } else {
-                    nmea_pos_ = 0; // Buffer overflow, reset
+                    nmeaPos = 0; // Buffer overflow, reset
                 }
             }
         } else {
@@ -123,22 +123,22 @@ void Gnss::process_loop() {
 
         // Periodic status log (every 10 seconds)
         uint32_t now = k_uptime_get_32();
-        if (now - last_log_time >= 10000) {
-            k_mutex_lock(&mutex_, K_FOREVER);
-            if (!first_data_received) {
+        if (now - lastLogTime >= 10000) {
+            k_mutex_lock(&mutex, K_FOREVER);
+            if (!firstDataReceived) {
                 LOG_WRN("GNSS Status: NO DATA RECEIVED ON UART (fixed 9600 baud)");
             } else {
                 LOG_INF("GNSS Status: lock=%s, sats=%d, snr=%.1f, time=%s",
-                        data_.valid ? "YES" : "NO", data_.satellites, (double)data_.avg_snr, time_str_);
+                        data.valid ? "YES" : "NO", data.satellites, (double)data.avgSNR, timeStr);
             }
-            k_mutex_unlock(&mutex_);
-            last_log_time = now;
+            k_mutex_unlock(&mutex);
+            lastLogTime = now;
         }
     }
 }
 
 // Helper to parse NMEA lat/lon format (DDMM.MMMM)
-static double parse_nmea_coord(const char* s, const char* dir) {
+static double parseNMEACoord(const char* s, const char* dir) {
     if (!s || !*s || !dir || !*dir) return 0.0;
     
     double val = atof(s);
@@ -151,7 +151,7 @@ static double parse_nmea_coord(const char* s, const char* dir) {
     return decimal;
 }
 
-void Gnss::parse_nmea(char* line) {
+void GNSS::parseNMEA(char* line) {
     if (line[0] != '$') return;
 
     // We look for RMC (Recommended Minimum Navigation Information) 
@@ -164,108 +164,108 @@ void Gnss::parse_nmea(char* line) {
 
     if (strcmp(token, "$GPRMC") == 0 || strcmp(token, "$GNRMC") == 0) {
         // $--RMC,time,status,lat,N,lon,W,spd,cog,date,mv,mvE,mode*cs
-        k_mutex_lock(&mutex_, K_FOREVER);
+        k_mutex_lock(&mutex, K_FOREVER);
         
-        char* t_time = strtok_r(NULL, ",", &saveptr);
-        char* t_status = strtok_r(NULL, ",", &saveptr);
-        char* t_lat = strtok_r(NULL, ",", &saveptr);
-        char* t_lat_dir = strtok_r(NULL, ",", &saveptr);
-        char* t_lon = strtok_r(NULL, ",", &saveptr);
-        char* t_lon_dir = strtok_r(NULL, ",", &saveptr);
+        char* tTime = strtok_r(NULL, ",", &saveptr);
+        char* tStatus = strtok_r(NULL, ",", &saveptr);
+        char* tLat = strtok_r(NULL, ",", &saveptr);
+        char* tLatDir = strtok_r(NULL, ",", &saveptr);
+        char* tLon = strtok_r(NULL, ",", &saveptr);
+        char* tLonDir = strtok_r(NULL, ",", &saveptr);
         strtok_r(NULL, ",", &saveptr); // speed
         strtok_r(NULL, ",", &saveptr); // cog
-        char* t_date = strtok_r(NULL, ",", &saveptr);
+        char* tDate = strtok_r(NULL, ",", &saveptr);
 
-        if (t_status && *t_status == 'A') {
-            data_.valid = true;
-            if (t_time && strlen(t_time) >= 6) {
-                data_.hour = (t_time[0]-'0')*10 + (t_time[1]-'0');
-                data_.minute = (t_time[2]-'0')*10 + (t_time[3]-'0');
-                data_.second = (t_time[4]-'0')*10 + (t_time[5]-'0');
+        if (tStatus && *tStatus == 'A') {
+            data.valid = true;
+            if (tTime && strlen(tTime) >= 6) {
+                data.hour = (tTime[0]-'0')*10 + (tTime[1]-'0');
+                data.minute = (tTime[2]-'0')*10 + (tTime[3]-'0');
+                data.second = (tTime[4]-'0')*10 + (tTime[5]-'0');
             }
-            if (t_date && strlen(t_date) >= 6) {
-                data_.day = (t_date[0]-'0')*10 + (t_date[1]-'0');
-                data_.month = (t_date[2]-'0')*10 + (t_date[3]-'0');
-                data_.year = 2000 + (t_date[4]-'0')*10 + (t_date[5]-'0');
+            if (tDate && strlen(tDate) >= 6) {
+                data.day = (tDate[0]-'0')*10 + (tDate[1]-'0');
+                data.month = (tDate[2]-'0')*10 + (tDate[3]-'0');
+                data.year = 2000 + (tDate[4]-'0')*10 + (tDate[5]-'0');
             }
-            if (t_lat && t_lat_dir && t_lon && t_lon_dir) {
-                data_.latitude = parse_nmea_coord(t_lat, t_lat_dir);
-                data_.longitude = parse_nmea_coord(t_lon, t_lon_dir);
-                compute_grid();
+            if (tLat && tLatDir && tLon && tLonDir) {
+                data.latitude = parseNMEACoord(tLat, tLatDir);
+                data.longitude = parseNMEACoord(tLon, tLonDir);
+                computeGrid();
             }
-            format_time();
+            formatTime();
         } else {
-            data_.valid = false;
-            format_time();
+            data.valid = false;
+            formatTime();
         }
-        k_mutex_unlock(&mutex_);
+        k_mutex_unlock(&mutex);
     } 
     else if (strcmp(token, "$GPGGA") == 0 || strcmp(token, "$GNGGA") == 0) {
         // $--GGA,time,lat,N,lon,W,fix,sats,hdop,alt,M,geoid,M,age,ref*cs
-        k_mutex_lock(&mutex_, K_FOREVER);
+        k_mutex_lock(&mutex, K_FOREVER);
         strtok_r(NULL, ",", &saveptr); // time
         strtok_r(NULL, ",", &saveptr); // lat
         strtok_r(NULL, ",", &saveptr); // N
         strtok_r(NULL, ",", &saveptr); // lon
         strtok_r(NULL, ",", &saveptr); // W
-        char* t_fix = strtok_r(NULL, ",", &saveptr);
-        char* t_sats = strtok_r(NULL, ",", &saveptr);
-        char* t_hdop = strtok_r(NULL, ",", &saveptr);
-        char* t_alt = strtok_r(NULL, ",", &saveptr);
+        char* tFix = strtok_r(NULL, ",", &saveptr);
+        char* tSats = strtok_r(NULL, ",", &saveptr);
+        char* tHDOP = strtok_r(NULL, ",", &saveptr);
+        char* tAlt = strtok_r(NULL, ",", &saveptr);
 
-        if (t_fix && *t_fix != '0') {
-            data_.valid = true;
-            if (t_sats) data_.satellites = atoi(t_sats);
-            if (t_hdop) data_.hdop = atof(t_hdop);
-            if (t_alt) data_.altitude = atof(t_alt);
+        if (tFix && *tFix != '0') {
+            data.valid = true;
+            if (tSats) data.satellites = atoi(tSats);
+            if (tHDOP) data.hdop = atof(tHDOP);
+            if (tAlt) data.altitude = atof(tAlt);
         }
-        k_mutex_unlock(&mutex_);
+        k_mutex_unlock(&mutex);
     }
     else if (strcmp(token, "$GPGSV") == 0 || strcmp(token, "$GNGSV") == 0) {
         // $--GSV,num_msgs,msg_num,sats_in_view,sat1_prn,sat1_elev,sat1_az,sat1_snr,...
         // Simple average SNR calculation
         strtok_r(NULL, ",", &saveptr); // num_msgs
         strtok_r(NULL, ",", &saveptr); // msg_num
-        char* t_sats_in_view = strtok_r(NULL, ",", &saveptr);
+        char* tSatsInView = strtok_r(NULL, ",", &saveptr);
         
-        if (t_sats_in_view) {
-            double sum_snr = 0;
-            int count_snr = 0;
+        if (tSatsInView) {
+            double sumSNR = 0;
+            int countSNR = 0;
             
             for (int i = 0; i < 4; i++) {
                 strtok_r(NULL, ",", &saveptr); // PRN
                 strtok_r(NULL, ",", &saveptr); // Elev
                 strtok_r(NULL, ",", &saveptr); // Az
-                char* t_snr = strtok_r(NULL, ",", &saveptr);
-                if (t_snr && *t_snr) {
-                    sum_snr += atof(t_snr);
-                    count_snr++;
+                char* tSNR = strtok_r(NULL, ",", &saveptr);
+                if (tSNR && *tSNR) {
+                    sumSNR += atof(tSNR);
+                    countSNR++;
                 }
             }
             
-            if (count_snr > 0) {
-                k_mutex_lock(&mutex_, K_FOREVER);
-                data_.avg_snr = (float)(sum_snr / count_snr);
-                k_mutex_unlock(&mutex_);
+            if (countSNR > 0) {
+                k_mutex_lock(&mutex, K_FOREVER);
+                data.avgSNR = (float)(sumSNR / countSNR);
+                k_mutex_unlock(&mutex);
             }
         }
     }
 }
 
-int64_t Gnss::unix_time() const {
-    k_mutex_lock(&mutex_, K_FOREVER);
-    if (!data_.valid) {
-        k_mutex_unlock(&mutex_);
+int64_t GNSS::unixTime() const {
+    k_mutex_lock(&mutex, K_FOREVER);
+    if (!data.valid) {
+        k_mutex_unlock(&mutex);
         return 0;
     }
 
     struct tm t;
-    t.tm_sec = data_.second;
-    t.tm_min = data_.minute;
-    t.tm_hour = data_.hour;
-    t.tm_mday = data_.day;
-    t.tm_mon = data_.month - 1;
-    t.tm_year = data_.year - 1900;
+    t.tm_sec = data.second;
+    t.tm_min = data.minute;
+    t.tm_hour = data.hour;
+    t.tm_mday = data.day;
+    t.tm_mon = data.month - 1;
+    t.tm_year = data.year - 1900;
     t.tm_isdst = 0;
 
     // Use Zephyr's time util or standard mktime
@@ -273,45 +273,45 @@ int64_t Gnss::unix_time() const {
     // For now, a simple approximation or better yet use a proper UTC conversion.
     // Zephyr has posix-like time functions.
     time_t epoch = mktime(&t);
-    k_mutex_unlock(&mutex_);
+    k_mutex_unlock(&mutex);
     return (int64_t)epoch;
 }
 
-bool Gnss::is_tx_slot() const {
-    k_mutex_lock(&mutex_, K_FOREVER);
+bool GNSS::isTXSlot() const {
+    k_mutex_lock(&mutex, K_FOREVER);
     // WSPR transmissions start at even minutes
-    bool result = data_.valid && (data_.second == 0) && ((data_.minute % 2) == 0);
-    k_mutex_unlock(&mutex_);
+    bool result = data.valid && (data.second == 0) && ((data.minute % 2) == 0);
+    k_mutex_unlock(&mutex);
     return result;
 }
 
-void Gnss::compute_grid() {
+void GNSS::computeGrid() {
     // Maidenhead grid locator calculation
-    double lon = data_.longitude + 180.0;
-    double lat = data_.latitude + 90.0;
+    double lon = data.longitude + 180.0;
+    double lat = data.latitude + 90.0;
 
-    grid_[0] = 'A' + (int)(lon / 20.0);
-    grid_[1] = 'A' + (int)(lat / 10.0);
+    grid[0] = 'A' + (int)(lon / 20.0);
+    grid[1] = 'A' + (int)(lat / 10.0);
 
     double remLon = fmod(lon, 20.0);
     double remLat = fmod(lat, 10.0);
-    grid_[2] = '0' + (int)(remLon / 2.0);
-    grid_[3] = '0' + (int)(remLat / 1.0);
+    grid[2] = '0' + (int)(remLon / 2.0);
+    grid[3] = '0' + (int)(remLat / 1.0);
 
     double subLon = fmod(remLon, 2.0);
     double subLat = fmod(remLat, 1.0);
-    grid_[4] = 'a' + (int)(subLon * 12.0);
-    grid_[5] = 'a' + (int)(subLat * 24.0);
-    grid_[6] = '\0';
+    grid[4] = 'a' + (int)(subLon * 12.0);
+    grid[5] = 'a' + (int)(subLat * 24.0);
+    grid[6] = '\0';
 }
 
-void Gnss::format_time() {
-    if (!data_.valid) {
-        snprintf(time_str_, sizeof(time_str_), "n/a");
+void GNSS::formatTime() {
+    if (!data.valid) {
+        snprintf(timeStr, sizeof(timeStr), "n/a");
         return;
     }
-    snprintf(time_str_, sizeof(time_str_), "%02d:%02d:%02d",
-             data_.hour, data_.minute, data_.second);
+    snprintf(timeStr, sizeof(timeStr), "%02d:%02d:%02d",
+             data.hour, data.minute, data.second);
 }
 
 } // namespace wspr

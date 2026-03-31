@@ -10,13 +10,13 @@
 
 namespace wspr {
 
-struct GnssData {
+struct GNSSData {
     bool valid;
     double latitude;
     double longitude;
     double altitude;
     float hdop;       // Horizontal Dilution of Precision (lower is better)
-    float avg_snr;    // Average Signal-to-Noise Ratio (dB-Hz)
+    float avgSNR;     // Average Signal-to-Noise Ratio (dB-Hz)
     uint8_t satellites;
     uint8_t hour;
     uint8_t minute;
@@ -26,9 +26,9 @@ struct GnssData {
     uint8_t day;
 };
 
-class Gnss {
+class GNSS {
 public:
-    static Gnss& instance();
+    static GNSS& instance();
 
     int init();
     
@@ -36,47 +36,47 @@ public:
     void start();
     void stop();
 
-    bool has_fix() const { return data_.valid; }
-    int satellites() const { return data_.satellites; }
-    double latitude() const { return data_.latitude; }
-    double longitude() const { return data_.longitude; }
-    double altitude() const { return data_.altitude; }
-    float hdop() const { return data_.hdop; }
-    float avg_snr() const { return data_.avg_snr; }
+    bool hasFix() const { return data.valid; }
+    int satellites() const { return data.satellites; }
+    double latitude() const { return data.latitude; }
+    double longitude() const { return data.longitude; }
+    double altitude() const { return data.altitude; }
+    float getHDOP() const { return data.hdop; }
+    float avgSNR() const { return data.avgSNR; }
 
-    const char* time_string() const { return time_str_; }
-    const char* grid_locator() const { return grid_; }
+    const char* timeString() const { return timeStr; }
+    const char* gridLocator() const { return grid; }
 
     // Get Unix timestamp (seconds since epoch)
-    int64_t unix_time() const;
+    int64_t unixTime() const;
 
     // Check if we're at the start of an even minute (for WSPR timing)
-    bool is_tx_slot() const;
+    bool isTXSlot() const;
 
 private:
-    Gnss() = default;
+    GNSS() = default;
 
-    void compute_grid();
-    void format_time();
-    void process_loop();
-    void parse_nmea(char* line);
+    void computeGrid();
+    void formatTime();
+    void processLoop();
+    void parseNMEA(char* line);
 
     // Thread management
-    static void thread_fn(void* p1, void* p2, void* p3);
-    struct k_thread thread_data_;
-    bool running_ = false;
+    static void threadFn(void* p1, void* p2, void* p3);
+    struct k_thread threadData;
+    bool running = false;
 
-    GnssData data_ = {};
-    char time_str_[20] = "n/a";
-    char grid_[7] = "AA00aa";
+    GNSSData data = {};
+    char timeStr[20] = "n/a";
+    char grid[7] = "AA00aa";
 
     // UART device
-    const struct device* uart_dev_ = nullptr;
-    char nmea_buf_[128];
-    int nmea_pos_ = 0;
+    const struct device* uartDev = nullptr;
+    char nmeaBuf[128];
+    int nmeaPos = 0;
 
     // Synchronization
-    mutable struct k_mutex mutex_;
+    mutable struct k_mutex mutex;
 };
 
 } // namespace wspr

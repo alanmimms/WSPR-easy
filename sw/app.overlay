@@ -10,16 +10,16 @@
  *   scratch_partition @0x2F0000 (64KB)
  *   storage_partition @0x300000 (64KB) - NVS
  *
- * We add LittleFS starting at 0x310000 (after storage), 512KB
+ * We add LittleFS starting at 0x310000 (after storage).
  * This fits comfortably in the 8MB flash.
  */
 
 &flash0 {
 	partitions {
 		/* LittleFS for web UI files - after all default partitions */
-		littlefs_partition: partition@310000 {
+		lfs_partition: partition@310000 {
 			label = "littlefs";
-			reg = <0x310000 DT_SIZE_K(512)>;  /* 512KB for web files */
+			reg = <0x310000 DT_SIZE_K(1024)>;  /* 1MB for web files */
 		};
 	};
 };
@@ -54,7 +54,7 @@
 		compatible = "gpio-keys"; 
 		
 		/* FPGA Control */
-		fpga_reset: fpga-reset {
+		fpga_nreset: fpga-nreset {
 			gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
 			label = "FPGA Reset";
 		};
@@ -75,6 +75,16 @@
 		gnss_reset: gnss-reset {
 			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
 			label = "GNSS Reset";
+		};
+
+		/* Power Control */
+		pg_fpgacore: pg_fpgacore {
+			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>; /* IO 41 */
+			label = "FPGA Core Power Good";
+		};
+		en_fpgaio: en_fpgaio {
+			gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>; /* IO 42 */
+			label = "FPGA IO Power Enable";
 		};
 
 		/* Low Pass Filter Switching */

@@ -6,7 +6,7 @@
 #include <zephyr/shell/shell.h>
 #include <zephyr/kernel.h>
 #include <zephyr/fs/fs.h>
-#include "wifi_manager.hpp"
+#include "wifiManager.hpp"
 #include "gnss.hpp"
 #include "fpga.hpp"
 
@@ -14,36 +14,36 @@ namespace wspr {
 
 static int cmd_wspr_status(const struct shell *sh, size_t argc, char **argv) {
     auto& wifi = WifiManager::instance();
-    auto& gnss = Gnss::instance();
-    auto& fpga = Fpga::instance();
+    auto& gnss = GNSS::instance();
+    auto& fpga = FPGA::instance();
 
     shell_print(sh, "=== WSPR-ease Status ===");
     shell_print(sh, "WiFi: %s (SSID: %s, RSSI: %d)", 
-                wifi.is_connected() ? "Connected" : "Disconnected",
-                wifi.ssid(), wifi.rssi());
-    shell_print(sh, "IP:   %s", wifi.ip_address());
+                wifi.isConnected() ? "Connected" : "Disconnected",
+                wifi.getSSID(), wifi.getRSSI());
+    shell_print(sh, "IP:   %s", wifi.getIPAddress());
     
     shell_print(sh, "--- GNSS ---");
     shell_print(sh, "Fix:  %s (Sats: %d, HDOP: %.2f)", 
-                gnss.has_fix() ? "YES" : "NO",
-                gnss.satellites(), (double)gnss.hdop());
+                gnss.hasFix() ? "YES" : "NO",
+                gnss.satellites(), (double)gnss.getHDOP());
     shell_print(sh, "Pos:  Lat %.6f, Lon %.6f, Alt %.1f m",
                 gnss.latitude(), gnss.longitude(), gnss.altitude());
-    shell_print(sh, "Time: %s (Grid: %s)", gnss.time_string(), gnss.grid_locator());
+    shell_print(sh, "Time: %s (Grid: %s)", gnss.timeString(), gnss.gridLocator());
 
     shell_print(sh, "--- FPGA ---");
     shell_print(sh, "Init: %s (Mode: %s)", 
-                fpga.is_initialized() ? "YES" : "NO",
-                fpga.is_transmitting() ? "TX" : "IDLE");
+                fpga.isInitialized() ? "YES" : "NO",
+                fpga.isTransmitting() ? "TX" : "IDLE");
     shell_print(sh, "Freq: %u Hz", fpga.frequency());
-    shell_print(sh, "PPS:  %u (40MHz clock count)", fpga.get_counter());
+    shell_print(sh, "PPS:  %u (40MHz clock count)", fpga.getCounter());
 
     return 0;
 }
 
 static int cmd_fpga_reset(const struct shell *sh, size_t argc, char **argv) {
     shell_print(sh, "Resetting FPGA...");
-    Fpga::instance().reset();
+    FPGA::instance().reset();
     return 0;
 }
 
@@ -54,7 +54,7 @@ static int cmd_fpga_flash(const struct shell *sh, size_t argc, char **argv) {
     }
 
     shell_print(sh, "Loading FPGA bitstream from %s...", path);
-    int ret = Fpga::instance().load_bitstream(path);
+    int ret = FPGA::instance().loadBitstream(path);
     if (ret == 0) {
         shell_print(sh, "FPGA flashed successfully");
     } else {
@@ -64,10 +64,10 @@ static int cmd_fpga_flash(const struct shell *sh, size_t argc, char **argv) {
 }
 
 static int cmd_fpga_counter(const struct shell *sh, size_t argc, char **argv) {
-    uint32_t count = Fpga::instance().get_counter();
-    shell_print(sh, "FPGA 1PPS Counter: %u (expected ~40000000)", count);
+    uint32_t count = FPGA::instance().getCounter();
+    shell_print(sh, "FPGA 1PPS Counter: %u (expected ~FPGA::tcxoFreqHz)", count);
     if (count > 0) {
-        double error = (double)count - 40000000.0;
+        double error = (double)count - FPGA::tcxoFreqHz;
         double ppm = (error / 40.0);
         shell_print(sh, "Clock Error: %.2f Hz (%.3f ppm)", error, ppm);
     }

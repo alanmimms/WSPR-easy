@@ -1,16 +1,21 @@
 # WSPR-ease FPGA Simulation
 
-This directory contains the Verilator-based testbench for the WSPR-ease FPGA design, integrated with the ESP32 software stack.
+This directory contains the Verilator-based testbench for the
+WSPR-ease FPGA design, integrated with the ESP32 software stack.
 
 ## Architecture
 
 The simulation integrates:
 
-- **FPGA RTL** (`top.sv`, `sequencer.sv`) - The actual iCE40 FPGA design with NCO and 6-step sequencer
-- **ESP32 Software** (`../sw/transmitter.cpp`, `../sw/wspr-encoder.cpp`) - Real transmitter and WSPR encoder code
-- **Simulation HAL** (`sim_hal.hpp`) - Hardware abstraction layer implementations for Verilator
+- **FPGA RTL** (`top.sv`, `sequencer.sv`) - The actual iCE40 FPGA
+  design with NCO and 6-step sequencer
+- **ESP32 Software** (`../sw/transmitter.cpp`,
+  `../sw/wspr-encoder.cpp`) - Real transmitter and WSPR encoder code
+- **Simulation HAL** (`simHAL.hpp`) - Hardware abstraction layer
+  implementations for Verilator
 
-This allows testing the complete signal chain from WSPR encoding through SPI transactions to RF output generation.
+This allows testing the complete signal chain from WSPR encoding
+through SPI transactions to RF output generation.
 
 ## Building
 
@@ -51,13 +56,15 @@ obj_dir/VTop --notrace --fastforward # Superfast mode
 
 ## Simulation Output
 
-The simulation runs for ~2 seconds of real-time transmission, sending 3 WSPR symbols:
+The simulation runs for ~2 seconds of real-time transmission, sending
+3 WSPR symbols:
 
 - Symbol 1 at ~682 ms
 - Symbol 2 at ~1365 ms
 - Symbol 3 at ~2048 ms
 
-Each symbol period is 682.67 ms (8192/12000 seconds), matching the WSPR standard.
+Each symbol period is 682.67 ms (8192/12000 seconds), matching the
+WSPR standard.
 
 ### Example Output
 
@@ -97,7 +104,7 @@ This reduces VCD file size significantly.
 
 ## Modifying Test Parameters
 
-Edit `tb_top.cpp` to change:
+Edit `tbTop.cpp` to change:
 
 ```cpp
 const uint32_t dialFreqHz = 14097000;  // Frequency (Hz)
@@ -121,9 +128,11 @@ bool fastMode = true;                    // Enable selective tracing
 
 ## Integration with ESP32 Code
 
-The sw/ directory code is compiled directly into the testbench. The HAL interfaces (`HAL::ISpi`, `HAL::ITimer`) are implemented by:
+The sw/ directory code is compiled directly into the testbench. The
+HAL interfaces (`HAL::ISpi`, `HAL::ITimer`) are implemented by:
 
 - `SimSpi` - Drives FPGA SPI signals via Verilator interface
 - `SimTimer` - Tracks simulation time in picoseconds
 
-This ensures the same transmitter logic runs in both simulation and on actual hardware.
+This ensures the same transmitter logic runs in both simulation and on
+actual hardware.
