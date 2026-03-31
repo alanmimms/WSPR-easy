@@ -1,6 +1,7 @@
 /*
  * FPGA Control Module Implementation for WSPR-ease
  * Handles iCE40 bitstream loading and SPI register access
+ * Strictly follows Lattice iCE40 SPI Peripheral Mode (Slave SPI) timing.
  */
 
 #include "fpga.hpp"
@@ -13,12 +14,13 @@
 
 #include <cstring>
 #include <errno.h>
+#include <stdlib.h>
 
 LOG_MODULE_REGISTER(fpga, LOG_LEVEL_INF);
 
 namespace wspr {
 
-// GPIO specs from devicetree
+// GPIO specs from devicetree (All configured as GPIO_ACTIVE_HIGH in overlay)
 static const struct gpio_dt_spec fpga_reset = GPIO_DT_SPEC_GET(DT_NODELABEL(fpga_reset), gpios);
 static const struct gpio_dt_spec fpga_done  = GPIO_DT_SPEC_GET(DT_NODELABEL(fpga_done), gpios);
 static const struct gpio_dt_spec fpga_cs    = GPIO_DT_SPEC_GET(DT_NODELABEL(fpga_cs), gpios);
@@ -26,14 +28,6 @@ static const struct gpio_dt_spec fpga_cs    = GPIO_DT_SPEC_GET(DT_NODELABEL(fpga
 // iCE40 Slave SPI: Mode 0 (CPOL=0, CPHA=0), MSB First.
 static const struct spi_dt_spec fpga_spi = SPI_DT_SPEC_GET(DT_NODELABEL(fpga_dev), 
     SPI_OP_MODE_MASTER | SPI_WORD_SET(8) | SPI_TRANSFER_MSB);
-
-// Fast bit-reversal helper
-static inline uint8_t bit_reverse(uint8_t b) {
-    b = ((b & 0xF0) >> 4) | ((b & 0x0F) << 4);
-    b = ((b & 0xCC) >> 2) | ((b & 0x33) << 2);
-    b = ((b & 0xAA) >> 1) | ((b & 0x55) << 1);
-    return b;
-}
 
 Fpga& Fpga::instance() {
     static Fpga inst;
@@ -53,13 +47,12 @@ int Fpga::init() {
         return -ENODEV;
     }
 
-    // Configure GPIOs. Done pin often needs a pull-up.
-    gpio_pin_configure_dt(&fpga_reset, GPIO_OUTPUT_INACTIVE);
-    gpio_pin_configure_dt(&fpga_cs, GPIO_OUTPUT_INACTIVE);
+    // Configure GPIOs for direct physical control (1=High, 0=Low)
+    gpio_pin_configure_dt(&fpga_reset, GPIO_OUTPUT_LOW); // Hold in Reset
+    gpio_pin_configure_dt(&fpga_cs, GPIO_OUTPUT_HIGH);    // CS Idle
     gpio_pin_configure_dt(&fpga_done, GPIO_INPUT | GPIO_PULL_UP);
 
-    // Ensure SS_B is High initially
-    gpio_pin_set_dt(&fpga_cs, 0); 
+    LOG_INF("FPGA held in reset while preparing image...");
 
     int ret = load_bitstream("/lfs/fpga.img");
     if (ret < 0) {
@@ -68,32 +61,34 @@ int Fpga::init() {
     }
 
     initialized_ = true;
-    LOG_INF("FPGA initialized successfully");
+    LOG_INF("FPGA initialized and running");
     return 0;
 }
 
 int Fpga::reset() {
-    // 1. Wakeup: Send 8 clocks with SS_B HIGH
-    gpio_pin_set_dt(&fpga_cs, 0); // SS_B = High
-    uint8_t dummy = 0xFF;
-    struct spi_buf s_buf = { .buf = &dummy, .len = 1 };
-    struct spi_buf_set s_bufs = { .buffers = &s_buf, .count = 1 };
-    spi_write_dt(&fpga_spi, &s_bufs);
-    k_usleep(100);
-
-    // 2. Pulse CRESET_B
-    gpio_pin_set_dt(&fpga_reset, 1); // CRESET_B = Low (Active)
-    k_msleep(2);
+    // 1. AP begins by driving CRESET_B Low, resetting iCE40.
+    // Similarly, AP holds iCE40 SPI_SS (CS) Low.
+    gpio_pin_set_dt(&fpga_cs, 0);    // Physical Low
+    gpio_pin_set_dt(&fpga_reset, 0); // Physical Low
     
-    // 3. Drive SS_B Low (Must be LOW when CRESET_B transitions High)
-    gpio_pin_set_dt(&fpga_cs, 1);    // SS_B = Low (Active)
-    k_usleep(200);
+    // AP must hold CRESET_B Low for at least 200 ns.
+    k_msleep(1); // 1ms is plenty
 
-    // 4. Release Reset
-    gpio_pin_set_dt(&fpga_reset, 0); 
+    // 2. AP releases CRESET_B (drives it High).
+    // iCE40 enters SPI peripheral mode when CRESET_B returns High while SPI_SS is Low.
+    gpio_pin_set_dt(&fpga_reset, 1); // Physical High
     
-    // 5. Wait for t_STAB (datasheet says 1200us)
-    k_msleep(5);
+    // SPI_SS must remain low for at least 200ns after CRESET_B release.
+    k_usleep(10); // 10us is plenty
+
+    // 3. AP must wait a minimum of 1200 us for internal memory clearing.
+    k_msleep(2); // 2ms is plenty
+    
+    // Verify CDONE is LOW (housekeeping should be in progress or done)
+    if (gpio_pin_get_dt(&fpga_done) > 0) {
+        LOG_ERR("FPGA Error: CDONE is HIGH immediately after reset pulse! Bad boot mode?");
+        return -EIO;
+    }
     
     return 0;
 }
@@ -110,60 +105,93 @@ int Fpga::load_bitstream(const char* path) {
 
     struct fs_dirent stat;
     fs_stat(path, &stat);
-    LOG_INF("Bitstream %s: %zu bytes", path, (size_t)stat.size);
+    LOG_INF("Bitstream %s opened (%zu bytes)", path, (size_t)stat.size);
 
-    reset();
+    // Allocate transient buffer on heap
+    const size_t chunk_size = 2048;
+    uint8_t* buffer = (uint8_t*)k_malloc(chunk_size);
+    if (!buffer) {
+        LOG_ERR("Failed to allocate bitstream buffer");
+        fs_close(&file);
+        return -ENOMEM;
+    }
 
-    LOG_INF("Transmitting bitstream with bit-reversal...");
+    // A. Trigger Reset and enter Slave SPI mode
+    if (reset() != 0) {
+        k_free(buffer);
+        fs_close(&file);
+        return -EIO;
+    }
 
-    // SS_B is LOW from reset()
-    uint8_t buf[1024];
+    // B. Once housekeeping is done, SPI_SS goes to High, waits 8 clocks, then back to Low.
+    gpio_pin_set_dt(&fpga_cs, 1); // Physical High
+    
+    uint8_t dummy = 0x00;
+    struct spi_buf s_dummy = { .buf = &dummy, .len = 1 };
+    struct spi_buf_set s_dummies = { .buffers = &s_dummy, .count = 1 };
+    spi_write_dt(&fpga_spi, &s_dummies); // 8 clocks
+    
+    gpio_pin_set_dt(&fpga_cs, 0); // Physical Low
+
+    // C. Transmit entire image without interruption
+    LOG_INF("Transmitting bitstream...");
+
     ssize_t bytes_read;
     size_t total_bytes = 0;
-    struct spi_buf s_buf = { .buf = buf, .len = sizeof(buf) };
+    struct spi_buf s_buf = { .buf = buffer, .len = chunk_size };
     struct spi_buf_set s_bufs = { .buffers = &s_buf, .count = 1 };
 
-    while ((bytes_read = fs_read(&file, buf, sizeof(buf))) > 0) {
-        // Bit-reverse each byte for iCE40 Slave SPI compatibility
-        for (int i = 0; i < bytes_read; i++) {
-            buf[i] = bit_reverse(buf[i]);
-        }
-
+    while ((bytes_read = fs_read(&file, buffer, chunk_size)) > 0) {
         s_buf.len = bytes_read;
         ret = spi_write_dt(&fpga_spi, &s_bufs);
         if (ret < 0) {
-            LOG_ERR("SPI fail at %zu: %s", total_bytes, strerror(-ret));
+            LOG_ERR("SPI write error at %zu: %d", total_bytes, ret);
+            k_free(buffer);
             fs_close(&file);
-            gpio_pin_set_dt(&fpga_cs, 0);
+            gpio_pin_set_dt(&fpga_cs, 1); 
             return ret;
         }
         total_bytes += bytes_read;
-        k_yield();
     }
 
     fs_close(&file);
-    LOG_INF("Upload complete (%zu bytes), sending final clocks...", total_bytes);
+    LOG_INF("Transmitted %zu bytes", total_bytes);
 
-    // Send final dummy clocks with SS_B HIGH
-    gpio_pin_set_dt(&fpga_cs, 0); 
-    memset(buf, 0xFF, 16);
-    s_buf.len = 16;
-    spi_write_dt(&fpga_spi, &s_bufs);
+    // D. After sending entire image, iCE40 releases CDONE.
+    // SPI_SS goes High.
+    gpio_pin_set_dt(&fpga_cs, 1); // Physical High
 
-    if (gpio_pin_get_dt(&fpga_done) > 0) {
-        LOG_INF("FPGA Configuration SUCCESS (CDONE is HIGH)");
-        return 0;
-    } else {
-        LOG_ERR("FPGA Configuration FAILED (CDONE remains LOW)");
-        return -EAGAIN; 
+    // Wait for CDONE up to 100 clock cycles.
+    // We'll send a few dummy bytes while checking.
+    bool success = false;
+    for (int i = 0; i < 20; i++) {
+        if (gpio_pin_get_dt(&fpga_done) > 0) {
+            success = true;
+            break;
+        }
+        spi_write_dt(&fpga_spi, &s_dummies); // 8 clocks per loop
     }
+
+    if (success) {
+        LOG_INF("FPGA SUCCESS: CDONE is HIGH");
+        // E. After CDONE goes High, send at least 49 additional dummy bits.
+        memset(buffer, 0x00, 8); // 64 clocks
+        s_buf.len = 8;
+        spi_write_dt(&fpga_spi, &s_bufs);
+        ret = 0;
+    } else {
+        LOG_ERR("FPGA FAILURE: CDONE remains LOW");
+        ret = -EAGAIN; 
+    }
+
+    k_free(buffer);
+    return ret;
 }
 
 int Fpga::set_frequency(uint32_t freq_hz) {
     current_freq_ = freq_hz;
     if (!initialized_) return -ENODEV;
 
-    // word = (freq * 2^32) / 40,000,000
     uint64_t word = ((uint64_t)freq_hz << 32) / 40000000;
     return spi_write_reg(0x01, (uint32_t)word);
 }
@@ -209,12 +237,11 @@ int Fpga::spi_write_reg(uint8_t reg, uint32_t value) {
     tx_buf[3] = (value >> 8) & 0xFF;
     tx_buf[4] = value & 0xFF;
 
-    // NO bit reversal for register access - this is post-config SPI
-    gpio_pin_set_dt(&fpga_cs, 1); 
+    gpio_pin_set_dt(&fpga_cs, 0); // Physical Low
     struct spi_buf s_buf = { .buf = tx_buf, .len = sizeof(tx_buf) };
     struct spi_buf_set s_bufs = { .buffers = &s_buf, .count = 1 };
     int ret = spi_write_dt(&fpga_spi, &s_bufs);
-    gpio_pin_set_dt(&fpga_cs, 0); 
+    gpio_pin_set_dt(&fpga_cs, 1); // Physical High
     return ret;
 }
 
@@ -222,13 +249,13 @@ int Fpga::spi_read_reg(uint8_t reg, uint32_t* value) {
     uint8_t tx_buf[1] = { (uint8_t)(reg & 0x7F) };
     uint8_t rx_buf[4] = { 0 };
 
-    gpio_pin_set_dt(&fpga_cs, 1); 
+    gpio_pin_set_dt(&fpga_cs, 0); // Physical Low
     struct spi_buf s_tx = { .buf = tx_buf, .len = 1 };
     struct spi_buf_set s_txs = { .buffers = &s_tx, .count = 1 };
     struct spi_buf s_rx = { .buf = rx_buf, .len = 4 };
     struct spi_buf_set s_rxs = { .buffers = &s_rx, .count = 1 };
     int ret = spi_transceive_dt(&fpga_spi, &s_txs, &s_rxs);
-    gpio_pin_set_dt(&fpga_cs, 0); 
+    gpio_pin_set_dt(&fpga_cs, 1); // Physical High
 
     if (ret == 0) {
         *value = ((uint32_t)rx_buf[0] << 24) |

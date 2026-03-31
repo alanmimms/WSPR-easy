@@ -55,7 +55,7 @@
 		
 		/* FPGA Control */
 		fpga_reset: fpga-reset {
-			gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
 			label = "FPGA Reset";
 		};
 		fpga_done: fpga-done {
@@ -63,7 +63,7 @@
 			label = "FPGA Done";
 		};
 		fpga_cs: fpga-cs {
-			gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
 			label = "FPGA CS";
 		};
 
@@ -73,7 +73,7 @@
 			label = "GNSS PPS";
 		};
 		gnss_reset: gnss-reset {
-			gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
 			label = "GNSS Reset";
 		};
 
@@ -130,7 +130,7 @@
 	fpga_dev: fpga@0 {
 		compatible = "vnd,spi-device";
 		reg = <0>;
-		spi-max-frequency = <20000000>; /* 20MHz for reliable config */
+		spi-max-frequency = <1000000>; /* 1MHz for maximum reliability during Slave SPI config */
 	};
 };
 
