@@ -40,8 +40,8 @@ the stepped RF waveform in real-time.
 
 | Component | Part Number | Package | Notes |
 | :--- | :--- | :--- | :--- |
-| **MCU** | ESP32-S3-WROOM-1-N16R8 | Module | 16MB Flash, 8MB Octal PSRAM. |
-| **FPGA** | iCE40UP5K-SG48 | QFN-48 | Note: Use UP5K symbol (Pin 29=VCCPLL). |
+| **MCU** | ESP32-S3-WROOM-1-N8R8 | Module | 8MB Flash, 8MB Octal PSRAM. |
+| **FPGA** | iCE40UP5K-SG48 | QFN-48 | Note: Pin 29=VCCPLL. |
 | **RF Buffer** | 74ACT244 | TSSOP-20 | "T" (TTL) variant required for 3.3V logic translation. |
 | **MOSFETs** | BS170 (x12) | SOT-23 | 3x Parallel per phase (Total 12). Low $V_{GS(th)}$. |
 | **Transformer** | BN-43-202 | Core | Binocular. 4T Primary / 4T Secondary. Safe for 80m. |
@@ -55,6 +55,9 @@ the stepped RF waveform in real-time.
 *   **3.3V Rail:** LDO (e.g., AP2112K). Powers ESP32, TCXO, GNSS, FPGA
     IO.
 *   **1.2V Rail:** LDO (e.g., TLV70012). Powers FPGA Core (VCC).
+*   **FPGA Power Controls:** ESP32 manages FPGA Core power good
+    (`pg_fpgacore` on IO 41) and enables FPGA IO power (`en_fpgaio` on IO
+    42) to ensure correct power sequencing.
 *   **PLL Supply:** Filtered 1.2V (10Ω Resistor + 10µF Cap to Pin 29).
 *   **PA Supply:** Direct 5V VBUS with 22µF Bulk Capacitor.
 
@@ -76,6 +79,8 @@ Uses FSPI (SPI2) on native pins for high-speed bitstream loading
 | **FPGA_RST** | IO 9 | Pin 8 | Hard Reset (CRESET_B) |
 | **FPGA_DONE** | IO 10 | Pin 7 | Config Status (CDONE) |
 | **PPS_IN** | IO 48 | Pin 6 | Shared GNSS Pulse Per Second |
+| **PG_CORE** | IO 41 | - | FPGA Core Power Good |
+| **EN_IO** | IO 42 | - | FPGA IO Power Enable |
 
 ### Zephyr Peripheral Map
 

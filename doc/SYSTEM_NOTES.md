@@ -19,7 +19,9 @@ The ESP32-S3 and the iCE40UP5K FPGA are connected via a shared SPI bus (FSPI/SPI
 | SPI_CS | IO 14 | Pin 16 | Chip Select (Active Low) |
 | FPGA_RST | IO 9 | Pin 8 | Hard Reset (CRESET_B) |
 | FPGA_DONE | IO 10 | Pin 7 | Config Status (CDONE) |
-| PPS_IN | IO 16 | Pin 6 | Shared GNSS Pulse Per Second |
+| PPS_IN | IO 48 | Pin 6 | Shared GNSS Pulse Per Second |
+| PG_CORE | IO 41 | - | FPGA Core Power Good |
+| EN_IO | IO 42 | - | FPGA IO Power Enable |
 
 ---
 
@@ -37,9 +39,10 @@ The ESP32-S3 and the iCE40UP5K FPGA are connected via a shared SPI bus (FSPI/SPI
 
 WSPR-ease runs on **Zephyr RTOS** (v4.3+), providing a robust multitasking environment.
 
-### Memory Management (PSRAM)
+### Memory Management (Heap vs BSS)
 Due to the memory-intensive nature of the web server and network stack, internal DRAM is constrained.
-- **Thread Stacks:** The Web Server (16KB), GNSS (4KB), and Captive DNS (2KB) thread stacks are dynamically allocated from the **heap** at runtime.
+- **Thread Stacks:** Large thread stacks (e.g., Web Server 16KB, GNSS 4KB) are dynamically allocated from the **heap** at runtime to avoid BSS overflow.
+- **Request Buffers:** Large buffers (e.g., 4KB HTTP request buffer) are also heap-allocated and reused where possible.
 - **Heap Configuration:** The Zephyr heap is configured to include the 8MB of external PSRAM.
 - **Flash Optimization:** Instructions and Rodata are kept in Flash to save DRAM, but PSRAM is used for large buffers.
 
@@ -52,10 +55,18 @@ Due to the memory-intensive nature of the web server and network stack, internal
 
 The ESP32-S3's flash is partitioned to include a **LittleFS** filesystem mounted at `/lfs`.
 
+### Partition Table
+To avoid conflicts with default board definitions, the `sw/app.overlay` explicitly deletes default partitions and defines:
+- **`boot_partition`**: 64KB (mcuboot)
+- **`slot0_partition`**: 3MB (application)
+- **`lfs_partition`**: 1MB (LittleFS)
+- **`storage_partition`**: 256KB (NVS)
+
 ### LittleFS Usage
-- **`fpga.img`**: The compiled FPGA bitstream. On boot, the ESP32 reads this file and loads it into the FPGA via bit-banging.
+- **`fpga.img`**: The compiled FPGA bitstream. On boot, the ESP32 reads this file and loads it into the FPGA via **SPI** (using `wspr::FPGA` loader).
 - **Web UI Files**: HTML, CSS, and JavaScript files for the web interface.
-- **Configuration**: User settings (Callsign, Grid Square, Schedules) are stored in NVS.
+- **Configuration**: User settings are stored in NVS via the WebServer's configuration manager.
+- **FileSystem Singleton**: A `wspr::FileSystem` class manages the mount state and provides a central point for FS access.
 
 ### UI Notes
 - **GNSS Display:** Displays Latitude, Longitude, Grid Square, and **Altitude (ASL)**.

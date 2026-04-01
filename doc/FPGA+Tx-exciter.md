@@ -1,23 +1,23 @@
-### 1. The FPGA Selection: Lattice iCE40LP384
+### 1. The FPGA Selection: Lattice iCE40UP5K
 
-The best candidate that balances cost, speed, and "hand-solderability" is the **Lattice iCE40LP384** or the slightly larger **iCE40HX1K**.
+The best candidate that balances cost, speed, and capability is the **Lattice iCE40UP5K**.
 
-- **Part Number:** **iCE40LP384-SG32** (or `iCE40LP384-SG32TR`)
+- **Part Number:** **iCE40UP5K-SG48**
     
-- **Package:** **QFN-32** (0.5mm pitch). This is a standard "Quad Flat No-leads" package. It has pads on the bottom edge, but no balls. You can solder this with a hot air gun or a reflow hotplate easily. You can even hand-solder it with a fine-tip iron if you extend the pads on the PCB footprint.
+- **Package:** **QFN-48** (0.5mm pitch). This is a standard "Quad Flat No-leads" package. It has pads on the bottom edge, but no balls. You can solder this with a hot air gun or a reflow hotplate easily.
     
-- **Logic Cells:** 384 LUTs (Look-Up Tables).
+- **Logic Cells:** 5280 LUTs (Look-Up Tables).
     
-    - _Is this enough?_ Yes. A 32-bit NCO + 6-step sequencer + SPI interface will consume maybe 100-150 LUTs. You have plenty of room.
+    - _Is this enough?_ Yes, it's more than enough. A 32-bit NCO + 6-step sequencer + SPI interface will consume maybe 150-200 LUTs. The UP5K also provides 1Mb of SPRAM and 8 DSP blocks which can be used for future signal processing.
         
 - **Speed:** The internal fabric runs easily at >200 MHz. The I/O pins can toggle at these speeds without issue.
     
-- **Cost:** ~$3.50 - $4.50 USD (DigiKey/Mouser).
+- **Cost:** ~$6.00 - $8.00 USD.
     
-- **Availability:** Generally good. If the LP384 is out, the **iCE40LP1K-SWG16** is a tiny BGA (16-ball, 2.5mm), but since you want to avoid BGA, stick to the **SG32** or **VQ100** (TQFP) packages found in the HX series (e.g. **iCE40HX1K-VQ100**), though VQ100 is much physically larger.
+- **Availability:** Excellent. 
     
 
-**Recommendation:** Go with **iCE40LP384-SG32**. It is the smallest non-BGA option.
+**Recommendation:** Go with **iCE40UP5K-SG48**. It provides massive headroom for future features.
 
 ---
 
