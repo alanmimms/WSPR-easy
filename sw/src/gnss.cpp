@@ -22,7 +22,8 @@ LOG_MODULE_REGISTER(gnss, LOG_LEVEL_INF);
 
 namespace wspr {
 
-static K_THREAD_STACK_DEFINE(gnssStack, 4096);
+#define GNSS_STACK_SIZE 4096
+static k_thread_stack_t *gnssStackPtr = nullptr;
 
 GNSS& GNSS::instance() {
     static GNSS inst;
@@ -32,6 +33,18 @@ GNSS& GNSS::instance() {
 int GNSS::init() {
     LOG_INF("Initializing GNSS module");
     k_mutex_init(&mutex);
+
+    // Allocate stack from heap
+    if (!gnssStackPtr) {
+        gnssStackPtr = (k_thread_stack_t *)k_aligned_alloc(
+            ARCH_STACK_PTR_ALIGN, 
+            K_THREAD_STACK_LEN(GNSS_STACK_SIZE)
+        );
+        if (!gnssStackPtr) {
+            LOG_ERR("Failed to allocate GNSS stack");
+            return -ENOMEM;
+        }
+    }
 
     // GNSS Reset sequence
     static const struct gpio_dt_spec gnssReset = GPIO_DT_SPEC_GET(DT_NODELABEL(gnss_reset), gpios);
@@ -65,7 +78,7 @@ void GNSS::start() {
     if (running) return;
     
     running = true;
-    k_thread_create(&threadData, gnssStack, K_THREAD_STACK_SIZEOF(gnssStack),
+    k_thread_create(&threadData, gnssStackPtr, GNSS_STACK_SIZE,
                     threadFn, this, NULL, NULL,
                     K_PRIO_PREEMPT(10), 0, K_NO_WAIT);
     k_thread_name_set(&threadData, "gnssWorker");

@@ -14,9 +14,6 @@ class WebServer {
 public:
     WebServer() = default;
 
-    // Mount LittleFS - can be called early, before network is ready
-    int mountFilesystem();
-
     int init();
     int start(uint16_t port = 80);
     void stop();

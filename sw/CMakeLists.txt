@@ -20,4 +20,5 @@ target_sources(app PRIVATE
   src/gnss.cpp
   src/fpga.cpp
   src/shellcmds.cpp
+  src/filesystem.cpp
 )

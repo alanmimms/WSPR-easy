@@ -5,6 +5,7 @@
  */
 
 #include "fpga.hpp"
+#include "filesystem.hpp"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
@@ -92,7 +93,11 @@ int FPGA::init() {
     k_msleep(100); // Stabilization delay
 
     // Proceed with configuration
-    int ret = loadBitstream("/lfs/fpga.img");
+    char bitstreamPath[256];
+    snprintf(bitstreamPath, sizeof(bitstreamPath), "%s/fpga.img", 
+             FileSystem::instance().getMountPoint());
+             
+    int ret = loadBitstream(bitstreamPath);
     if (ret < 0) {
         initialized = false;
         return ret;

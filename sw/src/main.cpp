@@ -14,6 +14,7 @@
 #include "captiveDNS.hpp"
 #include "gnss.hpp"
 #include "fpga.hpp"
+#include "filesystem.hpp"
 
 LOG_MODULE_REGISTER(wspr_ease, LOG_LEVEL_INF);
 
@@ -76,9 +77,10 @@ static void initSubsystems(wspr::WebServer& webServer)
     auto& wifi = wspr::WifiManager::instance();
     auto& gnss = wspr::GNSS::instance();
     auto& fpga = wspr::FPGA::instance();
+    auto& fs = wspr::FileSystem::instance();
 
     // Mount LittleFS early - doesn't need network
-    webServer.mountFilesystem();
+    fs.mount();
 
     // Initialize GNSS (stub mode)
     if (gnss.init() != 0) {
