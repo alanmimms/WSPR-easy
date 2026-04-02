@@ -4,7 +4,7 @@
 
 TARGET_IP="nano1.local"
 TARGET_PORT="/dev/ttyACM0"
-TARGET_BIN=/homealan/ham/WSPR-ease/sw/$1
+TARGET_BIN=/homealan/ham/WSPR-ease/$1
 
 echo "--- Redirecting Flash to ${TARGET_IP} ---"
 

@@ -10,7 +10,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-WEBUI_DIR="$(dirname "$PROJECT_DIR")/webui/www"
+WEBUI_DIR="$PROJECT_DIR/webui/www"
 BUILD_DIR="$PROJECT_DIR/build"
 
 # Use west's Python venv or system python
@@ -130,5 +130,5 @@ $ESPTOOL --chip esp32s3 \
     $LFS_OFFSET "$BUILD_DIR/littlefs.bin"
 
 echo ""
-echo "Done! Web UI files have been flashed to device."
+echo "Done! LitttleFS files have been flashed to device."
 echo "Reboot the device to load the new files."

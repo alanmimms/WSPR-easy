@@ -2,3 +2,4 @@ obj_dir/
 fpga.img
 wspr_ease.asc
 wspr_ease.json
+build/

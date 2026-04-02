@@ -46,6 +46,7 @@ module Top (
   logic [31:0] ppsCount = 0;
   logic [31:0] ppsFallVal = 0; 
   logic [31:0] ppsRiseVal = 0;
+  logic [31:0] ppsRiseValPrev = 0;
   logic [31:0] ppsEdges = 0;
   
   logic [2:0] ppsSync = 0;
@@ -57,7 +58,11 @@ module Top (
   always_ff @(posedge clk) begin
     ppsCount <= ppsCount + 1'b1;
     if (ppsF) begin ppsFallVal <= ppsCount; ppsEdges <= ppsEdges + 1'b1; end
-    if (ppsR) begin ppsRiseVal <= ppsCount; ppsEdges <= ppsEdges + 1'b1; end
+    if (ppsR) begin 
+      ppsRiseValPrev <= ppsRiseVal;
+      ppsRiseVal <= ppsCount; 
+      ppsEdges <= ppsEdges + 1'b1; 
+    end
   end
 
   // -------------------------------------------------------------------------
@@ -122,11 +127,12 @@ module Top (
       7'h03: spiRdData <= ppsFallVal;
       7'h04: spiRdData <= regPwrThresh;
       7'h05: spiRdData <= regToneSpacing;
-      7'h06: spiRdData <= ppsCount;
       7'h07: spiRdData <= ppsEdges;
       7'h08: spiRdData <= p1Inc;
+      7'h09: spiRdData <= ppsRiseVal;
+      7'h0A: spiRdData <= ppsRiseValPrev;
       default: spiRdData <= 32'hDEADBEEF;
-    endcase
+      endcase
   end
 
   logic misoOut;

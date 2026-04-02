@@ -151,47 +151,55 @@ static int cmd_fpga_flash(const struct shell *sh, size_t argc, char **argv) {
 }
 
 static int cmd_fpga_counter(const struct shell *sh, size_t argc, char **argv) {
-    auto& fpga = FPGA::instance();
-    uint32_t e1, f1, r1;
+    auto& fpga = wspr::FPGA::instance();
+    uint32_t r1, r2, r1_check, r2_check;
     
-    // Initial sample
-    fpga.readRegister(0x07, &e1);
-    fpga.readRegister(0x03, &f1);
-    fpga.readRegister(0x08, &r1);
+    // Read registers in a loop until stable to avoid hardware update race
+    int attempts = 0;
+    do {
+        fpga.readRegister(0x09, &r1);
+        fpga.readRegister(0x0A, &r2);
+        fpga.readRegister(0x09, &r1_check);
+        fpga.readRegister(0x0A, &r2_check);
+        attempts++;
+    } while ((r1 != r1_check || r2 != r2_check) && attempts < 100);
 
-    shell_print(sh, "Measuring FPGA frequency vs GNSS PPS (2s sample)...");
-    k_msleep(2100); // Wait for > 2 PPS cycles
+    if (attempts >= 100) {
+        shell_error(sh, "Failed to get stable PPS readings from FPGA!");
+        return -EIO;
+    }
 
-    uint32_t e2, f2, r2, live, ctrl;
-    fpga.readRegister(0x07, &e2);
-    fpga.readRegister(0x03, &f2);
-    fpga.readRegister(0x08, &r2);
+    // Handle 32-bit rollover to find the most recent sample
+    uint32_t diff1 = r1 - r2;
+    uint32_t diff2 = r2 - r1;
+    
+    uint32_t latest = (diff1 < diff2) ? r1 : r2;
+    uint32_t previous = (diff1 < diff2) ? r2 : r1;
+    uint32_t delta_f = latest - previous;
+
+    uint32_t live, ctrl, p1inc, edges;
     fpga.readRegister(0x06, &live);
     fpga.readRegister(0x00, &ctrl);
-
-    uint32_t delta_e = e2 - e1;
-    uint32_t delta_f = f2 - f1;
+    fpga.readRegister(0x08, &p1inc);
+    fpga.readRegister(0x07, &edges);
 
     shell_print(sh, "=== FPGA PPS Diagnostics ===");
-    shell_print(sh, "Live PPS Signal: %s", (ctrl & 0x02) ? "HIGH" : "LOW");
-    shell_print(sh, "Total Edge Count: %u (+%u)", e2, delta_e);
-    shell_print(sh, "Last Falling Edge: %u", f2);
-    shell_print(sh, "Last Rising Edge:  %u", r2);
+    shell_print(sh, "Live PPS Signal:   %s", (ctrl & 0x02) ? "HIGH" : "LOW");
+    shell_print(sh, "Total Edge Count:  %u", edges);
+    shell_print(sh, "Sample 1 (Rising): %u", latest);
+    shell_print(sh, "Sample 2 (Rising): %u", previous);
+    shell_print(sh, "p1Inc (Tuning):    0x%08x", p1inc);
     shell_print(sh, "Live Counter:      %u", live);
     
-    if (delta_e >= 2) {
-        // Each second has 2 edges (one rising, one falling)
-        // The falling-edge register updates once per 2 edges.
-        uint32_t seconds = delta_e / 2;
-        if (seconds > 0) {
-            double freq = (double)delta_f / seconds;
-            double ppm = (freq - 40000000.0) / 40.0;
-            shell_print(sh, "----------------------------");
-            shell_print(sh, "Measured Frequency: %.3f Hz", freq);
-            shell_print(sh, "Clock Error:        %.3f ppm", ppm);
-        }
+    // We are measuring exactly 1 second between two rising edges
+    if (delta_f > 0) {
+        double freq = (double)delta_f;
+        double ppm = (freq - 40000000.0) / 40.0;
+        shell_print(sh, "----------------------------");
+        shell_print(sh, "Measured Frequency: %.3f Hz", freq);
+        shell_print(sh, "Clock Error:        %.3f ppm", ppm);
     } else {
-        shell_warn(sh, "WARNING: No PPS edges detected during 2s measurement window!");
+        shell_warn(sh, "WARNING: PPS delta is zero. Clock not running or PPS missing?");
     }
     
     return 0;
