@@ -14,10 +14,15 @@
 #include <zephyr/settings/settings.h>
 
 #include <cstring>
+#include "logmanager.hpp"
 
 LOG_MODULE_REGISTER(wifiMgr, LOG_LEVEL_INF);
 
 namespace wspr {
+
+  // Register subsystem with LogManager
+  static Logger& logger = LogManager::instance().registerSubsystem("wifi", 
+      {"mgmt", "dhcp", "rssi", "ap", "init"});
 
   static struct net_mgmt_event_callback wifiCB;
   static struct net_mgmt_event_callback ipv4CB;
@@ -48,20 +53,20 @@ namespace wspr {
     if (mgmtEvent == NET_EVENT_WIFI_CONNECT_RESULT) {
       const struct wifi_status* status = (const struct wifi_status*)wifiCB.info;
       if (status->status == 0) {
-	LOG_INF("WiFi connected");
+	logger.inf("mgmt", "WiFi connected");
 	state = WifiState::Connected;
       } else {
-	LOG_ERR("WiFi connection failed: %d", status->status);
+	logger.err("mgmt", "WiFi connection failed: %d", status->status);
 	state = WifiState::Disconnected;
       }
       k_sem_give(&wifiConnectedSem);
     } else if (mgmtEvent == NET_EVENT_WIFI_DISCONNECT_RESULT) {
       // Ignore disconnect events while connecting - ESP32 driver quirk
       if (state == WifiState::Connecting) {
-	LOG_DBG("Ignoring disconnect during connection attempt");
+	logger.dbg("mgmt", "Ignoring disconnect during connection attempt");
 	return;
       }
-      LOG_INF("WiFi disconnected");
+      logger.inf("mgmt", "WiFi disconnected");
       state = WifiState::Disconnected;
       ipAddr[0] = '\0';
       k_sem_give(&wifiDisconnectedSem);
@@ -72,27 +77,27 @@ namespace wspr {
 	net_addr_ntop(AF_INET, &ipv4->unicast[0].ipv4.address.in_addr,
 		      buf, sizeof(buf));
 	strncpy(ipAddr, buf, sizeof(ipAddr) - 1);
-	LOG_INF("Got IP address: %s", ipAddr);
+	logger.inf("dhcp", "Got IP address: %s", ipAddr);
 	k_sem_give(&ipAcquiredSem);
       }
     } else if (mgmtEvent == NET_EVENT_WIFI_AP_ENABLE_RESULT) {
-      LOG_INF("WiFi AP enabled");
+      logger.inf("ap", "WiFi AP enabled");
     } else if (mgmtEvent == NET_EVENT_WIFI_AP_DISABLE_RESULT) {
-      LOG_INF("WiFi AP disabled");
+      logger.inf("ap", "WiFi AP disabled");
     } else if (mgmtEvent == NET_EVENT_WIFI_AP_STA_CONNECTED) {
-      LOG_INF("Station connected to AP");
+      logger.inf("ap", "Station connected to AP");
     } else if (mgmtEvent == NET_EVENT_WIFI_AP_STA_DISCONNECTED) {
-      LOG_INF("Station disconnected from AP");
+      logger.inf("ap", "Station disconnected from AP");
     }
   }
 
   int WifiManager::init() {
-    LOG_INF("Initializing WiFi manager");
+    logger.inf("init", "Initializing WiFi manager");
 
     // Get the default WiFi interface
     iface = net_if_get_default();
     if (!iface) {
-      LOG_ERR("No network interface found");
+      logger.err("init", "No network interface found");
       return -ENODEV;
     }
 
@@ -111,16 +116,13 @@ namespace wspr {
                                  NET_EVENT_IPV4_ADDR_ADD);
     net_mgmt_add_event_callback(&ipv4CB);
 
-    // Load saved config
-    // XXX    loadConfig();
-
-    LOG_INF("WiFi manager initialized");
+    logger.inf("init", "WiFi manager initialized");
     return 0;
   }
 
   int WifiManager::connect(const char* ssid, const char* password) {
     if (!iface) {
-      LOG_ERR("WiFi not initialized");
+      logger.err("mgmt", "WiFi not initialized");
       return -ENODEV;
     }
 
@@ -129,18 +131,18 @@ namespace wspr {
       // Check for valid IP (not empty and not 0.0.0.0)
       bool hasValidIP = ipAddr[0] != '\0' && strcmp(ipAddr, "0.0.0.0") != 0;
       if (strcmp(currentSSID, ssid) == 0 && hasValidIP) {
-	LOG_INF("Already connected to %s with IP %s", ssid, ipAddr);
+	logger.inf("mgmt", "Already connected to %s with IP %s", ssid, ipAddr);
 	return 0;
       }
       // Disconnect first if no valid IP or connecting to different network
-      LOG_INF("Disconnecting (ssid=%s, validIP=%s)",
+      logger.inf("mgmt", "Disconnecting (ssid=%s, validIP=%s)",
 	      (strcmp(currentSSID, ssid) == 0) ? "yes" : "no",
 	      hasValidIP ? "yes" : "no");
       disconnect();
       k_sleep(K_MSEC(500));
     }
 
-    LOG_INF("Connecting to WiFi SSID: %s", ssid);
+    logger.inf("mgmt", "Connecting to WiFi SSID: %s", ssid);
     state = WifiState::Connecting;
 
     // Reset semaphores before connecting
@@ -159,7 +161,7 @@ namespace wspr {
 
     int ret = net_mgmt(NET_REQUEST_WIFI_CONNECT, iface, &params, sizeof(params));
     if (ret) {
-      LOG_ERR("WiFi connect request failed: %d", ret);
+      logger.err("mgmt", "WiFi connect request failed: %d", ret);
       state = WifiState::Disconnected;
       return ret;
     }
@@ -170,7 +172,7 @@ namespace wspr {
     // Wait for connection with timeout
     ret = k_sem_take(&wifiConnectedSem, K_SECONDS(30));
     if (ret) {
-      LOG_ERR("WiFi connection timeout");
+      logger.err("mgmt", "WiFi connection timeout");
       state = WifiState::Disconnected;
       return -ETIMEDOUT;
     }
@@ -180,13 +182,13 @@ namespace wspr {
     }
 
     // Start DHCP client to get IP address
-    LOG_INF("Starting DHCP client...");
+    logger.inf("dhcp", "Starting DHCP client...");
     net_dhcpv4_start(iface);
 
     // Wait for DHCP to assign IP address
     ret = k_sem_take(&ipAcquiredSem, K_SECONDS(30));
     if (ret) {
-      LOG_WRN("DHCP timeout, no IP address assigned");
+      logger.wrn("dhcp", "DHCP timeout, no IP address assigned");
       return -ETIMEDOUT;
     }
 
@@ -195,11 +197,11 @@ namespace wspr {
 
   int WifiManager::startAP(const char* ssid, const char* password) {
     if (!iface) {
-      LOG_ERR("WiFi not initialized");
+      logger.err("ap", "WiFi not initialized");
       return -ENODEV;
     }
 
-    LOG_INF("Starting AP mode: %s", ssid);
+    logger.inf("ap", "Starting AP mode: %s", ssid);
 
     // Configure static IP for AP mode
     struct in_addr addr, netmask;
@@ -217,14 +219,14 @@ namespace wspr {
 
     // Add AP IP address
     if (!net_if_ipv4_addr_add(iface, &addr, NET_ADDR_MANUAL, 0)) {
-      LOG_ERR("Failed to add AP IP address");
+      logger.err("ap", "Failed to add AP IP address");
       return -EFAULT;
     }
 
     // Set netmask
     net_if_ipv4_set_netmask_by_addr(iface, &addr, &netmask);
 
-    LOG_INF("AP IP configured: %s", AP_IP_ADDR);
+    logger.inf("ap", "AP IP configured: %s", AP_IP_ADDR);
 
     // Enable AP mode
     struct wifi_connect_req_params params = {};
@@ -238,7 +240,7 @@ namespace wspr {
 
     int ret = net_mgmt(NET_REQUEST_WIFI_AP_ENABLE, iface, &params, sizeof(params));
     if (ret) {
-      LOG_ERR("Failed to enable AP: %d", ret);
+      logger.err("ap", "Failed to enable AP: %d", ret);
       return ret;
     }
 
@@ -249,16 +251,16 @@ namespace wspr {
 
     ret = net_dhcpv4_server_start(iface, &dhcp_start);
     if (ret) {
-      LOG_WRN("Failed to start DHCP server: %d (may already be running)", ret);
+      logger.wrn("dhcp", "Failed to start DHCP server: %d (may already be running)", ret);
     } else {
-      LOG_INF("DHCP server started (%s - %s)", AP_DHCP_START, AP_DHCP_END);
+      logger.inf("dhcp", "DHCP server started (%s - %s)", AP_DHCP_START, AP_DHCP_END);
     }
 
     state = WifiState::ApMode;
     strncpy(currentSSID, ssid, sizeof(currentSSID) - 1);
     strncpy(ipAddr, AP_IP_ADDR, sizeof(ipAddr) - 1);
 
-    LOG_INF("AP mode started: SSID=%s IP=%s", ssid, ipAddr);
+    logger.inf("ap", "AP mode started: SSID=%s IP=%s", ssid, ipAddr);
     return 0;
   }
 
@@ -267,7 +269,7 @@ namespace wspr {
       return;
     }
 
-    LOG_INF("Disconnecting WiFi");
+    logger.inf("mgmt", "Disconnecting WiFi");
 
     if (state == WifiState::ApMode) {
       // Stop DHCP server first

@@ -9,6 +9,7 @@
 #include "fpga.hpp"
 #include "band.hpp"
 #include "filesystem.hpp"
+#include "logmanager.hpp"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
@@ -33,6 +34,10 @@ LOG_MODULE_REGISTER(webserver, LOG_LEVEL_INF);
 #endif
 
 namespace wspr {
+
+// Register subsystem with LogManager
+static Logger& logger = LogManager::instance().registerSubsystem("web", 
+    {"init", "api", "config", "static"});
 
 #define HTTP_PORT 80
 #define MAX_REQUEST_SIZE 4096
@@ -164,7 +169,6 @@ static void handleAPIVersion(int clientSock) {
 }
 
 // Application configuration state (persisted to flash)
-// NO POINTERS ALLOWED HERE
 struct AppConfig {
     char callsign[16] = "N0CALL";
     char gridSquare[8] = "AA00";
@@ -182,11 +186,11 @@ static void loadConfigFromNVS() {
     const struct flash_area *fa;
     int rc;
 
-    LOG_INF("Loading configuration from NVS...");
+    logger.inf("init", "Loading configuration from NVS...");
 
     rc = flash_area_open(FIXED_PARTITION_ID(storage_partition), &fa);
     if (rc) {
-        LOG_ERR("Flash area open failed: %d (check app.overlay partitions)", rc);
+        logger.err("init", "Flash area open failed: %d (check app.overlay partitions)", rc);
         return;
     }
 
@@ -195,7 +199,7 @@ static void loadConfigFromNVS() {
     struct flash_pages_info info;
     rc = flash_get_page_info_by_offs(fa->fa_dev, fs.offset, &info);
     if (rc) {
-        LOG_ERR("Flash get page info failed: %d at offset 0x%lx", rc, (long)fs.offset);
+        logger.err("init", "Flash get page info failed: %d at offset 0x%lx", rc, (long)fs.offset);
         flash_area_close(fa);
         return;
     }
@@ -203,24 +207,24 @@ static void loadConfigFromNVS() {
     fs.sector_size = info.size;
     fs.sector_count = fa->fa_size / info.size;
 
-    LOG_INF("NVS init: dev=%p, off=0x%lx, sec_sz=%u, sec_cnt=%u",
+    logger.inf("init", "NVS init: dev=%p, off=0x%lx, sec_sz=%u, sec_cnt=%u",
             fs.flash_device, (long)fs.offset, fs.sector_size, fs.sector_count);
 
     rc = nvs_mount(&fs);
     if (rc) {
-        LOG_ERR("NVS mount failed: %d", rc);
+        logger.err("init", "NVS mount failed: %d", rc);
         flash_area_close(fa);
         return;
     }
 
     rc = nvs_read(&fs, CONFIG_NVS_ID, &appConfig, sizeof(appConfig));
     if (rc == sizeof(appConfig)) {
-        LOG_INF("Configuration loaded from flash: Callsign=%s Grid=%s", 
+        logger.inf("init", "Configuration loaded from flash: Callsign=%s Grid=%s", 
                 appConfig.callsign, appConfig.gridSquare);
     } else if (rc < 0) {
-        LOG_WRN("NVS read error: %d (expected %zu), using defaults", rc, sizeof(appConfig));
+        logger.wrn("init", "NVS read error: %d (expected %zu), using defaults", rc, sizeof(appConfig));
     } else {
-        LOG_INF("No valid configuration found in flash (read %d, expected %zu), using defaults", 
+        logger.inf("init", "No valid configuration found in flash (read %d, expected %zu), using defaults", 
                 rc, sizeof(appConfig));
     }
     
@@ -229,14 +233,14 @@ static void loadConfigFromNVS() {
 
 // Save configuration to NVS
 static void saveConfigToNVS() {
-    LOG_INF("Saving configuration to NVS (%zu bytes)...", sizeof(appConfig));
+    logger.inf("config", "Saving configuration to NVS (%zu bytes)...", sizeof(appConfig));
     int rc = nvs_write(&fs, CONFIG_NVS_ID, &appConfig, sizeof(appConfig));
     if (rc < 0) {
-        LOG_ERR("Failed to save config to NVS: %d", rc);
+        logger.err("config", "Failed to save config to NVS: %d", rc);
     } else if (rc == 0) {
-        LOG_INF("Configuration already up to date in NVS");
+        logger.inf("config", "Configuration already up to date in NVS");
     } else {
-        LOG_INF("Configuration saved to flash (%d bytes)", rc);
+        logger.inf("config", "Configuration saved to flash (%d bytes)", rc);
     }
 }
 
@@ -270,7 +274,7 @@ static void handleAPIConfigGet(int clientSock) {
 
     pos += snprintf(reqBufPtr + pos, MAX_REQUEST_SIZE - pos, "]}");
 
-    LOG_INF("Sending config JSON (%d bytes)", pos);
+    logger.inf("api", "Sending config JSON (%d bytes)", pos);
     sendJSON(clientSock, reqBufPtr);
 }
 
@@ -282,9 +286,7 @@ static bool getJSONString(const char* json, const char* key, char* out, size_t m
     if (!ptr) return false;
     
     ptr += strlen(searchKey);
-    // Skip optional whitespace and colon
     while (*ptr && (*ptr == ' ' || *ptr == ':')) ptr++;
-    // Must start with quote
     if (*ptr != '\"') return false;
     ptr++;
     
@@ -304,7 +306,6 @@ static bool getJSONInt(const char* json, const char* key, int* out) {
     if (!ptr) return false;
 
     ptr += strlen(searchKey);
-    // Skip optional whitespace and colon
     while (*ptr && (*ptr == ' ' || *ptr == ':')) ptr++;
     
     *out = atoi(ptr);
@@ -313,24 +314,21 @@ static bool getJSONInt(const char* json, const char* key, int* out) {
 
 // API handler: PUT /api/config
 static void handleAPIConfigPut(int clientSock, const char* body) {
-    LOG_INF("Saving configuration update. Body len: %zu", strlen(body));
+    logger.inf("config", "Saving configuration update. Body len: %zu", strlen(body));
     
-    // Log body for debugging (safely)
     if (strlen(body) > 0) {
         char dbgBody[64];
         snprintf(dbgBody, sizeof(dbgBody), "%.60s", body);
-        LOG_INF("Body start: %s...", dbgBody);
+        logger.inf("config", "Body start: %s...", dbgBody);
     }
 
-    // Extract basic fields
-    bool csFound = getJSONString(body, "callsign", appConfig.callsign, sizeof(appConfig.callsign));
-    bool gsFound = getJSONString(body, "gridSquare", appConfig.gridSquare, sizeof(appConfig.gridSquare));
+    getJSONString(body, "callsign", appConfig.callsign, sizeof(appConfig.callsign));
+    getJSONString(body, "gridSquare", appConfig.gridSquare, sizeof(appConfig.gridSquare));
     getJSONInt(body, "powerDbm", &appConfig.powerDbm);
     getJSONString(body, "mode", appConfig.mode, sizeof(appConfig.mode));
     getJSONInt(body, "slotIntervalMin", &appConfig.slotIntervalMin);
     getJSONString(body, "bandList", appConfig.bandList, sizeof(appConfig.bandList));
 
-    // Handle band enables (crude but effective)
     Band &bands{Band::get()};
     const char* bandsStart = strstr(body, "\"bands\":[");
     if (bandsStart) {
@@ -349,20 +347,13 @@ static void handleAPIConfigPut(int clientSock, const char* body) {
         }
     }
 
-    // Save updated config to flash
     saveConfigToNVS();
-    
-    LOG_INF("Config updated: Callsign=%s (%s) Grid=%s (%s)", 
-            appConfig.callsign, csFound ? "found" : "not found",
-            appConfig.gridSquare, gsFound ? "found" : "not found");
-
     sendJSON(clientSock, "{\"status\":\"ok\"}");
 }
 
 // API handler: POST /api/tx/trigger
 static void handleAPITXTrigger(int clientSock) {
-    // TODO: Actually trigger transmission via FPGA::instance()
-    LOG_INF("Manual TX trigger requested");
+    logger.inf("api", "Manual TX trigger requested");
     sendJSON(clientSock, "{\"message\":\"TX triggered (stub)\"}");
 }
 
@@ -373,7 +364,6 @@ static void handleAPIFilesList(int clientSock) {
         return;
     }
 
-    // List files in root (flat, no directories)
     char buf[1024];
     int pos = 0;
     pos += snprintf(buf + pos, sizeof(buf) - pos, "{\"files\":[");
@@ -385,7 +375,7 @@ static void handleAPIFilesList(int clientSock) {
         struct fs_dirent entry;
         bool first = true;
         while (fs_readdir(&dir, &entry) == 0 && entry.name[0]) {
-            if (entry.type == FS_DIR_ENTRY_DIR) continue;  // Skip directories
+            if (entry.type == FS_DIR_ENTRY_DIR) continue;
             if (!first) pos += snprintf(buf + pos, sizeof(buf) - pos, ",");
             pos += snprintf(buf + pos, sizeof(buf) - pos,
                 "{\"name\":\"%s\",\"size\":%zu,\"isDirectory\":false}",
@@ -419,7 +409,6 @@ static void handleAPIFileGet(int clientSock, const char* filename) {
         return;
     }
 
-    // Send header
     char header[256];
     int headerLen = snprintf(header, sizeof(header),
         "HTTP/1.1 200 OK\r\n"
@@ -432,7 +421,6 @@ static void handleAPIFileGet(int clientSock, const char* filename) {
 
     zsock_send(clientSock, header, headerLen, 0);
 
-    // Send file data - reuse request buffer to save stack/heap
     ssize_t bytesRead;
     while ((bytesRead = fs_read(&file, reqBufPtr, MAX_REQUEST_SIZE)) > 0) {
         zsock_send(clientSock, reqBufPtr, bytesRead, 0);
@@ -457,7 +445,7 @@ static void handleAPIFilePut(int clientSock, const char* filename, const char* b
     fs_write(&file, body, bodyLen);
     fs_close(&file);
 
-    LOG_INF("File written: %s (%zu bytes)", filename, bodyLen);
+    logger.inf("api", "File written: %s (%zu bytes)", filename, bodyLen);
     sendJSON(clientSock, "{\"status\":\"ok\"}");
 }
 
@@ -471,11 +459,11 @@ static void handleAPIFileDelete(int clientSock, const char* filename) {
         return;
     }
 
-    LOG_INF("File deleted: %s", filename);
+    logger.inf("api", "File deleted: %s", filename);
     sendJSON(clientSock, "{\"status\":\"ok\"}");
 }
 
-// Fallback page when LittleFS has no files
+// Fallback HTML
 static const char* fallbackHtml =
     "<!DOCTYPE html><html><head>"
     "<meta charset=\"utf-8\">"
@@ -491,12 +479,11 @@ static const char* fallbackHtml =
     "<h1>WSPR-ease</h1>"
     "<div class=\"status\">"
     "<p>Web UI files not yet installed on device.</p>"
-    "<p>Flash the LittleFS image with web files to enable full UI.</p>"
     "</div>"
     "<h2>API Endpoints</h2>"
     "<ul>"
-    "<li><a href=\"/api/status\">/api/status</a> - System status</li>"
-    "<li><a href=\"/api/config\">/api/config</a> - Configuration</li>"
+    "<li><a href=\"/api/status\">/api/status</a></li>"
+    "<li><a href=\"/api/config\">/api/config</a></li>"
     "</ul>"
     "</body></html>";
 
@@ -507,7 +494,6 @@ static void handleStatic(int clientSock, const char* path) {
         return;
     }
 
-    // Build full path, default to index.html
     char fullPath[256];
     const char* mountPoint = FileSystem::instance().getMountPoint();
     if (strcmp(path, "/") == 0) {
@@ -516,18 +502,16 @@ static void handleStatic(int clientSock, const char* path) {
         snprintf(fullPath, sizeof(fullPath), "%s%s", mountPoint, path);
     }
 
-    // Try to open file
     struct fs_file_t file;
     fs_file_t_init(&file);
 
     int ret = fs_open(&file, fullPath, FS_O_READ);
     if (ret < 0) {
-        LOG_INF("static GET: '%s'", fullPath);
+        logger.inf("static", "static GET: '%s'", fullPath);
         sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
         return;
     }
 
-    // Get file size
     struct fs_dirent stat;
     ret = fs_stat(fullPath, &stat);
     if (ret < 0) {
@@ -536,7 +520,6 @@ static void handleStatic(int clientSock, const char* path) {
         return;
     }
 
-    // Send header
     const char* contentType = getContentType(fullPath);
     char header[256];
     int headerLen = snprintf(header, sizeof(header),
@@ -548,41 +531,35 @@ static void handleStatic(int clientSock, const char* path) {
         "\r\n",
         contentType, (size_t)stat.size);
 
-    // Send header - ensure all bytes sent
     ssize_t sent = 0;
     while (sent < headerLen) {
         ssize_t n = zsock_send(clientSock, header + sent, headerLen - sent, 0);
         if (n <= 0) {
-            LOG_ERR("Failed to send header");
+            logger.err("static", "Failed to send header");
             fs_close(&file);
             return;
         }
         sent += n;
     }
 
-    // Send file in chunks - reuse request buffer to save stack/heap
     ssize_t bytesRead;
-    size_t totalSent = 0;
     while ((bytesRead = fs_read(&file, reqBufPtr, MAX_REQUEST_SIZE)) > 0) {
         ssize_t chunkSent = 0;
         while (chunkSent < bytesRead) {
             ssize_t n = zsock_send(clientSock, (uint8_t*)reqBufPtr + chunkSent,
                                    bytesRead - chunkSent, 0);
             if (n <= 0) {
-                LOG_ERR("Failed to send file data at offset %zu", totalSent);
                 fs_close(&file);
                 return;
             }
             chunkSent += n;
         }
-        totalSent += chunkSent;
     }
 
     fs_close(&file);
-    LOG_DBG("Sent %zu bytes for %s", totalSent, fullPath);
 }
 
-// Find HTTP body start (after \r\n\r\n or \n\n)
+// Find HTTP body start
 static const char* findBody(const char* request) {
     const char* body = strstr(request, "\r\n\r\n");
     if (body) return body + 4;
@@ -591,9 +568,8 @@ static const char* findBody(const char* request) {
     return nullptr;
 }
 
-// Parse HTTP request and route to handlers
+// Parse HTTP request and route
 static void handleRequest(int clientSock, const char* request, size_t requestLen) {
-    // Parse method and path (path limited to 128 chars, fullPath needs room for WEBROOT prefix)
     char method[8] = {0};
     char path[128] = {0};
 
@@ -602,30 +578,17 @@ static void handleRequest(int clientSock, const char* request, size_t requestLen
         return;
     }
 
-    LOG_INF("HTTP %s %s", method, path);
+    logger.inf("api", "HTTP %s %s", method, path);
 
-    // Route request
     if (strcmp(method, "GET") == 0) {
-        if (strcmp(path, "/api/status") == 0) {
-            handleAPIStatus(clientSock);
-        } else if (strcmp(path, "/api/version") == 0) {
-            handleAPIVersion(clientSock);
-        } else if (strcmp(path, "/api/config") == 0) {
-            handleAPIConfigGet(clientSock);
-        } else if (strncmp(path, "/api/files", 10) == 0) {
-            // Check if it's a file request or list request
-            if (path[10] == '?' || path[10] == '\0') {
-                // /api/files or /api/files?path=/
-                handleAPIFilesList(clientSock);
-            } else if (path[10] == '/') {
-                // /api/files/{filename}
-                handleAPIFileGet(clientSock, path + 11);
-            } else {
-                sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
-            }
-        } else {
-            handleStatic(clientSock, path);
-        }
+        if (strcmp(path, "/api/status") == 0) handleAPIStatus(clientSock);
+        else if (strcmp(path, "/api/version") == 0) handleAPIVersion(clientSock);
+        else if (strcmp(path, "/api/config") == 0) handleAPIConfigGet(clientSock);
+        else if (strncmp(path, "/api/files", 10) == 0) {
+            if (path[10] == '?' || path[10] == '\0') handleAPIFilesList(clientSock);
+            else if (path[10] == '/') handleAPIFileGet(clientSock, path + 11);
+            else sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
+        } else handleStatic(clientSock, path);
     } else if (strcmp(method, "PUT") == 0) {
         if (strcmp(path, "/api/config") == 0) {
             const char* body = findBody(request);
@@ -634,33 +597,16 @@ static void handleRequest(int clientSock, const char* request, size_t requestLen
             const char* body = findBody(request);
             size_t bodyLen = body ? (requestLen - (body - request)) : 0;
             handleAPIFilePut(clientSock, path + 11, body ? body : "", bodyLen);
-        } else {
-            sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
-        }
+        } else sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
     } else if (strcmp(method, "POST") == 0) {
-        if (strcmp(path, "/api/tx/trigger") == 0) {
-            handleAPITXTrigger(clientSock);
-        } else {
-            sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
-        }
+        if (strcmp(path, "/api/tx/trigger") == 0) handleAPITXTrigger(clientSock);
+        else sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
     } else if (strcmp(method, "DELETE") == 0) {
-        if (strncmp(path, "/api/files/", 11) == 0) {
-            handleAPIFileDelete(clientSock, path + 11);
-        } else {
-            sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
-        }
+        if (strncmp(path, "/api/files/", 11) == 0) handleAPIFileDelete(clientSock, path + 11);
+        else sendResponse(clientSock, 404, "text/plain", "Not Found", 9);
     } else if (strcmp(method, "OPTIONS") == 0) {
-        // CORS preflight - allow all methods
-        char header[256];
-        int headerLen = snprintf(header, sizeof(header),
-            "HTTP/1.1 200 OK\r\n"
-            "Access-Control-Allow-Origin: *\r\n"
-            "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
-            "Access-Control-Allow-Headers: Content-Type\r\n"
-            "Content-Length: 0\r\n"
-            "Connection: close\r\n"
-            "\r\n");
-        zsock_send(clientSock, header, headerLen, 0);
+        char header[] = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\nAccess-Control-Allow-Headers: Content-Type\r\nContent-Length: 0\r\nConnection: close\r\n\r\n";
+        zsock_send(clientSock, header, strlen(header), 0);
     } else {
         sendResponse(clientSock, 405, "text/plain", "Method Not Allowed", 18);
     }
@@ -668,57 +614,30 @@ static void handleRequest(int clientSock, const char* request, size_t requestLen
 
 // Server thread function
 static void serverThreadFn(void* p1, void* p2, void* p3) {
-    ARG_UNUSED(p1);
-    ARG_UNUSED(p2);
-    ARG_UNUSED(p3);
-
-    LOG_INF("HTTP server thread started, waiting for connections on port %d", HTTP_PORT);
+    ARG_UNUSED(p1); ARG_UNUSED(p2); ARG_UNUSED(p3);
+    logger.inf("init", "HTTP server thread started, port %d", HTTP_PORT);
 
     while (serverRunning) {
         struct sockaddr_in clientAddr;
         socklen_t clientAddrLen = sizeof(clientAddr);
+        int clientSock = zsock_accept(serverSock, (struct sockaddr*)&clientAddr, &clientAddrLen);
+        if (clientSock < 0) continue;
 
-        int clientSock = zsock_accept(serverSock, (struct sockaddr*)&clientAddr,
-                                       &clientAddrLen);
-        if (clientSock < 0) {
-            if (serverRunning) {
-                LOG_ERR("accept() failed: %d", errno);
-            }
-            continue;
-        }
-
-        // Log client connection
-        char clientIP[16];
-        net_addr_ntop(AF_INET, &clientAddr.sin_addr, clientIP, sizeof(clientIP));
-        LOG_DBG("HTTP connection from %s", clientIP);
-
-        // Set receive timeout (shorter to handle concurrent requests faster)
         struct zsock_timeval tv = { .tv_sec = 2, .tv_usec = 0 };
         zsock_setsockopt(clientSock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
-        // Read request
-        int totalLen = 0;
         int ret = zsock_recv(clientSock, reqBufPtr, MAX_REQUEST_SIZE - 1, 0);
         if (ret > 0) {
-            totalLen = ret;
+            int totalLen = ret;
             reqBufPtr[totalLen] = '\0';
-
-            // Check if we need to read more (for PUT/POST with body)
             if (strncmp(reqBufPtr, "PUT", 3) == 0 || strncmp(reqBufPtr, "POST", 4) == 0) {
                 const char* clP = strstr(reqBufPtr, "Content-Length:");
                 if (clP) {
                     int contentLen = atoi(clP + 15);
                     const char* bodyStart = findBody(reqBufPtr);
-                    int curBodyLen = 0;
-                    if (bodyStart) {
-                        curBodyLen = totalLen - (bodyStart - reqBufPtr);
-                    }
-
-                    LOG_INF("Expect body: %d bytes, already have: %d", contentLen, curBodyLen);
-
+                    int curBodyLen = bodyStart ? (totalLen - (bodyStart - reqBufPtr)) : 0;
                     while (curBodyLen < contentLen && totalLen < MAX_REQUEST_SIZE - 1) {
-                        ret = zsock_recv(clientSock, reqBufPtr + totalLen,
-                                         MAX_REQUEST_SIZE - 1 - totalLen, 0);
+                        ret = zsock_recv(clientSock, reqBufPtr + totalLen, MAX_REQUEST_SIZE - 1 - totalLen, 0);
                         if (ret <= 0) break;
                         totalLen += ret;
                         curBodyLen += ret;
@@ -726,122 +645,66 @@ static void serverThreadFn(void* p1, void* p2, void* p3) {
                     }
                 }
             }
-
-            LOG_DBG("Received %d bytes total", totalLen);
             handleRequest(clientSock, reqBufPtr, totalLen);
-        } else {
-            LOG_WRN("HTTP recv failed or empty: %d (errno=%d)", ret, errno);
         }
-
         zsock_close(clientSock);
     }
-
-    LOG_INF("HTTP server thread exiting");
+    logger.inf("init", "HTTP server thread exiting");
 }
 
 int WebServer::init() {
-    LOG_INF("Initializing web server");
-
-    // Load configuration from flash
+    logger.inf("init", "Initializing web server");
     loadConfigFromNVS();
-
     return 0;
 }
 
 int WebServer::start(uint16_t port) {
-    LOG_INF("Starting web server on port %d", port);
-
-    // Allocate stack and request buffer from heap
+    logger.inf("init", "Starting web server on port %d", port);
     if (!serverStackPtr) {
-        serverStackPtr = (k_thread_stack_t *)k_aligned_alloc(
-            ARCH_STACK_PTR_ALIGN, 
-            K_THREAD_STACK_LEN(SERVER_STACK_SIZE)
-        );
-        if (!serverStackPtr) {
-            LOG_ERR("Failed to allocate server stack");
-            return -ENOMEM;
-        }
+        serverStackPtr = (k_thread_stack_t *)k_aligned_alloc(ARCH_STACK_PTR_ALIGN, K_THREAD_STACK_LEN(SERVER_STACK_SIZE));
+        if (!serverStackPtr) return -ENOMEM;
     }
-
     if (!reqBufPtr) {
         reqBufPtr = (char *)k_malloc(MAX_REQUEST_SIZE);
-        if (!reqBufPtr) {
-            LOG_ERR("Failed to allocate request buffer");
-            return -ENOMEM;
-        }
+        if (!reqBufPtr) return -ENOMEM;
     }
-
-    // Create socket
     serverSock = zsock_socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (serverSock < 0) {
-        LOG_ERR("Failed to create socket: %d", errno);
-        return -errno;
-    }
-
-    // Allow address reuse
+    if (serverSock < 0) return -errno;
     int opt = 1;
     zsock_setsockopt(serverSock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-
-    // Bind to port
     struct sockaddr_in addr = {};
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = INADDR_ANY;
-
     if (zsock_bind(serverSock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-        LOG_ERR("Failed to bind: %d", errno);
         zsock_close(serverSock);
         serverSock = -1;
         return -errno;
     }
-
-    // Listen with larger backlog for concurrent browser requests
     if (zsock_listen(serverSock, 8) < 0) {
-        LOG_ERR("Failed to listen: %d", errno);
         zsock_close(serverSock);
         serverSock = -1;
         return -errno;
     }
-
-    // Start server thread
     serverRunning = true;
-    k_thread_create(&serverThread, serverStackPtr, SERVER_STACK_SIZE,
-                    serverThreadFn, NULL, NULL, NULL,
-                    K_PRIO_COOP(10), 0, K_NO_WAIT);
+    k_thread_create(&serverThread, serverStackPtr, SERVER_STACK_SIZE, serverThreadFn, NULL, NULL, NULL, K_PRIO_COOP(10), 0, K_NO_WAIT);
     k_thread_name_set(&serverThread, "httpServer");
-
     running = true;
-    LOG_INF("Web server started on port %d", port);
     return 0;
 }
 
 void WebServer::stop() {
     if (!running) return;
-
-    LOG_INF("Stopping web server");
-
+    logger.inf("init", "Stopping web server");
     serverRunning = false;
-
     if (serverSock >= 0) {
         zsock_close(serverSock);
         serverSock = -1;
     }
-
-    // Wait for thread to exit
     k_thread_join(&serverThread, K_SECONDS(5));
-
-    // Free heap memory
-    if (serverStackPtr) {
-        k_free(serverStackPtr);
-        serverStackPtr = nullptr;
-    }
-    if (reqBufPtr) {
-        k_free(reqBufPtr);
-        reqBufPtr = nullptr;
-    }
-
+    if (serverStackPtr) { k_free(serverStackPtr); serverStackPtr = nullptr; }
+    if (reqBufPtr) { k_free(reqBufPtr); reqBufPtr = nullptr; }
     running = false;
-    LOG_INF("Web server stopped");
 }
 
 } // namespace wspr

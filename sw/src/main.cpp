@@ -19,6 +19,12 @@
 
 LOG_MODULE_REGISTER(wspr_ease, LOG_LEVEL_INF);
 
+namespace wspr {
+// Register subsystem with LogManager
+static Logger& logger = LogManager::instance().registerSubsystem("sys", 
+    {"init", "wifi", "status", "tx"});
+}
+
 // WiFi retry configuration
 #define WIFI_RETRY_DELAY_SECONDS  10
 #define WIFI_MAX_RETRIES          0   // 0 = infinite retries
@@ -41,12 +47,13 @@ static void printConnectionBanner(const char* ip)
 static bool wifiConnectWithRetry()
 {
     auto& wifi = wspr::WifiManager::instance();
+    using wspr::logger;
 
     const char* ssid = CONFIG_WSPR_WIFI_SSID;
     const char* pass = CONFIG_WSPR_WIFI_PASSWORD;
 
     if (ssid[0] == '\0') {
-        LOG_ERR("No WiFi SSID configured! Set CONFIG_WSPR_WIFI_SSID in prj.conf");
+        logger.err("wifi", "No WiFi SSID configured! Set CONFIG_WSPR_WIFI_SSID in prj.conf");
         return false;
     }
 
@@ -54,19 +61,19 @@ static bool wifiConnectWithRetry()
 
     while (WIFI_MAX_RETRIES == 0 || retryCount < WIFI_MAX_RETRIES) {
         if (retryCount > 0) {
-            LOG_INF("WiFi retry %d, waiting %d seconds...",
+            logger.inf("wifi", "WiFi retry %d, waiting %d seconds...",
                     retryCount, WIFI_RETRY_DELAY_SECONDS);
             k_sleep(K_SECONDS(WIFI_RETRY_DELAY_SECONDS));
         }
 
-        LOG_INF("Connecting to WiFi: %s", ssid);
+        logger.inf("wifi", "Connecting to WiFi: %s", ssid);
 
         if (wifi.connect(ssid, pass) == 0) {
-            LOG_INF("WiFi connected, IP: %s", wifi.getIPAddress());
+            logger.inf("wifi", "WiFi connected, IP: %s", wifi.getIPAddress());
             return true;
         }
 
-        LOG_WRN("WiFi connection failed");
+        logger.wrn("wifi", "WiFi connection failed");
         retryCount++;
     }
 
@@ -79,23 +86,24 @@ static void initSubsystems(wspr::WebServer& webServer)
     auto& gnss = wspr::GNSS::instance();
     auto& fpga = wspr::FPGA::instance();
     auto& fs = wspr::FileSystem::instance();
+    using wspr::logger;
 
     // Mount LittleFS early - doesn't need network
     fs.mount();
 
     // Initialize GNSS (stub mode)
     if (gnss.init() != 0) {
-        LOG_ERR("GNSS init failed");
+        logger.err("init", "GNSS init failed");
     }
 
     // Initialize FPGA (stub mode)
     if (fpga.init() != 0) {
-        LOG_ERR("FPGA init failed");
+        logger.err("init", "FPGA init failed");
     }
 
     // Initialize WiFi
     if (wifi.init() != 0) {
-        LOG_ERR("WiFi init failed");
+        logger.err("init", "WiFi init failed");
         return;
     }
 
@@ -110,14 +118,15 @@ static void initSubsystems(wspr::WebServer& webServer)
             printConnectionBanner(wifi.getIPAddress());
         }
     } else {
-        LOG_ERR("Web server init failed");
+        logger.err("init", "Web server init failed");
     }
 }
 
 int main(void)
 {
-    LOG_INF("WSPR-ease starting...");
-    LOG_INF("Build: %s %s", __DATE__, __TIME__);
+    using wspr::logger;
+    logger.inf("init", "WSPR-ease starting...");
+    logger.inf("init", "Build: %s %s", __DATE__, __TIME__);
 
     // Ensure logging is initialized early
     (void)wspr::LogManager::instance();
@@ -130,7 +139,7 @@ int main(void)
 
     initSubsystems(webServer);
 
-    LOG_INF("Entering main loop");
+    logger.inf("init", "Entering main loop");
 
     auto& wifi = wspr::WifiManager::instance();
     auto& gnss = wspr::GNSS::instance();
@@ -143,13 +152,13 @@ int main(void)
         // Check for scheduled WSPR transmission
         // (In real implementation, this would check schedule and start TX)
         if (gnss.isTXSlot() && !fpga.isTransmitting()) {
-            LOG_INF("TX slot detected (not transmitting in stub mode)");
+            logger.inf("tx", "TX slot detected (not transmitting in stub mode)");
         }
 
         // Monitor WiFi connection and reconnect if needed
         bool isConnected = wifi.isConnected();
         if (wasConnected && !isConnected) {
-            LOG_WRN("WiFi disconnected! Attempting to reconnect...");
+            logger.wrn("wifi", "WiFi disconnected! Attempting to reconnect...");
             if (wifiConnectWithRetry()) {
                 printConnectionBanner(wifi.getIPAddress());
             }
@@ -158,7 +167,7 @@ int main(void)
 
         // Periodic status log
         if ((loopCount % 60) == 0) {  // Every 60 seconds
-            LOG_INF("Status: WiFi=%s IP=%s RSSI=%d GNSS=%s Freq=%u",
+            logger.inf("status", "Status: WiFi=%s IP=%s RSSI=%d GNSS=%s Freq=%u",
                     wifi.isConnected() ? "connected" : "disconnected",
                     wifi.getIPAddress(),
                     wifi.getRSSI(),

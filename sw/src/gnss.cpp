@@ -17,10 +17,15 @@
 #include <ctime>
 
 #include "fpga.hpp"
+#include "logmanager.hpp"
 
 LOG_MODULE_REGISTER(gnss, LOG_LEVEL_INF);
 
 namespace wspr {
+
+// Register subsystem with LogManager
+static Logger& logger = LogManager::instance().registerSubsystem("gnss", 
+    {"raw", "fix", "time", "init"});
 
 #define GNSS_STACK_SIZE 4096
 static k_thread_stack_t *gnssStackPtr = nullptr;
@@ -31,7 +36,7 @@ GNSS& GNSS::instance() {
 }
 
 int GNSS::init() {
-    LOG_INF("Initializing GNSS module");
+    logger.inf("init", "Initializing GNSS module");
     k_mutex_init(&mutex);
     k_msgq_init(&monitorMsgQ, msgq_buffer, 256, 4);
 
@@ -42,7 +47,7 @@ int GNSS::init() {
             K_THREAD_STACK_LEN(GNSS_STACK_SIZE)
         );
         if (!gnssStackPtr) {
-            LOG_ERR("Failed to allocate GNSS stack");
+            logger.err("init", "Failed to allocate GNSS stack");
             return -ENOMEM;
         }
     }
@@ -56,7 +61,7 @@ int GNSS::init() {
 
     uartDev = DEVICE_DT_GET(DT_ALIAS(gnss_uart));
     if (!device_is_ready(uartDev)) {
-        LOG_ERR("GNSS UART device not ready");
+        logger.err("init", "GNSS UART device not ready");
         return -ENODEV;
     }
 
@@ -70,11 +75,11 @@ int GNSS::reset() {
     static const struct gpio_dt_spec gnssReset = GPIO_DT_SPEC_GET(DT_NODELABEL(gnss_reset), gpios);
     if (!device_is_ready(gnssReset.port)) return -ENODEV;
 
-    LOG_INF("Resetting GNSS chip (IO15 Active-Low)...");
+    logger.inf("init", "Resetting GNSS chip (IO15 Active-Low)...");
     gpio_pin_set_dt(&gnssReset, 1); // Assert Reset (Physically Low)
     k_msleep(100);
     gpio_pin_set_dt(&gnssReset, 0); // Deassert Reset (Physically High)
-    LOG_INF("GNSS reset released");
+    logger.inf("init", "GNSS reset released");
     return 0;
 }
 
@@ -98,7 +103,7 @@ void GNSS::threadFn(void* p1, void* p2, void* p3) {
 }
 
 void GNSS::processLoop() {
-    LOG_INF("GNSS worker thread started (fixed 9600 baud)");
+    logger.inf("init", "GNSS worker thread started (fixed 9600 baud)");
     
     uint8_t c;
     uint32_t lastLogTime = 0;
@@ -115,7 +120,7 @@ void GNSS::processLoop() {
         // Read from UART
         if (uart_poll_in(uartDev, &c) == 0) {
             if (!firstDataReceived) {
-                LOG_INF("GNSS: Data received from UART (byte: 0x%02x '%c')", c, (c >= 32 && c <= 126) ? c : '.');
+                logger.inf("raw", "GNSS: Data received from UART (byte: 0x%02x '%c')", c, (c >= 32 && c <= 126) ? c : '.');
                 firstDataReceived = true;
             }
 
@@ -158,9 +163,9 @@ void GNSS::processLoop() {
         if (now - lastLogTime >= 10000) {
             k_mutex_lock(&mutex, K_FOREVER);
             if (!firstDataReceived) {
-                LOG_WRN("GNSS Status: NO DATA RECEIVED ON UART");
+                logger.wrn("init", "GNSS Status: NO DATA RECEIVED ON UART");
             } else {
-                LOG_INF("GNSS Status: lock=%s, sats=%d, snr=%.1f, time=%s",
+                logger.inf("fix", "GNSS Status: lock=%s, sats=%d, snr=%.1f, time=%s",
                         data.valid ? "YES" : "NO", data.satellites, (double)data.avgSNR, timeStr);
             }
             k_mutex_unlock(&mutex);

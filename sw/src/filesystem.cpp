@@ -8,9 +8,15 @@
 #include <zephyr/storage/flash_map.h>
 #include <zephyr/drivers/flash.h>
 
+#include "logmanager.hpp"
+
 LOG_MODULE_REGISTER(filesystem, LOG_LEVEL_INF);
 
 namespace wspr {
+
+// Register subsystem with LogManager
+static Logger& logger = LogManager::instance().registerSubsystem("fs", 
+    {"mount", "ops"});
 
 // LittleFS partition definition from devicetree
 #define LFS_PARTITION_ID FIXED_PARTITION_ID(lfs_partition)
@@ -38,16 +44,16 @@ int FileSystem::mount() {
     return 0; // Already mounted
   }
 
-  LOG_INF("Mounting LittleFS at %s...", lfsMount.mnt_point);
+  logger.inf("mount", "Mounting LittleFS at %s...", lfsMount.mnt_point);
   
   int ret = fs_mount(&lfsMount);
   if (ret < 0) {
-    LOG_ERR("LittleFS mount failed: %d", ret);
+    logger.err("mount", "LittleFS mount failed: %d", ret);
     mounted = false;
     return ret;
   }
 
-  LOG_INF("LittleFS mounted successfully");
+  logger.inf("mount", "LittleFS mounted successfully");
   mounted = true;
 
   // List root directory for debugging
@@ -56,13 +62,13 @@ int FileSystem::mount() {
   
   ret = fs_opendir(&dir, lfsMount.mnt_point);
   if (ret == 0) {
-    LOG_INF("Files in %s:", lfsMount.mnt_point);
+    logger.inf("ops", "Files in %s:", lfsMount.mnt_point);
     struct fs_dirent entry;
     while (fs_readdir(&dir, &entry) == 0 && entry.name[0] != '\0') {
       if (entry.type == FS_DIR_ENTRY_FILE) {
-        LOG_INF("  [F] %s (%zu bytes)", entry.name, (size_t)entry.size);
+        logger.inf("ops", "  [F] %s (%zu bytes)", entry.name, (size_t)entry.size);
       } else {
-        LOG_INF("  [D] %s", entry.name);
+        logger.inf("ops", "  [D] %s", entry.name);
       }
     }
     fs_closedir(&dir);

@@ -317,11 +317,29 @@ static int cmd_wspr_log(const struct shell *sh, size_t argc, char **argv) {
         lm.setAll(true);
         shell_print(sh, "All logging enabled.");
     } else if (arg[0] == '+') {
-        lm.setSubsystem(arg.substr(1), true);
-        shell_print(sh, "Subsystem %s enabled.", arg.substr(1).c_str());
+        std::string sub = arg.substr(1);
+        size_t colon = sub.find(':');
+        if (colon != std::string::npos) {
+            std::string type = sub.substr(colon + 1);
+            sub = sub.substr(0, colon);
+            lm.setSubtype(sub, type, true);
+            shell_print(sh, "Subsystem %s subtype %s enabled.", sub.c_str(), type.c_str());
+        } else {
+            lm.setSubsystem(sub, true);
+            shell_print(sh, "Subsystem %s enabled.", sub.c_str());
+        }
     } else if (arg[0] == '-') {
-        lm.setSubsystem(arg.substr(1), false);
-        shell_print(sh, "Subsystem %s disabled.", arg.substr(1).c_str());
+        std::string sub = arg.substr(1);
+        size_t colon = sub.find(':');
+        if (colon != std::string::npos) {
+            std::string type = sub.substr(colon + 1);
+            sub = sub.substr(0, colon);
+            lm.setSubtype(sub, type, false);
+            shell_print(sh, "Subsystem %s subtype %s disabled.", sub.c_str(), type.c_str());
+        } else {
+            lm.setSubsystem(sub, false);
+            shell_print(sh, "Subsystem %s disabled.", sub.c_str());
+        }
     } else {
         lm.listSubtypes(sh, arg);
     }
@@ -369,7 +387,7 @@ SHELL_STATIC_SUBCMD_SET_CREATE(sub_fs,
 );
 
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_tx,
-    SHELL_CMD(start, NULL, "Start TX <freq_hz> <pwr_0_255>", cmd_tx_start),
+    SHELL_CMD(start, NULL, "Start TX <freq_hz> [pwr_0_255]", cmd_tx_start),
     SHELL_CMD(stop, NULL, "Stop TX / Sweep", cmd_tx_stop),
     SHELL_CMD(sweep, NULL, "Sweep 1-30MHz <duration_sec> [single|continuous]", cmd_tx_sweep),
     SHELL_SUBCMD_SET_END

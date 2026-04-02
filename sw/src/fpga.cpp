@@ -6,6 +6,7 @@
 
 #include "fpga.hpp"
 #include "filesystem.hpp"
+#include "logmanager.hpp"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
@@ -20,6 +21,10 @@
 LOG_MODULE_REGISTER(fpga, LOG_LEVEL_INF);
 
 namespace wspr {
+
+// Register subsystem with LogManager
+static Logger& logger = LogManager::instance().registerSubsystem("fpga", 
+    {"spi", "pps", "config", "bitstream"});
 
 // GPIO specs from devicetree (All configured as GPIO_ACTIVE_HIGH in overlay)
 static const struct gpio_dt_spec fpgaNRESET = GPIO_DT_SPEC_GET(DT_NODELABEL(fpga_nreset), gpios);
@@ -39,17 +44,17 @@ FPGA& FPGA::instance() {
 }
 
 int FPGA::init() {
-    LOG_INF("Initializing FPGA module");
+    logger.inf("Initializing FPGA module");
 
     if (!device_is_ready(fpgaNRESET.port) || !device_is_ready(fpgaDONE.port) || 
         !device_is_ready(fpgaCS.port) || !device_is_ready(pgFPGACORE.port) || 
         !device_is_ready(enFPGAIO.port)) {
-        LOG_ERR("FPGA GPIO devices not ready");
+        logger.err("FPGA GPIO devices not ready");
         return -ENODEV;
     }
 
     if (!spi_is_ready_dt(&fpgaSPI)) {
-        LOG_ERR("FPGA SPI device not ready");
+        logger.err("FPGA SPI device not ready");
         return -ENODEV;
     }
 
@@ -63,7 +68,7 @@ int FPGA::init() {
     gpio_pin_configure_dt(&pgFPGACORE, GPIO_INPUT);
     gpio_pin_configure_dt(&fpgaDONE, GPIO_INPUT | GPIO_PULL_UP);
 
-    LOG_INF("enFPGAIO deasserted. Waiting for FPGA Core power good (pgFPGACORE)...");
+    logger.inf("enFPGAIO deasserted. Waiting for FPGA Core power good (pgFPGACORE)...");
     
     // Power Sequencing: Wait for Core Power Good
     uint32_t startTime = k_uptime_get_32();
@@ -73,17 +78,17 @@ int FPGA::init() {
 
         if (gpio_pin_get_dt(&pgFPGACORE) > 0) {
             pgOK = true;
-            LOG_INF("pgFPGACORE asserted after %u ms", k_uptime_get_32() - startTime);
+            logger.inf("pgFPGACORE asserted after %u ms", k_uptime_get_32() - startTime);
         }
         k_msleep(5);
     }
 
     if (!pgOK) {
-        LOG_WRN("Timeout waiting for pgFPGACORE! Proceeding anyway (Bypass)...");
+        logger.wrn("Timeout waiting for pgFPGACORE! Proceeding anyway (Bypass)...");
     }
 
     // Enable FPGA IO Power
-    LOG_INF("Enabling FPGA IO power (enFPGAIO)...");
+    logger.inf("Enabling FPGA IO power (enFPGAIO)...");
     gpio_pin_set_dt(&enFPGAIO, 1); // Physical High
     k_msleep(100); // Stabilization delay
 
@@ -99,7 +104,7 @@ int FPGA::init() {
     }
 
     initialized = true;
-    LOG_INF("FPGA initialized and running");
+    logger.inf("FPGA initialized and running");
     return 0;
 }
 
@@ -111,7 +116,7 @@ int FPGA::reset() {
     k_usleep(10);
     k_msleep(2);
     if (gpio_pin_get_dt(&fpgaDONE) > 0) {
-        LOG_ERR("FPGA Error: CDONE is HIGH immediately after reset pulse!");
+        logger.err("FPGA Error: CDONE is HIGH immediately after reset pulse!");
         return -EIO;
     }
     return 0;
@@ -123,18 +128,18 @@ int FPGA::loadBitstream(const char* path) {
 
     int ret = fs_open(&file, path, FS_O_READ);
     if (ret < 0) {
-        LOG_ERR("Could not open %s: %s", path, strerror(-ret));
+        logger.err("bitstream", "Could not open %s: %s", path, strerror(-ret));
         return ret;
     }
 
     struct fs_dirent stat;
     fs_stat(path, &stat);
-    LOG_INF("Bitstream %s opened (%zu bytes)", path, (size_t)stat.size);
+    logger.inf("bitstream", "Bitstream %s opened (%zu bytes)", path, (size_t)stat.size);
 
     const size_t chunk_size = 2048;
     uint8_t* buffer = (uint8_t*)k_malloc(chunk_size);
     if (!buffer) {
-        LOG_ERR("Failed to allocate bitstream buffer");
+        logger.err("bitstream", "Failed to allocate bitstream buffer");
         fs_close(&file);
         return -ENOMEM;
     }
@@ -152,7 +157,7 @@ int FPGA::loadBitstream(const char* path) {
     spi_write_dt(&fpgaSPI, &s_dummies); 
     gpio_pin_set_dt(&fpgaCS, 0); 
 
-    LOG_INF("Transmitting bitstream...");
+    logger.inf("bitstream", "Transmitting bitstream...");
 
     ssize_t bytesRead;
     size_t totalBytes = 0;
@@ -163,7 +168,7 @@ int FPGA::loadBitstream(const char* path) {
         sBuf.len = bytesRead;
         ret = spi_write_dt(&fpgaSPI, &sBufs);
         if (ret < 0) {
-            LOG_ERR("SPI write error at %zu: %d", totalBytes, ret);
+            logger.err("bitstream", "SPI write error at %zu: %d", totalBytes, ret);
             k_free(buffer);
             fs_close(&file);
             gpio_pin_set_dt(&fpgaCS, 1); 
@@ -173,7 +178,7 @@ int FPGA::loadBitstream(const char* path) {
     }
 
     fs_close(&file);
-    LOG_INF("Transmitted %zu bytes", totalBytes);
+    logger.inf("bitstream", "Transmitted %zu bytes", totalBytes);
 
     gpio_pin_set_dt(&fpgaCS, 1); 
 
@@ -188,13 +193,13 @@ int FPGA::loadBitstream(const char* path) {
     }
 
     if (success) {
-        LOG_INF("FPGA SUCCESS: CDONE is HIGH");
+        logger.inf("bitstream", "FPGA SUCCESS: CDONE is HIGH");
         memset(buffer, 0x00, 8); 
         sBuf.len = 8;
         spi_write_dt(&fpgaSPI, &sBufs);
         ret = 0;
     } else {
-        LOG_ERR("FPGA FAILURE: CDONE remains LOW");
+        logger.err("bitstream", "FPGA FAILURE: CDONE remains LOW");
         ret = -EAGAIN; 
     }
 
@@ -220,7 +225,7 @@ int FPGA::setFrequency(uint32_t freqHz) {
 int FPGA::startTX() {
     if (!initialized) return -ENODEV;
     if (transmitting) return -EALREADY;
-    LOG_INF("Starting transmission at %u Hz", currentFreq);
+    logger.inf("config", "Starting transmission at %u Hz", currentFreq);
     transmitting = true;
     return spiWriteReg(0x00, 0x01); // Bit 0: TX Enable
 }
@@ -228,14 +233,14 @@ int FPGA::startTX() {
 int FPGA::stopTX() {
     if (!initialized) return -ENODEV;
     if (!transmitting) return 0;
-    LOG_INF("Stopping transmission");
+    logger.inf("config", "Stopping transmission");
     transmitting = false;
     return spiWriteReg(0x00, 0x00); 
 }
 
 int FPGA::setPowerLevel(uint8_t level) {
     if (!initialized) return -ENODEV;
-    LOG_INF("Setting FPGA power level to %u", level);
+    logger.inf("config", "Setting FPGA power level to %u", level);
     // Scale 0-255 to 0-0xFFFFFFFF for the FPGA's 32-bit PWM threshold
     uint32_t thresh = (uint32_t)level * 0x01010101;
     return spiWriteReg(0x04, thresh);
