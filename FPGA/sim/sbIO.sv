@@ -1,29 +1,34 @@
-`timescale 1ns / 1ps
-// Simulation-only behavioral model for Lattice SB_IO
-`default_nettype none
+`timescale 1ns / 100ps
+// Behavioral model for Lattice SB_IO (Registered DDR Output)
 module SB_IO #(
-    parameter PIN_TYPE = 6'b000000,
+    parameter [5:0] PIN_TYPE = 6'b000000,
+    parameter [0:0] PULLUP = 1'b0,
+    parameter [0:0] NEG_TRIGGER = 1'b0,
     parameter IO_STANDARD = "SB_LVCMOS"
 ) (
-    inout  wire PACKAGE_PIN,
-    input  wire OUTPUT_CLK,
-    input  wire CLOCK_ENABLE,
-    input  wire INPUT_CLK,
-    input  wire OUTPUT_ENABLE,
-    input  wire D_OUT_0,
-    input  wire D_OUT_1,
-    output wire D_IN_0,
-    output wire D_IN_1
+    inout  wire  PACKAGE_PIN,
+    output logic PACKAGE_PIN_OUT,
+    input  logic OUTPUT_CLK,
+    input  logic CLOCK_ENABLE,
+    input  logic OUTPUT_ENABLE,
+    input  logic D_OUT_0,
+    input  logic D_OUT_1,
+    output logic D_IN_0,
+    output logic D_IN_1,
+    input  logic INPUT_CLK,
+    input  logic LATCH_INPUT_VALUE
 );
 
-    // This model only implements PIN_TYPE = 6'b010000 (PIN_OUTPUT_DDR)
+    // Simple DDR registered output model
+    logic r0, r1;
+    always @(posedge OUTPUT_CLK) begin
+        if (CLOCK_ENABLE) begin
+            r0 <= D_OUT_0;
+            r1 <= D_OUT_1;
+        end
+    end
 
-    assign PACKAGE_PIN = (CLOCK_ENABLE && OUTPUT_ENABLE) ?
-                         (OUTPUT_CLK ? D_OUT_0 : D_OUT_1) :
-                         1'bz; // High impedance when not enabled
-
-    // Input path is not used in this design, so D_IN is not driven.
-    assign D_IN_0 = 1'bz;
-    assign D_IN_1 = 1'bz;
+    assign PACKAGE_PIN = OUTPUT_ENABLE ? (OUTPUT_CLK ? r0 : r1) : 1'bz;
+    assign PACKAGE_PIN_OUT = PACKAGE_PIN;
 
 endmodule

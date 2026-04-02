@@ -54,6 +54,10 @@ namespace wspr {
     WSPRBand getBand() const { return currentBand; }
 
     uint32_t getCounter();
+    uint32_t getLiveCounter();
+
+    // Raw register access for diagnostics
+    int readRegister(uint8_t reg, uint32_t* value) { return spiReadReg(reg, value); }
 
     bool isInitialized() const { return initialized; }
 

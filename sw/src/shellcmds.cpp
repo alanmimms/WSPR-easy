@@ -4,13 +4,48 @@
  */
 
 #include <zephyr/shell/shell.h>
+#include <zephyr/shell/shell_uart.h>
 #include <zephyr/kernel.h>
 #include <zephyr/fs/fs.h>
+#include <stdlib.h>
+#include <string>
 #include "wifiManager.hpp"
 #include "gnss.hpp"
 #include "fpga.hpp"
+#include "logmanager.hpp"
 
 namespace wspr {
+
+static struct k_thread sweepThreadData;
+static K_THREAD_STACK_DEFINE(sweepThreadStack, 2048);
+static bool sweepRunning = false;
+static bool sweepContinuous = false;
+static uint32_t sweepDurationSec = 10;
+
+static void sweepThreadEntry(void *p1, void *p2, void *p3) {
+    auto& fpga = FPGA::instance();
+    const struct shell *sh = (const struct shell *)p1;
+
+    uint32_t startFreq = 1000000; // 1 MHz
+    uint32_t endFreq = 30000000; // 30 MHz
+    uint32_t steps = 1000;
+    uint32_t stepDelayMs = (sweepDurationSec * 1000) / steps;
+    
+    do {
+        shell_print(sh, "Starting sweep: %u to %u MHz over %u s", 
+                    startFreq/1000000, endFreq/1000000, sweepDurationSec);
+        
+        for (uint32_t i = 0; i <= steps && sweepRunning; i++) {
+            uint32_t freq = startFreq + ((uint64_t)(endFreq - startFreq) * i) / steps;
+            fpga.setFrequency(freq);
+            k_msleep(stepDelayMs);
+        }
+    } while (sweepRunning && sweepContinuous);
+
+    sweepRunning = false;
+    fpga.stopTX();
+    shell_print(sh, "Sweep stopped.");
+}
 
 static int cmd_wspr_status(const struct shell *sh, size_t argc, char **argv) {
     auto& wifi = WifiManager::instance();
@@ -36,7 +71,59 @@ static int cmd_wspr_status(const struct shell *sh, size_t argc, char **argv) {
                 fpga.isInitialized() ? "YES" : "NO",
                 fpga.isTransmitting() ? "TX" : "IDLE");
     shell_print(sh, "Freq: %u Hz", fpga.frequency());
-    shell_print(sh, "PPS:  %u (40MHz clock count)", fpga.getCounter());
+    shell_print(sh, "PPS:  %u", fpga.getCounter());
+
+    return 0;
+}
+
+static int cmd_tx_start(const struct shell *sh, size_t argc, char **argv) {
+    if (argc < 2) {
+        shell_error(sh, "Usage: tx_start <freq_hz> [power_0_255]");
+        return -EINVAL;
+    }
+    uint32_t freq = strtoul(argv[1], NULL, 10);
+    uint8_t pwr = 255;
+    if (argc >= 3) {
+        pwr = (uint8_t)strtoul(argv[2], NULL, 10);
+    }
+
+    auto& fpga = FPGA::instance();
+    fpga.setFrequency(freq);
+    fpga.setPowerLevel(pwr);
+    int ret = fpga.startTX();
+    if (ret == 0) {
+        shell_print(sh, "TX started at %u Hz, Power %u (Ignored by current RTL)", freq, pwr);
+    } else {
+        shell_error(sh, "Failed to start TX: %d", ret);
+    }
+    return ret;
+}
+
+static int cmd_tx_stop(const struct shell *sh, size_t argc, char **argv) {
+    sweepRunning = false;
+    FPGA::instance().stopTX();
+    shell_print(sh, "TX stopped");
+    return 0;
+}
+
+static int cmd_tx_sweep(const struct shell *sh, size_t argc, char **argv) {
+    if (sweepRunning) {
+        shell_error(sh, "Sweep already running. Use tx_stop first.");
+        return -EBUSY;
+    }
+
+    sweepDurationSec = (argc > 1) ? strtoul(argv[1], NULL, 10) : 10;
+    sweepContinuous = (argc > 2 && strcmp(argv[2], "continuous") == 0);
+    
+    auto& fpga = FPGA::instance();
+    fpga.setPowerLevel(255); // Full power for sweep
+    fpga.startTX();
+
+    sweepRunning = true;
+    k_thread_create(&sweepThreadData, sweepThreadStack,
+                    K_THREAD_STACK_SIZEOF(sweepThreadStack),
+                    sweepThreadEntry, (void*)sh, NULL, NULL,
+                    7, 0, K_NO_WAIT);
 
     return 0;
 }
@@ -64,13 +151,49 @@ static int cmd_fpga_flash(const struct shell *sh, size_t argc, char **argv) {
 }
 
 static int cmd_fpga_counter(const struct shell *sh, size_t argc, char **argv) {
-    uint32_t count = FPGA::instance().getCounter();
-    shell_print(sh, "FPGA 1PPS Counter: %u (expected ~FPGA::tcxoFreqHz)", count);
-    if (count > 0) {
-        double error = (double)count - FPGA::tcxoFreqHz;
-        double ppm = (error / 40.0);
-        shell_print(sh, "Clock Error: %.2f Hz (%.3f ppm)", error, ppm);
+    auto& fpga = FPGA::instance();
+    uint32_t e1, f1, r1;
+    
+    // Initial sample
+    fpga.readRegister(0x07, &e1);
+    fpga.readRegister(0x03, &f1);
+    fpga.readRegister(0x08, &r1);
+
+    shell_print(sh, "Measuring FPGA frequency vs GNSS PPS (2s sample)...");
+    k_msleep(2100); // Wait for > 2 PPS cycles
+
+    uint32_t e2, f2, r2, live, ctrl;
+    fpga.readRegister(0x07, &e2);
+    fpga.readRegister(0x03, &f2);
+    fpga.readRegister(0x08, &r2);
+    fpga.readRegister(0x06, &live);
+    fpga.readRegister(0x00, &ctrl);
+
+    uint32_t delta_e = e2 - e1;
+    uint32_t delta_f = f2 - f1;
+
+    shell_print(sh, "=== FPGA PPS Diagnostics ===");
+    shell_print(sh, "Live PPS Signal: %s", (ctrl & 0x02) ? "HIGH" : "LOW");
+    shell_print(sh, "Total Edge Count: %u (+%u)", e2, delta_e);
+    shell_print(sh, "Last Falling Edge: %u", f2);
+    shell_print(sh, "Last Rising Edge:  %u", r2);
+    shell_print(sh, "Live Counter:      %u", live);
+    
+    if (delta_e >= 2) {
+        // Each second has 2 edges (one rising, one falling)
+        // The falling-edge register updates once per 2 edges.
+        uint32_t seconds = delta_e / 2;
+        if (seconds > 0) {
+            double freq = (double)delta_f / seconds;
+            double ppm = (freq - 40000000.0) / 40.0;
+            shell_print(sh, "----------------------------");
+            shell_print(sh, "Measured Frequency: %.3f Hz", freq);
+            shell_print(sh, "Clock Error:        %.3f ppm", ppm);
+        }
+    } else {
+        shell_warn(sh, "WARNING: No PPS edges detected during 2s measurement window!");
     }
+    
     return 0;
 }
 
@@ -97,6 +220,7 @@ static int cmd_fs_ls(const struct shell *sh, size_t argc, char **argv) {
             shell_print(sh, "  %-20s %u bytes", entry.name, (uint32_t)entry.size);
         }
     }
+    fs_opendir(&dir, path); // Reset to beginning for next readdir if needed or just close
     fs_closedir(&dir);
     return 0;
 }
@@ -117,10 +241,124 @@ static int cmd_fs_rm(const struct shell *sh, size_t argc, char **argv) {
     return ret;
 }
 
+static int cmd_gnss_raw(const struct shell *sh, size_t argc, char **argv) {
+    char buf[128];
+    if (GNSS::instance().getRawNmea(buf, sizeof(buf)) > 0) {
+        shell_print(sh, "Most recent GNSS UART sentence:");
+        shell_print(sh, "%s", buf);
+    } else {
+        shell_warn(sh, "No GNSS data received yet.");
+    }
+    return 0;
+}
+
+static int cmd_gnss_reset(const struct shell *sh, size_t argc, char **argv) {
+    shell_print(sh, "Resetting GNSS chip via IO15...");
+    GNSS::instance().reset();
+    return 0;
+}
+
+static int cmd_gnss_monitor(const struct shell *sh, size_t argc, char **argv) {
+    auto& gnss = GNSS::instance();
+    struct k_msgq* q = gnss.getMonitorQueue();
+    char buf[256];
+
+    // Flush any pending input (like the newline from the command itself)
+    if (sh && sh->iface && sh->iface->api && sh->iface->api->read) {
+        uint8_t dummy;
+        size_t nread;
+        while (sh->iface->api->read(sh->iface, &dummy, 1, &nread) == 0 && nread > 0) {
+            // consume existing characters
+        }
+    }
+
+    shell_print(sh, "Entering GNSS monitor mode. Press Ctrl+C to exit.");
+    gnss.setMonitor(true);
+
+    while (true) {
+        // Wait for a message with timeout so we can check for user input
+        if (k_msgq_get(q, buf, K_MSEC(10)) == 0) {
+            shell_print(sh, "%s", buf);
+        }
+
+        // Check if user pressed Ctrl+C (0x03)
+        if (sh && sh->iface && sh->iface->api && sh->iface->api->read) {
+            uint8_t c;
+            size_t nread = 0;
+            if (sh->iface->api->read(sh->iface, &c, 1, &nread) == 0 && nread > 0) {
+                if (c == 0x03) { // Ctrl+C
+                    break;
+                }
+            }
+        }
+    }
+
+    gnss.setMonitor(false);
+    // Flush remaining messages
+    while (k_msgq_get(q, buf, K_NO_WAIT) == 0) {}
+    
+    shell_print(sh, "Exited GNSS monitor mode.");
+    return 0;
+}
+
+static int cmd_wspr_log(const struct shell *sh, size_t argc, char **argv) {
+    auto& lm = LogManager::instance();
+
+    if (argc < 2) {
+        lm.listSubsystems(sh);
+        return 0;
+    }
+
+    std::string arg = argv[1];
+    if (arg == "quiet") {
+        lm.setAll(false);
+        shell_print(sh, "All logging disabled.");
+    } else if (arg == "full") {
+        lm.setAll(true);
+        shell_print(sh, "All logging enabled.");
+    } else if (arg[0] == '+') {
+        lm.setSubsystem(arg.substr(1), true);
+        shell_print(sh, "Subsystem %s enabled.", arg.substr(1).c_str());
+    } else if (arg[0] == '-') {
+        lm.setSubsystem(arg.substr(1), false);
+        shell_print(sh, "Subsystem %s disabled.", arg.substr(1).c_str());
+    } else {
+        lm.listSubtypes(sh, arg);
+    }
+
+    return 0;
+}
+
+static int cmd_fpga_status(const struct shell *sh, size_t argc, char **argv) {
+    uint32_t ctrl = 0, tuning = 0, pwr = 0, inc = 0;
+    auto& fpga = FPGA::instance();
+    
+    fpga.readRegister(0x00, &ctrl);
+    fpga.readRegister(0x01, &tuning);
+    fpga.readRegister(0x04, &pwr);
+    fpga.readRegister(0x08, &inc);
+
+    shell_print(sh, "=== FPGA Hardware Status ===");
+    shell_print(sh, "TX Enable:       %s", (ctrl & 0x01) ? "ON" : "OFF");
+    shell_print(sh, "PLL Locked:      %s", (ctrl & 0x02) ? "YES" : "NO");
+    shell_print(sh, "Heartbeat:       %s", (ctrl & 0x08) ? "1" : "0");
+    shell_print(sh, "Step Index:      %u", (ctrl >> 4) & 0x07);
+    shell_print(sh, "--- Registers ---");
+    shell_print(sh, "Tuning Word:     0x%08X", tuning);
+    shell_print(sh, "Phase Inc (Act): 0x%08X", inc);
+    shell_print(sh, "Power Thresh:    0x%08X", pwr);
+    
+    if (!(ctrl & 0x02)) {
+        shell_warn(sh, "WARNING: FPGA PLL is not locked.");
+    }
+    return 0;
+}
+
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_fpga,
+    SHELL_CMD(status, NULL, "Show FPGA hardware register status", cmd_fpga_status),
     SHELL_CMD(reset, NULL, "Reset iCE40 FPGA", cmd_fpga_reset),
     SHELL_CMD(flash, NULL, "Load bitstream from LFS [path]", cmd_fpga_flash),
-    SHELL_CMD(counter, NULL, "Read 1PPS reference counter", cmd_fpga_counter),
+    SHELL_CMD(counter, NULL, "Read 1PPS reference counter (Falling edge)", cmd_fpga_counter),
     SHELL_SUBCMD_SET_END
 );
 
@@ -130,10 +368,27 @@ SHELL_STATIC_SUBCMD_SET_CREATE(sub_fs,
     SHELL_SUBCMD_SET_END
 );
 
+SHELL_STATIC_SUBCMD_SET_CREATE(sub_tx,
+    SHELL_CMD(start, NULL, "Start TX <freq_hz> <pwr_0_255>", cmd_tx_start),
+    SHELL_CMD(stop, NULL, "Stop TX / Sweep", cmd_tx_stop),
+    SHELL_CMD(sweep, NULL, "Sweep 1-30MHz <duration_sec> [single|continuous]", cmd_tx_sweep),
+    SHELL_SUBCMD_SET_END
+);
+
+SHELL_STATIC_SUBCMD_SET_CREATE(sub_gnss,
+    SHELL_CMD(raw, NULL, "Show most recent raw NMEA string", cmd_gnss_raw),
+    SHELL_CMD(reset, NULL, "Manual GNSS chip reset (IO15)", cmd_gnss_reset),
+    SHELL_CMD(monitor, NULL, "Continuously monitor GNSS UART data", cmd_gnss_monitor),
+    SHELL_SUBCMD_SET_END
+);
+
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_wspr,
     SHELL_CMD(status, NULL, "Show system status", cmd_wspr_status),
+    SHELL_CMD(log, NULL, "Control subsystem logging", cmd_wspr_log),
     SHELL_CMD(fpga, &sub_fpga, "FPGA control commands", NULL),
+    SHELL_CMD(gnss, &sub_gnss, "GNSS control commands", NULL),
     SHELL_CMD(fs, &sub_fs, "FileSystem commands", NULL),
+    SHELL_CMD(tx, &sub_tx, "Transmitter test commands", NULL),
     SHELL_SUBCMD_SET_END
 );
 

@@ -21,4 +21,5 @@ target_sources(app PRIVATE
   src/fpga.cpp
   src/shellcmds.cpp
   src/filesystem.cpp
+  src/logmanager.cpp
 )

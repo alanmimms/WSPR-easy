@@ -15,6 +15,7 @@
 #include "gnss.hpp"
 #include "fpga.hpp"
 #include "filesystem.hpp"
+#include "logmanager.hpp"
 
 LOG_MODULE_REGISTER(wspr_ease, LOG_LEVEL_INF);
 
@@ -117,6 +118,9 @@ int main(void)
 {
     LOG_INF("WSPR-ease starting...");
     LOG_INF("Build: %s %s", __DATE__, __TIME__);
+
+    // Ensure logging is initialized early
+    (void)wspr::LogManager::instance();
 
     // Create WebServer on main's stack (persists for lifetime of program)
     wspr::WebServer webServer;

@@ -2,11 +2,8 @@
 /**
  * file: top.sv
  * module: Top
- * description: WSPR-ease Main FPGA Design (SystemVerilog).
- * Features:
- * - 200 Msps NCO with 1-2-1 Sequencer
- * - PPS Period Counter (TCXO Calibration)
- * - Bidirectional SPI
+ * description: WSPR-ease Main FPGA Design. 
+ * Simplified Output Drive (Non-DDR) for physical verification.
  */
 
 module Top (
@@ -18,7 +15,7 @@ module Top (
 
 	    input  logic clk40MHz,   // 40 MHz TCXO (Drives PLL on pin 35)
 
-	    // RF Power Amplifier Drive (DDR Outputs)
+	    // RF Power Amplifier Drive
 	    output logic rfPushBase,
 	    output logic rfPushPeak,
 	    output logic rfPullBase,
@@ -26,228 +23,156 @@ module Top (
 	    );
 
   // -------------------------------------------------------------------------
-  // 1. Clock Generation (100 MHz from 40 MHz Pad)
+  // 1. Clock Generation (40 MHz)
   // -------------------------------------------------------------------------
-  logic clk100MHz;
+  logic clk;
   logic pllLocked;
 
-  // 40 MHz -> 100 MHz
-  // F_out = F_ref * (DIVF+1) / (2^DIVQ * (DIVR+1))
-  // 100 = 40 * (4+1) / (2^1 * (0+1)) = 40 * 5 / 2 = 100
   SB_PLL40_PAD #(
 		 .FEEDBACK_PATH("SIMPLE"),
-		 .DIVR(4'b0000),      // DIVR = 0
-		 .DIVF(7'b0000100),   // DIVF = 4
-		 .DIVQ(3'b001),       // DIVQ = 1
+		 .DIVR(4'b0000), .DIVF(7'b0000111), .DIVQ(3'b011),
 		 .FILTER_RANGE(3'b001)
 		 ) pllInst (
 			    .PACKAGEPIN(clk40MHz),
-			    .PLLOUTCORE(clk100MHz),
+			    .PLLOUTCORE(clk),
 			    .LOCK(pllLocked),
 			    .RESETB(1'b1),
 			    .BYPASS(1'b0)
 			    );
 
   // -------------------------------------------------------------------------
-  // 2. PPS Measurement (TCXO Calibration) - Now at 100 MHz
+  // 2. PPS Measurement
   // -------------------------------------------------------------------------
-  logic [31:0] ppsLiveCounter;
-  logic [31:0] ppsCapturedPeriod; 
+  logic [31:0] ppsCount = 0;
+  logic [31:0] ppsFallVal = 0; 
+  logic [31:0] ppsRiseVal = 0;
+  logic [31:0] ppsEdges = 0;
   
-  logic [2:0] ppsSync;
-  logic ppsRisingEdge;
+  logic [2:0] ppsSync = 0;
+  always_ff @(posedge clk) ppsSync <= {ppsSync[1:0], gnssPPS};
 
-  always_ff @(posedge clk100MHz) begin
-    ppsSync <= {ppsSync[1:0], gnssPPS};
-  end
+  wire ppsF = (!ppsSync[1] && ppsSync[2]);
+  wire ppsR = (ppsSync[1] && !ppsSync[2]);
 
-  assign ppsRisingEdge = (ppsSync[0] && !ppsSync[1]);
-
-  always_ff @(posedge clk100MHz) begin
-    if (ppsRisingEdge) begin
-      ppsCapturedPeriod <= ppsLiveCounter;
-      ppsLiveCounter <= 32'd0;
-    end else begin
-      ppsLiveCounter <= ppsLiveCounter + 1'b1;
-    end
+  always_ff @(posedge clk) begin
+    ppsCount <= ppsCount + 1'b1;
+    if (ppsF) begin ppsFallVal <= ppsCount; ppsEdges <= ppsEdges + 1'b1; end
+    if (ppsR) begin ppsRiseVal <= ppsCount; ppsEdges <= ppsEdges + 1'b1; end
   end
 
   // -------------------------------------------------------------------------
-  // 3. Synchronous SPI Slave (sampled by clk100MHz)
+  // 3. SPI Slave
   // -------------------------------------------------------------------------
-  logic [31:0] spiShiftReg;
-  logic [31:0] tuningWordShadow = 32'd0;
-  logic [5:0]  spiBitCount;
+  logic [39:0] spiShift;
+  logic [5:0]  spiBits;
+  logic [2:0]  sclkS, mosiS, ncsS;
   
-  logic [2:0] sclkSync, mosiSync, ncsSync;
-  
-  always_ff @(posedge clk100MHz) begin
-    sclkSync <= {sclkSync[1:0], fpgaClk};
-    mosiSync <= {mosiSync[1:0], fpgaMOSI};
-    ncsSync  <= {ncsSync[1:0], fpgaNCS};
+  always_ff @(posedge clk) begin
+    sclkS <= {sclkS[1:0], fpgaClk};
+    mosiS <= {mosiS[1:0], fpgaMOSI};
+    ncsS  <= {ncsS[1:0], fpgaNCS};
   end
   
-  wire sclkRise = (sclkSync[1] && !sclkSync[2]);
-  wire sclkFall = (!sclkSync[1] && sclkSync[2]);
-  wire ncsActive = !ncsSync[1];
-  wire ncsFallingEdge = (!ncsSync[1] && ncsSync[2]);
+  wire sclkR = (sclkS[1] && !sclkS[2]);
+  wire sclkF = (!sclkS[1] && sclkS[2]);
+  wire ncsA  = !ncsS[1];
 
-  logic spiMisoOut;
+  logic [31:0] regControl = 0;      
+  logic [31:0] regTuning = 0;       
+  logic [31:0] regSymbol = 0;       
+  logic [31:0] regPwrThresh = 32'hFFFFFFFF;    
+  logic [31:0] regToneSpacing = 0;  
 
-  always_ff @(posedge clk100MHz) begin
-    if (!ncsActive) begin
-      spiBitCount <= '0;
-      spiMisoOut <= 1'b0;
-    end else begin
-      if (ncsFallingEdge) begin
-        spiShiftReg <= ppsCapturedPeriod;
-        spiBitCount <= '0;
-        spiMisoOut <= ppsCapturedPeriod[31];
-      end else if (sclkRise) begin
-        spiShiftReg <= {spiShiftReg[30:0], mosiSync[1]};
-        spiBitCount <= spiBitCount + 1'b1;
-      end else if (sclkFall) begin
-        // Shift out the next bit on falling edge
-        spiMisoOut <= spiShiftReg[31];
+  logic [31:0] spiRdData;
+  logic [6:0]  spiAddr;
+
+  always_ff @(posedge clk) begin
+    if (!ncsA) begin
+      spiBits <= 0;
+      if (ncsS[1] && !ncsS[2]) begin // CS Rising
+        if (spiBits == 6'd40 && spiShift[39]) begin
+          case (spiShift[38:32])
+            7'h00: regControl     <= spiShift[31:0];
+            7'h01: regTuning      <= spiShift[31:0];
+            7'h02: regSymbol      <= spiShift[31:0];
+            7'h04: regPwrThresh   <= spiShift[31:0];
+            7'h05: regToneSpacing <= spiShift[31:0];
+          endcase
+        end
       end
-    end
-  end
-  
-  // MISO Output
-  assign fpgaMISO = ncsActive ? spiMisoOut : 1'bz;
-
-  // Tuning Word Latch
-  always_ff @(posedge clk100MHz) begin
-    if (!ncsActive && ncsSync[2]) begin // NCS rising edge
-      if (spiBitCount == 6'd32) begin
-        tuningWordShadow <= spiShiftReg;
-      end
+    end else if (sclkR) begin
+      spiShift <= {spiShift[38:0], mosiS[1]};
+      spiBits <= spiBits + 1'b1;
+      if (spiBits == 6'd7) spiAddr <= {spiShift[6:0], mosiS[1]};
     end
   end
 
-  // -------------------------------------------------------------------------
-  // 4. 200 Msps NCO & Sequencer (100 MHz DDR)
-  // -------------------------------------------------------------------------
-  logic [31:0] accumulator;
-  logic [2:0]  stepIndex;
-  
-  logic [2:0] idxRise;
-  logic [2:0] idxFall;
+  // Forward declarations for status
+  logic [2:0] p4StR;
+  logic [31:0] p1Inc;
+  logic [25:0] hbCounter = 0;
+  always_ff @(posedge clk) hbCounter <= hbCounter + 1;
 
-  logic [31:0] accPlus1;
-  logic [31:0] accPlus2;
-  logic        overflow1;
-  logic        overflow2;
-
-  assign accPlus1 = accumulator + tuningWordShadow;
-  assign accPlus2 = accumulator + (tuningWordShadow << 1); 
-
-  assign overflow1 = (accPlus1 < accumulator);
-  assign overflow2 = (accPlus2 < accPlus1);
-
-  always_ff @(posedge clk100MHz) begin
-    if (!pllLocked) begin
-      accumulator <= '0;
-      stepIndex   <= '0;
-    end else begin
-      accumulator <= accPlus2;
-      // Modulo 6 arithmetic
-      if (overflow1 && overflow2) begin
-        stepIndex <= (stepIndex >= 3'd4) ? (stepIndex - 3'd4) : (stepIndex + 3'd2); 
-      end else if (overflow1 || overflow2) begin
-        stepIndex <= (stepIndex == 3'd5) ? 3'd0 : (stepIndex + 3'd1);
-      end
-    end
+  always_ff @(posedge clk) begin
+    case (spiAddr)
+      // Bit 0: TX En, 1: PLL Lock, 2: PPS, 3: Heartbeat, 6:4: Step Index
+      7'h00: spiRdData <= {25'd0, p4StR, hbCounter[25], ppsSync[1], pllLocked, regControl[0]}; 
+      7'h01: spiRdData <= regTuning;
+      7'h02: spiRdData <= regSymbol;
+      7'h03: spiRdData <= ppsFallVal;
+      7'h04: spiRdData <= regPwrThresh;
+      7'h05: spiRdData <= regToneSpacing;
+      7'h06: spiRdData <= ppsCount;
+      7'h07: spiRdData <= ppsEdges;
+      7'h08: spiRdData <= p1Inc;
+      default: spiRdData <= 32'hDEADBEEF;
+    endcase
   end
 
-  // Combinatorial Logic: Determine state for Rise and Fall outputs
-  always_comb begin
-    idxRise = stepIndex;
-    if (overflow1) begin
-      idxFall = (stepIndex == 3'd5) ? 3'd0 : (stepIndex + 3'd1);
-    end else begin
-      idxFall = stepIndex;
+  logic misoOut;
+  always_ff @(posedge clk) begin
+    if (sclkF) begin
+      if (spiBits >= 6'd8 && spiBits < 6'd40)
+        misoOut <= spiRdData[5'd31 - (spiBits[4:0] - 5'd8)];
+      else misoOut <= 0;
     end
   end
-
-  // Sequencer Signals
-  logic pushBaseRise, pushPeakRise, pullBaseRise, pullPeakRise;
-  logic pushBaseFall, pushPeakFall, pullBaseFall, pullPeakFall;
-  
-  Sequencer121 seqRise (
-			.stepIndex(idxRise),
-			.pushBase (pushBaseRise), 
-			.pushPeak (pushPeakRise), 
-			.pullBase (pullBaseRise), 
-			.pullPeak (pullPeakRise)
-			);
-
-  Sequencer121 seqFall (
-			.stepIndex(idxFall),
-			.pushBase (pushBaseFall), 
-			.pushPeak (pushPeakFall), 
-			.pullBase (pullBaseFall), 
-			.pullPeak (pullPeakFall)
-			);
+  assign fpgaMISO = ncsA ? misoOut : 1'bz;
 
   // -------------------------------------------------------------------------
-  // 5. DDR Output Primitives
+  // 4. RF Synthesis (Simple 40 Msps for Debug)
   // -------------------------------------------------------------------------
   
-  SB_IO #(
-          .PIN_TYPE(6'b010000), // PIN_OUTPUT_DDR
-          .IO_STANDARD("SB_LVCMOS")
-	  ) ioPushBase (
-			.PACKAGE_PIN(rfPushBase),
-			.D_OUT_0(pushBaseRise),
-			.D_OUT_1(pushBaseFall),
-			.OUTPUT_CLK(clk100MHz),
-			.CLOCK_ENABLE(1'b1),
-			.INPUT_CLK(1'b0),
-			.OUTPUT_ENABLE(1'b1),
-			.D_IN_0(), .D_IN_1()
-			);
+  always_ff @(posedge clk) p1Inc <= regTuning + (regSymbol[1:0] * regToneSpacing);
 
-  SB_IO #(
-          .PIN_TYPE(6'b010000),
-          .IO_STANDARD("SB_LVCMOS")
-	  ) ioPushPeak (
-			.PACKAGE_PIN(rfPushPeak),
-			.D_OUT_0(pushPeakRise),
-			.D_OUT_1(pushPeakFall),
-			.OUTPUT_CLK(clk100MHz),
-			.CLOCK_ENABLE(1'b1),
-			.INPUT_CLK(1'b0),
-			.OUTPUT_ENABLE(1'b1),
-			.D_IN_0(), .D_IN_1()
-			);
+  logic [31:0] p2Acc;
+  always_ff @(posedge clk) begin
+    if (!pllLocked || !regControl[0]) p2Acc <= 0;
+    else p2Acc <= p2Acc + p1Inc;
+  end
 
-  SB_IO #(
-          .PIN_TYPE(6'b010000),
-          .IO_STANDARD("SB_LVCMOS")
-	  ) ioPullBase (
-			.PACKAGE_PIN(rfPullBase),
-			.D_OUT_0(pullBaseRise),
-			.D_OUT_1(pullBaseFall),
-			.OUTPUT_CLK(clk100MHz),
-			.CLOCK_ENABLE(1'b1),
-			.INPUT_CLK(1'b0),
-			.OUTPUT_ENABLE(1'b1),
-			.D_IN_0(), .D_IN_1()
-			);
+  // Pipelined Phase-to-Step mapping (6 steps per RF cycle)
+  logic [34:0] p3Phase6x;
+  always_ff @(posedge clk) p3Phase6x <= 35'd6 * p2Acc;
+  always_ff @(posedge clk) p4StR <= p3Phase6x[34:32];
 
-  SB_IO #(
-          .PIN_TYPE(6'b010000),
-          .IO_STANDARD("SB_LVCMOS")
-	  ) ioPullPeak (
-			.PACKAGE_PIN(rfPullPeak),
-			.D_OUT_0(pullPeakRise),
-			.D_OUT_1(pullPeakFall),
-        .OUTPUT_CLK(clk100MHz),
-        .CLOCK_ENABLE(1'b1),
-        .INPUT_CLK(1'b0),
-        .OUTPUT_ENABLE(1'b1),
-        .D_IN_0(), .D_IN_1()
-    );
+  logic p5EnR;
+  wire txActive = regControl[0] && pllLocked;
+  always_ff @(posedge clk) p5EnR <= txActive;
 
-endmodule // Top
+  logic r1, r2, r3, r4;
+  Sequencer121 sR(.stepIndex(p4StR), .pushBase(r1), .pushPeak(r2), .pullBase(r3), .pullPeak(r4));
+
+  logic gr1, gr2, gr3, gr4;
+  always_ff @(posedge clk) begin
+    gr1 <= r1 & p5EnR; gr2 <= r2 & p5EnR; 
+    gr3 <= r3 & p5EnR; gr4 <= r4 & p5EnR;
+  end
+
+  // PIN_TYPE 010100 = Registered Output
+  SB_IO #(.PIN_TYPE(6'b010100)) io0(.PACKAGE_PIN(rfPushBase), .D_OUT_0(gr1), .OUTPUT_CLK(clk), .CLOCK_ENABLE(1'b1), .OUTPUT_ENABLE(1'b1));
+  SB_IO #(.PIN_TYPE(6'b010100)) io1(.PACKAGE_PIN(rfPushPeak), .D_OUT_0(gr2), .OUTPUT_CLK(clk), .CLOCK_ENABLE(1'b1), .OUTPUT_ENABLE(1'b1));
+  SB_IO #(.PIN_TYPE(6'b010100)) io2(.PACKAGE_PIN(rfPullBase), .D_OUT_0(gr3), .OUTPUT_CLK(clk), .CLOCK_ENABLE(1'b1), .OUTPUT_ENABLE(1'b1));
+  SB_IO #(.PIN_TYPE(6'b010100)) io3(.PACKAGE_PIN(rfPullPeak), .D_OUT_0(gr4), .OUTPUT_CLK(clk), .CLOCK_ENABLE(1'b1), .OUTPUT_ENABLE(1'b1));
+
+endmodule

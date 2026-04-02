@@ -67,24 +67,19 @@ int FPGA::init() {
     
     // Power Sequencing: Wait for Core Power Good
     uint32_t startTime = k_uptime_get_32();
-    bool pgOK = true;		// XXX TEMPORARILY ignore pgFPGACORE signal
+    bool pgOK = false;
     
-    while (!pgOK && k_uptime_get_32() - startTime < 500) { 
+    while (!pgOK && k_uptime_get_32() - startTime < 1000) { 
 
         if (gpio_pin_get_dt(&pgFPGACORE) > 0) {
             pgOK = true;
             LOG_INF("pgFPGACORE asserted after %u ms", k_uptime_get_32() - startTime);
-
-            if (k_uptime_get_32() - startTime > 100) {
-                LOG_WRN("Warning: pgFPGACORE took longer than 100ms to assert");
-            }
         }
         k_msleep(5);
     }
 
     if (!pgOK) {
-        LOG_ERR("Timeout waiting for pgFPGACORE!");
-        return -ETIMEDOUT;
+        LOG_WRN("Timeout waiting for pgFPGACORE! Proceeding anyway (Bypass)...");
     }
 
     // Enable FPGA IO Power
@@ -211,7 +206,14 @@ int FPGA::setFrequency(uint32_t freqHz) {
     currentFreq = freqHz;
     if (!initialized) return -ENODEV;
 
-    uint64_t word = ((uint64_t)freqHz << 32) / tcxoFreqHz;
+    // Standard NCO tuning: M = (f_out / f_clk) * 2^32
+    // We use the full 32-bit range for exactly one RF cycle.
+    uint64_t word = ((uint64_t)freqHz << 32) / (uint64_t)tcxoFreqHz;
+    
+    // WSPR tone spacing is 1.46484375 Hz (12000 / 8192)
+    uint64_t spacing = (146484375ULL * (1ULL << 32)) / ((uint64_t)tcxoFreqHz * 100000000ULL);
+    spiWriteReg(0x05, (uint32_t)spacing);
+
     return spiWriteReg(0x01, (uint32_t)word);
 }
 
@@ -220,7 +222,7 @@ int FPGA::startTX() {
     if (transmitting) return -EALREADY;
     LOG_INF("Starting transmission at %u Hz", currentFreq);
     transmitting = true;
-    return spiWriteReg(0x00, 0x01); 
+    return spiWriteReg(0x00, 0x01); // Bit 0: TX Enable
 }
 
 int FPGA::stopTX() {
@@ -234,12 +236,14 @@ int FPGA::stopTX() {
 int FPGA::setPowerLevel(uint8_t level) {
     if (!initialized) return -ENODEV;
     LOG_INF("Setting FPGA power level to %u", level);
-    return spiWriteReg(0x04, (uint32_t)level);
+    // Scale 0-255 to 0-0xFFFFFFFF for the FPGA's 32-bit PWM threshold
+    uint32_t thresh = (uint32_t)level * 0x01010101;
+    return spiWriteReg(0x04, thresh);
 }
 
 int FPGA::sendSymbol(uint8_t symbol) {
     if (!initialized) return -ENODEV;
-    return spiWriteReg(0x02, symbol);
+    return spiWriteReg(0x02, (uint32_t)(symbol & 0x03));
 }
 
 int FPGA::setLPFBand(WSPRBand band) {
@@ -251,6 +255,13 @@ uint32_t FPGA::getCounter() {
     if (!initialized) return 0;
     uint32_t val = 0;
     spiReadReg(0x03, &val);
+    return val;
+}
+
+uint32_t FPGA::getLiveCounter() {
+    if (!initialized) return 0;
+    uint32_t val = 0;
+    spiReadReg(0x06, &val);
     return val;
 }
 
@@ -271,22 +282,23 @@ int FPGA::spiWriteReg(uint8_t reg, uint32_t value) {
 }
 
 int FPGA::spiReadReg(uint8_t reg, uint32_t* value) {
-    uint8_t txBuf[1] = { (uint8_t)(reg & 0x7F) };
-    uint8_t rxBuf[4] = { 0 };
+    uint8_t txBuf[5] = { (uint8_t)(reg & 0x7F), 0, 0, 0, 0 };
+    uint8_t rxBuf[5] = { 0 };
 
     gpio_pin_set_dt(&fpgaCS, 0); 
-    struct spi_buf sTX = { .buf = txBuf, .len = 1 };
+    struct spi_buf sTX = { .buf = txBuf, .len = 5 };
     struct spi_buf_set sTXs = { .buffers = &sTX, .count = 1 };
-    struct spi_buf sRX = { .buf = rxBuf, .len = 4 };
+    struct spi_buf sRX = { .buf = rxBuf, .len = 5 };
     struct spi_buf_set sRXs = { .buffers = &sRX, .count = 1 };
     int ret = spi_transceive_dt(&fpgaSPI, &sTXs, &sRXs);
     gpio_pin_set_dt(&fpgaCS, 1); 
 
     if (ret == 0) {
-        *value = ((uint32_t)rxBuf[0] << 24) |
-                 ((uint32_t)rxBuf[1] << 16) |
-                 ((uint32_t)rxBuf[2] << 8) |
-                 (uint32_t)rxBuf[3];
+        // Data is in rxBuf[1..4] because Byte 0 was the address/command
+        *value = ((uint32_t)rxBuf[1] << 24) |
+                 ((uint32_t)rxBuf[2] << 16) |
+                 ((uint32_t)rxBuf[3] << 8) |
+                 (uint32_t)rxBuf[4];
     }
     return ret;
 }

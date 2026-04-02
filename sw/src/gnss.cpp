@@ -33,6 +33,7 @@ GNSS& GNSS::instance() {
 int GNSS::init() {
     LOG_INF("Initializing GNSS module");
     k_mutex_init(&mutex);
+    k_msgq_init(&monitorMsgQ, msgq_buffer, 256, 4);
 
     // Allocate stack from heap
     if (!gnssStackPtr) {
@@ -46,20 +47,11 @@ int GNSS::init() {
         }
     }
 
-    // GNSS Reset sequence
+    // GNSS Reset sequence (gnss_reset is now GPIO_ACTIVE_LOW)
     static const struct gpio_dt_spec gnssReset = GPIO_DT_SPEC_GET(DT_NODELABEL(gnss_reset), gpios);
     if (device_is_ready(gnssReset.port)) {
-        LOG_INF("Pulsing GNSS reset (GPIO 15)");
-        gpio_pin_configure_dt(&gnssReset, GPIO_OUTPUT_INACTIVE); // Start High (Inactive)
-        
-        gpio_pin_set_dt(&gnssReset, 0); // Physical High
-        k_msleep(10);
-        
-        gpio_pin_set_dt(&gnssReset, 1); // Physical Low (Active Reset)
-        k_msleep(50);
-        
-        gpio_pin_set_dt(&gnssReset, 0); // Physical High (Release Reset)
-        LOG_INF("GNSS reset released");
+        gpio_pin_configure_dt(&gnssReset, GPIO_OUTPUT_INACTIVE);
+        reset();
     }
 
     uartDev = DEVICE_DT_GET(DT_ALIAS(gnss_uart));
@@ -71,6 +63,18 @@ int GNSS::init() {
     // Start processing thread
     start();
 
+    return 0;
+}
+
+int GNSS::reset() {
+    static const struct gpio_dt_spec gnssReset = GPIO_DT_SPEC_GET(DT_NODELABEL(gnss_reset), gpios);
+    if (!device_is_ready(gnssReset.port)) return -ENODEV;
+
+    LOG_INF("Resetting GNSS chip (IO15 Active-Low)...");
+    gpio_pin_set_dt(&gnssReset, 1); // Assert Reset (Physically Low)
+    k_msleep(100);
+    gpio_pin_set_dt(&gnssReset, 0); // Deassert Reset (Physically High)
+    LOG_INF("GNSS reset released");
     return 0;
 }
 
@@ -98,11 +102,10 @@ void GNSS::processLoop() {
     
     uint8_t c;
     uint32_t lastLogTime = 0;
-    uint32_t lastDataTime = k_uptime_get_32();
     bool firstDataReceived = false;
 
     while (running) {
-        // Skip processing during transmission to avoid affecting realtime modulation
+        // Skip processing during transmission
         if (FPGA::instance().isTransmitting()) {
             while (uart_poll_in(uartDev, &c) == 0) { /* flush */ }
             k_sleep(K_MSEC(1000));
@@ -111,27 +114,43 @@ void GNSS::processLoop() {
 
         // Read from UART
         if (uart_poll_in(uartDev, &c) == 0) {
-            lastDataTime = k_uptime_get_32();
             if (!firstDataReceived) {
                 LOG_INF("GNSS: Data received from UART (byte: 0x%02x '%c')", c, (c >= 32 && c <= 126) ? c : '.');
                 firstDataReceived = true;
             }
 
+            if (c == '$') {
+                nmeaPos = 0; // Always sync to start of sentence
+            }
+
             if (c == '\n' || c == '\r') {
-                if (nmeaPos > 0) {
+                if (nmeaPos > 5) { // Minimum NMEA sentence length ($GPxyz)
                     nmeaBuf[nmeaPos] = '\0';
+                    
+                    // COHERENT COPY: Latch the full message into the 'last' buffer
+                    k_mutex_lock(&mutex, K_FOREVER);
+                    strncpy(lastNmea, nmeaBuf, sizeof(lastNmea)-1);
+                    lastNmea[sizeof(lastNmea)-1] = '\0';
+                    
+                    if (monitorEnabled) {
+                        k_msgq_put(&monitorMsgQ, nmeaBuf, K_NO_WAIT);
+                    }
+                    
+                    // Parse while holding lock to keep GNSSData coherent
                     parseNMEA(nmeaBuf);
+                    k_mutex_unlock(&mutex);
+                    
                     nmeaPos = 0;
                 }
             } else {
                 if (nmeaPos < (int)sizeof(nmeaBuf) - 1) {
                     nmeaBuf[nmeaPos++] = c;
                 } else {
-                    nmeaPos = 0; // Buffer overflow, reset
+                    nmeaPos = 0; // Overflow
                 }
             }
         } else {
-            k_sleep(K_MSEC(10));
+            k_sleep(K_MSEC(1)); // Fast poll to avoid FIFO overruns
         }
 
         // Periodic status log (every 10 seconds)
@@ -139,7 +158,7 @@ void GNSS::processLoop() {
         if (now - lastLogTime >= 10000) {
             k_mutex_lock(&mutex, K_FOREVER);
             if (!firstDataReceived) {
-                LOG_WRN("GNSS Status: NO DATA RECEIVED ON UART (fixed 9600 baud)");
+                LOG_WRN("GNSS Status: NO DATA RECEIVED ON UART");
             } else {
                 LOG_INF("GNSS Status: lock=%s, sats=%d, snr=%.1f, time=%s",
                         data.valid ? "YES" : "NO", data.satellites, (double)data.avgSNR, timeStr);
@@ -148,6 +167,18 @@ void GNSS::processLoop() {
             lastLogTime = now;
         }
     }
+}
+
+size_t GNSS::getRawNmea(char* dest, size_t maxLen) const {
+    if (!dest || maxLen == 0) return 0;
+    
+    k_mutex_lock(&mutex, K_FOREVER);
+    strncpy(dest, lastNmea, maxLen - 1);
+    dest[maxLen - 1] = '\0';
+    size_t len = strlen(dest);
+    k_mutex_unlock(&mutex);
+    
+    return len;
 }
 
 // Helper to parse NMEA lat/lon format (DDMM.MMMM)
@@ -165,19 +196,14 @@ static double parseNMEACoord(const char* s, const char* dir) {
 }
 
 void GNSS::parseNMEA(char* line) {
-    if (line[0] != '$') return;
+    if (line[0] != '$' || strlen(line) < 7) return;
 
-    // We look for RMC (Recommended Minimum Navigation Information) 
-    // and GGA (Global Positioning System Fix Data)
-    // and GSV (GNSS Satellites in View)
-    
     char* saveptr;
     char* token = strtok_r(line, ",", &saveptr);
     if (!token) return;
 
-    if (strcmp(token, "$GPRMC") == 0 || strcmp(token, "$GNRMC") == 0) {
+    if (strstr(token, "RMC")) {
         // $--RMC,time,status,lat,N,lon,W,spd,cog,date,mv,mvE,mode*cs
-        k_mutex_lock(&mutex, K_FOREVER);
         
         char* tTime = strtok_r(NULL, ",", &saveptr);
         char* tStatus = strtok_r(NULL, ",", &saveptr);
@@ -211,11 +237,9 @@ void GNSS::parseNMEA(char* line) {
             data.valid = false;
             formatTime();
         }
-        k_mutex_unlock(&mutex);
     } 
-    else if (strcmp(token, "$GPGGA") == 0 || strcmp(token, "$GNGGA") == 0) {
+    else if (strstr(token, "GGA")) {
         // $--GGA,time,lat,N,lon,W,fix,sats,hdop,alt,M,geoid,M,age,ref*cs
-        k_mutex_lock(&mutex, K_FOREVER);
         strtok_r(NULL, ",", &saveptr); // time
         strtok_r(NULL, ",", &saveptr); // lat
         strtok_r(NULL, ",", &saveptr); // N
@@ -232,11 +256,9 @@ void GNSS::parseNMEA(char* line) {
             if (tHDOP) data.hdop = atof(tHDOP);
             if (tAlt) data.altitude = atof(tAlt);
         }
-        k_mutex_unlock(&mutex);
     }
-    else if (strcmp(token, "$GPGSV") == 0 || strcmp(token, "$GNGSV") == 0) {
+    else if (strstr(token, "GSV")) {
         // $--GSV,num_msgs,msg_num,sats_in_view,sat1_prn,sat1_elev,sat1_az,sat1_snr,...
-        // Simple average SNR calculation
         strtok_r(NULL, ",", &saveptr); // num_msgs
         strtok_r(NULL, ",", &saveptr); // msg_num
         char* tSatsInView = strtok_r(NULL, ",", &saveptr);
@@ -257,9 +279,7 @@ void GNSS::parseNMEA(char* line) {
             }
             
             if (countSNR > 0) {
-                k_mutex_lock(&mutex, K_FOREVER);
                 data.avgSNR = (float)(sumSNR / countSNR);
-                k_mutex_unlock(&mutex);
             }
         }
     }
