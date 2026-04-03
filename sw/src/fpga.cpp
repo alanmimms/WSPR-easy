@@ -211,14 +211,11 @@ int FPGA::setFrequency(uint32_t freqHz) {
     currentFreq = freqHz;
     if (!initialized) return -ENODEV;
 
-    // Standard NCO tuning: M = (f_out / f_clk) * 2^32
-    // We use the full 32-bit range for exactly one RF cycle.
-    uint64_t word = ((uint64_t)freqHz << 32) / (uint64_t)tcxoFreqHz;
+    // NCO tuning: M = (6 * f_out / f_clk) * 2^32
+    // All symbol/tone math is now handled here in software.
+    // The FPGA just gets the final tuning word for the 6x rate.
+    uint64_t word = ((uint64_t)freqHz * 6ULL << 32) / (uint64_t)tcxoFreqHz;
     
-    // WSPR tone spacing is 1.46484375 Hz (12000 / 8192)
-    uint64_t spacing = (146484375ULL * (1ULL << 32)) / ((uint64_t)tcxoFreqHz * 100000000ULL);
-    spiWriteReg(0x05, (uint32_t)spacing);
-
     return spiWriteReg(0x01, (uint32_t)word);
 }
 
@@ -227,7 +224,11 @@ int FPGA::startTX() {
     if (transmitting) return -EALREADY;
     logger.inf("config", "Starting transmission at %u Hz", currentFreq);
     transmitting = true;
-    return spiWriteReg(0x00, 0x01); // Bit 0: TX Enable
+    
+    uint32_t ctrl = 0;
+    spiReadReg(0x00, &ctrl);
+    ctrl |= 0x01; // Bit 0: TX Enable
+    return spiWriteReg(0x00, ctrl);
 }
 
 int FPGA::stopTX() {
@@ -235,20 +236,28 @@ int FPGA::stopTX() {
     if (!transmitting) return 0;
     logger.inf("config", "Stopping transmission");
     transmitting = false;
-    return spiWriteReg(0x00, 0x00); 
+
+    uint32_t ctrl = 0;
+    spiReadReg(0x00, &ctrl);
+    ctrl &= ~0x01; // Bit 0: TX Enable
+    return spiWriteReg(0x00, ctrl);
 }
 
 int FPGA::setPowerLevel(uint8_t level) {
     if (!initialized) return -ENODEV;
     logger.inf("config", "Setting FPGA power level to %u", level);
-    // Scale 0-255 to 0-0xFFFFFFFF for the FPGA's 32-bit PWM threshold
-    uint32_t thresh = (uint32_t)level * 0x01010101;
+    // Scale 0-255 to 0-0xFF000000 for the FPGA's PWM threshold (top 8 bits)
+    uint32_t thresh = (uint32_t)level << 24;
     return spiWriteReg(0x04, thresh);
 }
 
 int FPGA::sendSymbol(uint8_t symbol) {
     if (!initialized) return -ENODEV;
-    return spiWriteReg(0x02, (uint32_t)(symbol & 0x03));
+    
+    // WSPR tone spacing is 1.46484375 Hz (12000 / 8192)
+    // All frequency shifts are now handled here.
+    double toneFreq = (double)currentFreq + (double)symbol * 1.46484375;
+    return setFrequency((uint32_t)toneFreq);
 }
 
 int FPGA::setLPFBand(WSPRBand band) {

@@ -15,8 +15,8 @@ VERILATOR_FLAGS += -CFLAGS "-std=c++17 -I$(SW_DIR)"
 VERILATOR_FLAGS += -LDFLAGS "-lm"
 
 # Source files
-RTL_SOURCES := top.sv sequencer.sv
-RTL_SIM_SOURCES += $(SIM_DIR)/sbIO.sv $(SIM_DIR)/sbPLL40Core.sv $(SIM_DIR)/sbPLL40Pad.sv
+RTL_SOURCES := top.sv
+RTL_SIM_SOURCES += $(SIM_DIR)/sbIO.sv $(SIM_DIR)/sbPLL40Core.sv $(SIM_DIR)/sbPLL40Pad.sv $(SIM_DIR)/sbRAM404K.sv $(SIM_DIR)/sbGB.sv
 
 CPP_SOURCES := tbTop.cpp
 
@@ -41,8 +41,10 @@ $(TARGET):	$(RTL_SOURCES)
 	@echo "  YOSYS (Synthesis)..."
 	@yosys -q -p "read_verilog -sv $(RTL_SOURCES); synth_ice40 -top $(TOP) -json $(PROJECT).json"
 	@echo "  NEXTPNR (Place & Route)..."
-	@nextpnr-ice40 --$(DEVICE) --package $(PACKAGE) --freq 40 \
+	@nextpnr-ice40 --$(DEVICE) --package $(PACKAGE) --opt-timing --no-promote-globals \
+		--pre-pack timing.py --placer sa \
 		--json $(PROJECT).json --pcf $(PCF) --asc $(PROJECT).asc > build/nextpnr.log 2>&1 || (tail -n 20 build/nextpnr.log && exit 1)
+
 	@echo "  ICEPACK (Bitstream)..."
 	@icepack $(PROJECT).asc $(PROJECT).bin
 	@mv -f $(PROJECT).bin $(TARGET)

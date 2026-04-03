@@ -177,24 +177,34 @@ static int cmd_fpga_counter(const struct shell *sh, size_t argc, char **argv) {
     uint32_t previous = (diff1 < diff2) ? r2 : r1;
     uint32_t delta_f = latest - previous;
 
-    uint32_t live, ctrl, p1inc, edges;
-    fpga.readRegister(0x06, &live);
-    fpga.readRegister(0x00, &ctrl);
-    fpga.readRegister(0x08, &p1inc);
+    uint32_t status, tuning, pwr, edges, sig;
+    fpga.readRegister(0x00, &status);
+    fpga.readRegister(0x01, &tuning);
+    fpga.readRegister(0x04, &pwr);
     fpga.readRegister(0x07, &edges);
+    fpga.readRegister(0x0B, &sig);
+
+    bool tx_active = (status & 0x01);
+    bool pll_lock  = (status & 0x02);
+    bool pps_val   = (status & 0x04);
+    bool hb        = (status & 0x08);
+    uint8_t step   = (status >> 4) & 0x07;
 
     shell_print(sh, "=== FPGA PPS Diagnostics ===");
-    shell_print(sh, "Live PPS Signal:   %s", (ctrl & 0x02) ? "HIGH" : "LOW");
+    shell_print(sh, "FPGA Signature:    0x%04X %s", sig, (sig == 0x600D) ? "(OK)" : "(FAIL)");
+    shell_print(sh, "Status:            TX=%s, PLL=%s, PPS=%s, HB=%s, Step=%d",
+                tx_active ? "ON" : "OFF", pll_lock ? "LOCKED" : "NO_LOCK",
+                pps_val ? "HIGH" : "LOW", hb ? "1" : "0", step);
     shell_print(sh, "Total Edge Count:  %u", edges);
     shell_print(sh, "Sample 1 (Rising): %u", latest);
     shell_print(sh, "Sample 2 (Rising): %u", previous);
-    shell_print(sh, "p1Inc (Tuning):    0x%08x", p1inc);
-    shell_print(sh, "Live Counter:      %u", live);
+    shell_print(sh, "Tuning Word:       0x%08x", tuning);
+    shell_print(sh, "Power Thresh:      0x%08x", pwr);
     
     // We are measuring exactly 1 second between two rising edges
     if (delta_f > 0) {
         double freq = (double)delta_f;
-        double ppm = (freq - 40000000.0) / 40.0;
+        double ppm = (freq - 120000000.0) / 120.0;
         shell_print(sh, "----------------------------");
         shell_print(sh, "Measured Frequency: %.3f Hz", freq);
         shell_print(sh, "Clock Error:        %.3f ppm", ppm);
