@@ -534,4 +534,15 @@
 		(uuid "37eef897-f0ff-4393-a156-8a53a5e6f5c1")
 	)
 	(embedded_fonts no)
+	(model "/home/alan/ham/NexRx/symbols/TPS22918DBVR/3D/TPS22918DBVR.stp"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
 )

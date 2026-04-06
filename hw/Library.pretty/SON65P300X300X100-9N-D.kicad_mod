@@ -220,7 +220,7 @@
 		(uuid "2d9a0739-aa28-4e01-975a-d504082c0c1d")
 	)
 	(embedded_fonts no)
-	(model "TPS74612PQWDRBRQ1.stp"
+	(model "/home/alan/ham/NexRx/symbols/TPS74612PQWDRBRQ1/3D/TPS74612PQWDRBRQ1.stp"
 		(offset
 			(xyz 0 0 0)
 		)
