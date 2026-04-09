@@ -3,3 +3,6 @@ fpga.img
 wspr_ease.asc
 wspr_ease.json
 build/
+regs.hpp
+regs.md
+regs.sv

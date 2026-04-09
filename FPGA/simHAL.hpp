@@ -33,14 +33,14 @@ public:
         top->fpgaMOSI = (txByte >> i) & 1;
         
         // Rise SCLK
-        top->fpgaClk = 1;
+        top->fpgaSCLK = 1;
         advanceClock(10); // Wait 5 full cycles
         
         // Sample MISO on Rising Edge (Mode 0)
         rxByte = (rxByte << 1) | (top->fpgaMISO & 1);
         
         // Fall SCLK
-        top->fpgaClk = 0;
+        top->fpgaSCLK = 0;
         advanceClock(10); // Wait 5 full cycles
       }
       
@@ -80,7 +80,7 @@ private:
 
   void advanceClock(int cycles) {
     for (int i = 0; i < cycles; i++) {
-      top->clk40MHz = !top->clk40MHz;
+      top->clk40 = !top->clk40;
       top->eval();
       *simTime += 12500; // 12.5ns = 12500ps (40 MHz)
     }

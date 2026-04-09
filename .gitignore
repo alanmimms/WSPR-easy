@@ -4,3 +4,4 @@
 production/
 symbols/
 build/
+**/__pycache__/

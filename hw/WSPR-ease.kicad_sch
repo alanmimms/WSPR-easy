@@ -6996,7 +6996,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 96.52) (xy 57.15 96.52)
+			(xy 58.42 96.52) (xy 46.99 96.52)
 		)
 		(stroke
 			(width 0)
@@ -7926,7 +7926,7 @@
 	)
 	(wire
 		(pts
-			(xy 88.9 58.42) (xy 90.17 58.42)
+			(xy 88.9 58.42) (xy 97.79 58.42)
 		)
 		(stroke
 			(width 0)
@@ -8386,7 +8386,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 99.06) (xy 57.15 99.06)
+			(xy 58.42 99.06) (xy 46.99 99.06)
 		)
 		(stroke
 			(width 0)
@@ -9155,7 +9155,7 @@
 		(uuid "3596d954-560c-4b7d-b062-4ef4bd8aec5e")
 	)
 	(label "gnssPPS"
-		(at 57.15 99.06 180)
+		(at 46.99 99.06 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9235,7 +9235,7 @@
 		(uuid "544cfb6f-5d48-48ec-82bd-dc7df275ae44")
 	)
 	(label "fpgaNRESET"
-		(at 90.17 58.42 0)
+		(at 97.79 58.42 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9285,7 +9285,7 @@
 		(uuid "7a326f16-ebd1-4921-9830-4aa2c6e61ad7")
 	)
 	(label "gnssNRESET"
-		(at 57.15 96.52 180)
+		(at 46.99 96.52 180)
 		(effects
 			(font
 				(size 1.27 1.27)

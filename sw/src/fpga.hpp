@@ -28,7 +28,7 @@ namespace wspr {
   public:
     static FPGA& instance();
 
-    static const int tcxoFreqHz = 180*1000*1000;
+    static const int tcxoFreqHz = 40*1000*1000;
 
     int init();
     int reset();
@@ -41,7 +41,7 @@ namespace wspr {
     // Transmission control
     int startTX();
     int stopTX();
-    bool isTransmitting() const { return transmitting; }
+    bool isTransmitting() const { return initialized && transmitting; }
 
     // Power control (0-255)
     int setPowerLevel(uint8_t level);

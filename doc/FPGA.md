@@ -7,13 +7,12 @@ interface of the iCE40UP5K FPGA used in the WSPR-ease project.
 
 The FPGA performs real-time RF synthesis and timing measurement. To
 support the 10m amateur band (30 MHz) with high-fidelity harmonic
-cancellation, the FPGA operates at a **180 MHz** internal clock rate.
+cancellation, the FPGA operates at a **90 MHz** internal clock rate.
 
 ### Performance Requirements
-*   **Clock Frequency:** 180 MHz (Required for 30 MHz RF at 6 samples
+*   **Clock Frequency:** 90 MHz DDR (Required for 30 MHz RF at 6 samples
     per cycle).
-*   **Update Rate:** 180 Msps (SDR) or 360 Msps (DDR).
-*   **Timing Closure:** Achieving 180 MHz on the iCE40 requires
+*   **Timing Closure:** Achieving 90 MHz on the iCE40 requires
     aggressive pipelining of all 32-bit operations and decoupling of
     the SPI control plane from the RF synthesis data plane.
 
@@ -33,13 +32,13 @@ cancellation, the FPGA operates at a **180 MHz** internal clock rate.
 
 ## SPI Interface Protocol (Decoupled)
 
-The SPI interface is decoupled from the 180 MHz RF domain using
+The SPI interface is decoupled from the 90 MHz RF domain using
 **Shadow Registers**.
 
 *   **Writes:** Data is shifted into a shadow register and transferred
-    to the 180 MHz domain only upon the completion of a full 40-bit
+    to the 90 MHz domain only upon the completion of a full 40-bit
     frame (CS rising edge).
-*   **Reads:** Data is latched from the 180 MHz domain into the SPI
+*   **Reads:** Data is latched from the 90 MHz domain into the SPI
     shift register at the 8th bit of the frame (immediately after the
     address is known). This prevents the large combinatorial readback
     MUX from interfering with RF synthesis timing.
@@ -57,18 +56,17 @@ The SPI interface is decoupled from the 180 MHz RF domain using
 
 | Address | Name | Type | Description |
 | :--- | :--- | :--- | :--- |
-| 0x00 | **CONTROL** | R/W | Bit 0: `TX_EN`. Readback includes Status bits. |
-| 0x01 | **TUNING** | R/W | NCO Tuning Word. $M = \frac{6 \cdot f_{out} \cdot 2^{32}}{f_{clk}}$ |
-| 0x03 | **PPS_FALL** | RO | Counter latched at GNSS PPS falling edge. |
-| 0x04 | **PWR_THRESH**| R/W | PWM Power Threshold (Bits 31:24). |
-| 0x07 | **PPS_EDGES** | RO | Total count of GNSS PPS transitions. |
-| 0x09 | **PPS_RISE** | RO | Counter latched at latest GNSS PPS rising edge. |
-| 0x0A | **PPS_RISE_P**| RO | Counter latched at previous GNSS PPS rising edge. |
+| 0x00 | **CONTROL** | R/W | `[31:24]` Power Threshold<br>`[23:2]` Reserved<br>`[1]` PLL Locked (Read Only)<br>`[0]` TX Enable |
+| 0x01 | **TUNING** | R/W | 32-bit NCO Tuning Word. $M = \frac{6 \cdot f_{out} \cdot 2^{32}}{f_{clk}}$ |
+| 0x03 | **PPSFALL** | RO | Counter latched at GNSS PPS falling edge. |
+| 0x07 | **PPSEDGES** | RO | Total count of GNSS PPS transitions. |
+| 0x09 | **PPSRISE** | RO | Counter latched at latest GNSS PPS rising edge. |
+| 0x0A | **PPSRIPEP**| RO | Counter latched at previous GNSS PPS rising edge. |
 | 0x0B | **SIGNATURE** | RO | Fixed value `0x0000600D`. |
 
 ---
 
-## Implementation Strategies for 180 MHz
+## Implementation Strategies for 90 MHz
 
 ### 16-bit Skewed Addition
 To meet the 5.5ns timing window, 32-bit additions must be split:

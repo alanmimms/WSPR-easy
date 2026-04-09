@@ -87,18 +87,23 @@
 		compatible = "gpio-keys"; 
 		
 		/* FPGA Control */
-		fpga_nreset: fpga-nreset {
+		fpga_creset: fpga-creset {
 			gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
-			label = "FPGA Reset";
+			label = "FPGA Config Reset";
 		};
 		fpga_done: fpga-done {
 			gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
 			label = "FPGA Done";
 		};
-		fpga_cs: fpga-cs {
+		fpga_ncs: fpga-ncs {
 			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-			label = "FPGA CS";
+			label = "FPGA NCS";
 		};
+		fpga_nreset: fpga-nreset {
+			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
+			label = "FPGA Non-config Reset";
+		};
+
 
 		/* GNSS Timing and Control */
 		pps_in: pps-in {
@@ -106,10 +111,9 @@
 			label = "GNSS PPS";
 		};
 		gnss_reset: gnss-reset {
-			gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
 			label = "GNSS Reset";
 		};
-
 		/* Power Control */
 		pg_fpgacore: pg_fpgacore {
 			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>; /* IO 41 */
@@ -168,8 +172,11 @@
 	status = "okay";
 	pinctrl-0 = <&spi2_default>;
 	pinctrl-names = "default";
-	
-	/* FPGA is the only device on this bus. CS managed manually during config. */
+
+	/* FPGA is the only device on this bus. NCS is managed
+	manually during config so that SPI slave mode can be made to
+	sense NCS LOW when /CRESET is released. */
+
 	fpga_dev: fpga@0 {
 		compatible = "vnd,spi-device";
 		reg = <0>;

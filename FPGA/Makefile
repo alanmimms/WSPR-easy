@@ -15,8 +15,9 @@ VERILATOR_FLAGS += -CFLAGS "-std=c++17 -I$(SW_DIR)"
 VERILATOR_FLAGS += -LDFLAGS "-lm"
 
 # Source files
-RTL_SOURCES := top.sv
+RTL_SOURCES := top.sv WSPRExciter.sv SPIRegisters.sv freqCounter.sv syncronizer.sv edgeDetector.sv
 RTL_SIM_SOURCES += $(SIM_DIR)/sbIO.sv $(SIM_DIR)/sbPLL40Core.sv $(SIM_DIR)/sbPLL40Pad.sv $(SIM_DIR)/sbRAM404K.sv $(SIM_DIR)/sbGB.sv
+GENERATED_SOURCES := regs.sv regs.hpp regs.md
 
 CPP_SOURCES := tbTop.cpp
 
@@ -35,7 +36,7 @@ SIMTARGET := obj_dir/VTop
 all: $(TARGET)
 
 # The FPGA image
-$(TARGET):	$(RTL_SOURCES)
+$(TARGET):	$(RTL_SOURCES) $(GENERATED_SOURCES)
 	@echo "--- Building FPGA Bitstream ---"
 	@mkdir -p build
 	@echo "  YOSYS (Synthesis)..."
@@ -49,6 +50,9 @@ $(TARGET):	$(RTL_SOURCES)
 	@icepack $(PROJECT).asc $(PROJECT).bin
 	@mv -f $(PROJECT).bin $(TARGET)
 	@echo "--- FPGA Build Complete ---"
+
+$(GENERATED_SOURCES):	regs.py ../tools/regTool.py
+	export PYTHONPATH=$PYTHONPATH:..:. && python3 regs.py
 
 # Build the Verilator simulation
 $(SIMTARGET): $(RTL_SOURCES) $(RTL_SIM_SOURCES) $(CPP_SOURCES) simHAL.hpp

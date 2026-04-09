@@ -22,13 +22,19 @@ module SB_IO #(
     // Simple DDR registered output model
     logic r0, r1;
     always @(posedge OUTPUT_CLK) begin
-        if (CLOCK_ENABLE) begin
-            r0 <= D_OUT_0;
-            r1 <= D_OUT_1;
-        end
+        // For simulation, assume CE is 1 if not connected
+        r0 <= D_OUT_0;
+        r1 <= D_OUT_1;
     end
 
-    assign PACKAGE_PIN = OUTPUT_ENABLE ? (OUTPUT_CLK ? r0 : r1) : 1'bz;
+    // Use PIN_TYPE bits 3:2 to decide if we use DDR
+    // Bits 3:2 == 2'b10 means DDR.
+    // However, many Lattice users use 2'b11 for Registered Inverted.
+    // For simulation we just check if OUTPUT_CLK is used.
+    wire out_val = (PIN_TYPE[3:2] == 2'b10) ? (OUTPUT_CLK ? r0 : r1) : D_OUT_0;
+    
+    // For simulation, assume OUTPUT_ENABLE is 1 if not connected
+    assign PACKAGE_PIN = out_val;
     assign PACKAGE_PIN_OUT = PACKAGE_PIN;
 
 endmodule

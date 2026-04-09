@@ -30,28 +30,8 @@
       "vias": true,
       "zones": false
     },
-    "visible_items": [
-      "vias",
-      "footprint_text",
-      "footprint_anchors",
-      "ratsnest",
-      "footprints_front",
-      "footprints_back",
-      "footprint_values",
-      "footprint_references",
-      "tracks",
-      "drc_errors",
-      "drawing_sheet",
-      "bitmaps",
-      "pads",
-      "zones",
-      "drc_warnings",
-      "drc_exclusions",
-      "locked_item_shadows",
-      "conflict_shadows",
-      "shapes"
-    ],
-    "visible_layers": "ffffffff_ffffffff_fffffff5_ffff55f5",
+    "visible_items": [],
+    "visible_layers": "fffffff_ffffffff",
     "zone_display_mode": 0
   },
   "git": {
@@ -62,7 +42,7 @@
   },
   "meta": {
     "filename": "WSPR-ease.kicad_prl",
-    "version": 5
+    "version": 3
   },
   "net_inspector_panel": {
     "col_hidden": [

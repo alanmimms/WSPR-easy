@@ -52,7 +52,7 @@ int GNSS::init() {
         }
     }
 
-    // GNSS Reset sequence (gnss_reset is now GPIO_ACTIVE_LOW)
+    // GNSS Reset sequence
     static const struct gpio_dt_spec gnssReset = GPIO_DT_SPEC_GET(DT_NODELABEL(gnss_reset), gpios);
     if (device_is_ready(gnssReset.port)) {
         gpio_pin_configure_dt(&gnssReset, GPIO_OUTPUT_INACTIVE);
@@ -76,9 +76,9 @@ int GNSS::reset() {
     if (!device_is_ready(gnssReset.port)) return -ENODEV;
 
     logger.inf("init", "Resetting GNSS chip (IO15 Active-Low)...");
-    gpio_pin_set_dt(&gnssReset, 1); // Assert Reset (Physically Low)
-    k_msleep(100);
-    gpio_pin_set_dt(&gnssReset, 0); // Deassert Reset (Physically High)
+    gpio_pin_set_dt(&gnssReset, 0); // reset
+    k_msleep(10);
+    gpio_pin_set_dt(&gnssReset, 1); // deassert reset
     logger.inf("init", "GNSS reset released");
     return 0;
 }
