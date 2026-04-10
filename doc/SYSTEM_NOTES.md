@@ -28,10 +28,10 @@ The ESP32-S3 and the iCE40UP5K FPGA are connected via a shared SPI bus (FSPI/SPI
 ## FPGA Internal Architecture
 
 - **Input Clock:** 40 MHz TCXO on FPGA Pin 35.
-- **Internal NCO Clock:** 100 MHz (Synthesized via PLL from 40 MHz).
-- **PPS Counter:** 32-bit counter running at 100 MHz, latched on every PPS rising edge.
-- **NCO:** 32-bit phase accumulator running at 100 MHz.
-- **RF Drive:** DDR outputs producing a 6-step synthesized sine wave.
+- **Internal NCO Clock:** 80 MHz (Synthesized via PLL from 40 MHz).
+- **PPS Counter:** 26-bit counter running at 80 MHz, latched on every PPS rising edge.
+- **NCO:** 32-bit phase accumulator running at 80 MHz.
+- **RF Drive:** DDR outputs producing a 6-step synthesized sine wave at 160 Msps.
 
 ---
 

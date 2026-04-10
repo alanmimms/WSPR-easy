@@ -229,11 +229,11 @@ namespace wspr {
     currentFreq = freqHz;
     if (!initialized) return -ENODEV;
 
-    // NCO tuning: M = (6 * f_out / f_clk) * 2^32
+    // NCO tuning: M = (f_out / f_clk) * 2^32
     // All symbol/tone math is now handled here in software.
-    // The FPGA runs at 45 MHz (clk45).
-    const uint64_t clk_in = 45000000ULL;
-    uint64_t word = ((uint64_t)freqHz * 6ULL << 32) / clk_in;
+    // The FPGA runs at 40 MHz (clk90).
+    const uint64_t clk_in = 40000000ULL;
+    uint64_t word = ((uint64_t)freqHz << 32) / clk_in;
 
     return spiWriteReg(WSPRRegs::aWSPRTuning, (uint32_t)word);
   }

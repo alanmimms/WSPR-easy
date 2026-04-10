@@ -33,14 +33,14 @@ public:
         top->fpgaMOSI = (txByte >> i) & 1;
         
         // Rise SCLK
-        top->fpgaSCLK = 1;
+        top->fpgaSCLK_pin = 1;
         advanceClock(10); // Wait 5 full cycles
         
         // Sample MISO on Rising Edge (Mode 0)
         rxByte = (rxByte << 1) | (top->fpgaMISO & 1);
         
         // Fall SCLK
-        top->fpgaSCLK = 0;
+        top->fpgaSCLK_pin = 0;
         advanceClock(10); // Wait 5 full cycles
       }
       

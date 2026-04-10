@@ -44,8 +44,9 @@ $(TARGET):	$(RTL_SOURCES) $(GENERATED_SOURCES)
 	@echo "  NEXTPNR (Place & Route)..."
 	@nextpnr-ice40 --$(DEVICE) --package $(PACKAGE) --opt-timing --no-promote-globals \
 		--pre-pack timing.py --placer sa \
-		--json $(PROJECT).json --pcf $(PCF) --asc $(PROJECT).asc > build/nextpnr.log 2>&1 || (tail -n 20 build/nextpnr.log && exit 1)
-
+		--json $(PROJECT).json --pcf $(PCF) \
+		--log build/nextpnr.log -q \
+		--asc $(PROJECT).asc
 	@echo "  ICEPACK (Bitstream)..."
 	@icepack $(PROJECT).asc $(PROJECT).bin
 	@mv -f $(PROJECT).bin $(TARGET)

@@ -1,5 +1,5 @@
 # Clock Inputs
-set_io fpgaSCLK 15
+set_io fpgaSCLK_pin 15
 set_io clk40 35
 set_io gnssPPS 6
 
@@ -9,10 +9,11 @@ set_io fpgaNCS 16
 set_io fpgaMISO 14
 
 # RF Exciter Outputs (DDR Capable, 12mA High Drive)
+# Based on hardware reality: Pin 37 is PULL2 (Peak), Pin 48 is PUSH2 (Peak)
 set_io rfPushBase 42
-set_io rfPushPeak 37
+set_io rfPushPeak 48
 set_io rfPullBase 45
-set_io rfPullPeak 48
+set_io rfPullPeak 37
 set_io driverNEN 25
 
 # Reset without reconfiguration

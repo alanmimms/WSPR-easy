@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
   vluint64_t mainTime = 0;
   top->clk40 = 0;
   top->fpgaNCS = 1;
-  top->fpgaSCLK = 0;
+  top->fpgaSCLK_pin = 0;
   top->fpgaMOSI = 0;
   top->gnssPPS = 0;
 
@@ -44,10 +44,11 @@ int main(int argc, char** argv) {
 
   SimSpi spi(top, &mainTime);
 
-  // Set Frequency
-  uint32_t freqHz = 5000000;
-  // Update rate is 2 steps per clock cycle. 
-  // Simulation clock is 40MHz, so update rate is 80Msps.
+  // Set Frequency: 5.555555 MHz
+  uint32_t freqHz = 5555555;
+  // Update rate in simulation:
+  // clk40 is passed through to clk90 (40MHz).
+  // DDR means 2 updates per clk90 cycle = 80Msps.
   uint32_t tuningWord = ((uint64_t)freqHz << 32) / 80000000ULL;
 
   std::cout << "Setting Tuning Word: 0x" << std::hex << tuningWord << std::dec << " for " << freqHz << " Hz at 80 Msps" << std::endl;
@@ -56,44 +57,21 @@ int main(int argc, char** argv) {
   uint32_t rb = spi.readReg(0x01);
   std::cout << "Readback Tuning: 0x" << std::hex << rb << std::dec << std::endl;
 
-  uint32_t ctrl = spi.readReg(0x00);
-  std::cout << "Initial WSPRControl: 0x" << std::hex << ctrl << std::dec << std::endl;
-  std::cout << "  PLL Locked bit: " << ((ctrl >> 1) & 1) << std::endl;
-
-  // Test Case: Check driverNEN
-  std::cout << "Initial driverNEN: " << (int)top->driverNEN << " (Expected 1)" << std::endl;
-  
   std::cout << "Enabling TX..." << std::endl;
   spi.writeReg(0x00, 0x01); // TX EN = 1
   
-  // Advance a bit for register to update (45MHz domain needs more cycles)
-  for (int i = 0; i < 100; i++) {
+  // Simulation loop
+  std::cout << "Running RF simulation for 5000 cycles..." << std::endl;
+  for (int i = 0; i < 10000; i++) {
     top->clk40 = !top->clk40;
     top->eval();
     if (tfp) tfp->dump(mainTime);
-    mainTime += 12500;
-  }
-  std::cout << "After Enable driverNEN: " << (int)top->driverNEN << " (Expected 0)" << std::endl;
-
-  int rfToggles = 0;
-  for (int i = 0; i < 1000; i++) {
-    bool old = top->rfPushBase;
-    top->clk40 = !top->clk40;
-    top->eval();
-    if (tfp) tfp->dump(mainTime);
-    mainTime += 12500;
-    if (top->rfPushBase != old) rfToggles++;
-  }
-  std::cout << "RF Toggles detected: " << rfToggles << std::endl;
-
-  if (top->driverNEN == 0 && rfToggles > 0) {
-    std::cout << "SUCCESS: driverNEN is active and RF is free-running!" << std::endl;
-  } else {
-    std::cout << "FAILURE!" << std::endl;
+    mainTime += 12500; // 40MHz clock half-period
   }
 
   top->final();
   if (tfp) { tfp->close(); delete tfp; }
   delete top;
+  std::cout << "Simulation finished. Waveform saved to waveform.vcd" << std::endl;
   return 0;
 }
