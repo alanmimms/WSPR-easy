@@ -1,3 +1,5 @@
+`timescale 1ns / 100ps
+
 module FreqCounter (
 		    input logic clk40,
 		    input logic reset,

@@ -1,3 +1,5 @@
+`timescale 1ns / 100ps
+
 module Top (
 	    // 40 MHz GNSS-Disciplined TCXO Input
 	    input  logic clk40,
@@ -53,6 +55,10 @@ module Top (
 		   .GLOBAL_BUFFER_OUTPUT(clk90)
 		   );
 
+  // Synchronized reset for 90MHz domain
+  logic reset90;
+  Synchronizer resetSync (.clk(clk90), .dIn(!fpgaNRESET), .dOut(reset90));
+
   logic [5:0] ppsGen;
   logic [25:0] ppsCount;
   logic [31:0] tuningWord;
@@ -77,7 +83,7 @@ module Top (
 
   // Use clk90 for frequency counter.
   FreqCounter freqCounter (
-			   .reset(!fpgaNRESET),
+			   .reset(reset90),
 			   .clk40(clk90),
 			   .fpgaNCS(fpgaNCS),
 			   .ppsCount(ppsCount),
@@ -87,7 +93,7 @@ module Top (
 
 
   SPIRegisters spiCore (
-			.reset(!fpgaNRESET),
+			.reset(reset90),
 			.fpgaSCLK(fpgaSCLK),
 			.fpgaMOSI(fpgaMOSI),
 			.fpgaMISO(fpgaMISO),
@@ -101,7 +107,7 @@ module Top (
 			);
 
   WSPRExciter exciterCore (
-			   .reset(!fpgaNRESET),
+			   .reset(reset90),
 			   .clk90(clk90),
 			   .tuningWord(tuningWord),
 			   .txEnable(txEnable & pllLocked), 

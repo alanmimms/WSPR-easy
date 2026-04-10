@@ -1,3 +1,5 @@
+`timescale 1ns / 100ps
+
 module WSPRExciter (
     input  logic clk90,
     input  logic reset,
@@ -12,7 +14,7 @@ module WSPRExciter (
     );
 
   // =========================================================================
-  // 1. NCO Pipeline (T1-T10)
+  // 1. NCO Pipeline (T1-T13)
   // =========================================================================
   
   // Register inputs locally
@@ -59,23 +61,25 @@ module WSPRExciter (
     end
   end
 
-  // Skew-align high bits (T10)
+  // Skew-align bits to form a coherent 16-bit phase (T11)
+  logic [3:0] s6_q1;
+  logic [3:0] s5_q1, s5_q2;
+  logic [3:0] s4_q1, s4_q2, s4_q3;
   logic [15:0] ph;
-  logic [3:0] s6_d, s5_d, s4_d;
   always_ff @(posedge clk90) begin
-    s6_d <= s6;
-    s5_d <= s5;
-    s4_d <= s4;
-    ph <= {s7, s6_d, s5_d, s4_d};
+    s6_q1 <= s6;
+    s5_q1 <= s5; s5_q2 <= s5_q1;
+    s4_q1 <= s4; s4_q2 <= s4_q1; s4_q3 <= s4_q2;
+    ph <= {s7, s6_q1, s5_q2, s4_q3};
   end
 
   // =========================================================================
-  // 2. Scaling Pipeline (T11-T14)
+  // 2. Scaling Pipeline (T12-T15)
   // =========================================================================
   logic [15:0] phR, phF;
   logic [14:0] twHigh_q;
   always_ff @(posedge clk90) begin
-    twHigh_q <= tw_q[31:17]; 
+    twHigh_q <= tw_q[31:17];
     phR <= ph;
     phF <= ph + twHigh_q;
   end
@@ -93,7 +97,7 @@ module WSPRExciter (
   end
 
   // =========================================================================
-  // 3. Decoding & Output (T15-T17)
+  // 3. Decoding & Output (T16-T19)
   // =========================================================================
   logic [31:0] enP = 0; 
   always_ff @(posedge clk90) enP <= {enP[30:0], txEn_q};
@@ -114,11 +118,20 @@ module WSPRExciter (
     end
   end
 
-  // Final stage registers for SB_IO packing
+  // Clean posedge intermediate stage to break timing path to negedge
+  logic rb0_q, rb1_q, rp0_q, rp1_q, lb0_q, lb1_q, lp0_q, lp1_q;
+  always_ff @(posedge clk90) begin
+    rb0_q <= rb0_i; rb1_q <= rb1_i; rp0_q <= rp0_i; rp1_q <= rp1_i;
+    lb0_q <= lb0_i; lb1_q <= lb1_i; lp0_q <= lp0_i; lp1_q <= lp1_i;
+  end
+
+  // Final stage registers for SB_IO packing.
   logic rb0, rb1, rp0, rp1, lb0, lb1, lp0, lp1;
   always_ff @(posedge clk90) begin
-    rb0 <= rb0_i; rb1 <= rb1_i; rp0 <= rp0_i; rp1 <= rp1_i;
-    lb0 <= lb0_i; lb1 <= lb1_i; lp0 <= lp0_i; lp1 <= lp1_i;
+    rb0 <= rb0_q; rp0 <= rp0_q; lb0 <= lb0_q; lp0 <= lp0_q;
+  end
+  always_ff @(negedge clk90) begin
+    rb1 <= rb1_q; rp1 <= rp1_q; lb1 <= lb1_q; lp1 <= lp1_q;
   end
 
   SB_IO #(.PIN_TYPE(6'b010000)) ioPushB (.PACKAGE_PIN(rfPushBase), .OUTPUT_CLK(clk90), .D_OUT_0(rb0), .D_OUT_1(rb1));

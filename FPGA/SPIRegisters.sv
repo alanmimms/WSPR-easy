@@ -1,3 +1,4 @@
+`timescale 1ns / 100ps
 `include "regs.sv"
 
 module SPIRegisters (

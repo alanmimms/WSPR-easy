@@ -1,3 +1,5 @@
+`timescale 1ns / 100ps
+
 module edgeDetector #(
     parameter int WIDTH = 1,
     parameter logic [WIDTH-1:0] RESET_VALUE = '0

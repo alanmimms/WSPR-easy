@@ -1,3 +1,5 @@
+`timescale 1ns / 100ps
+
 module Synchronizer #(
 		      parameter int WIDTH = 1,
 		      parameter int STAGES = 2,
