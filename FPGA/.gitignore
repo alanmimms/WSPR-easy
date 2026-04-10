@@ -6,3 +6,4 @@ build/
 regs.hpp
 regs.md
 regs.sv
+build/
