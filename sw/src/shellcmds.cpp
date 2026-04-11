@@ -48,7 +48,7 @@ namespace wspr {
     shell_print(sh, "Sweep stopped.");
   }
 
-  static int cmd_wspr_status(const struct shell *sh, size_t argc, char **argv) {
+  static int cmd_status(const struct shell *sh, size_t argc, char **argv) {
     auto& wifi = WifiManager::instance();
     auto& gnss = GNSS::instance();
     auto& fpga = FPGA::instance();
@@ -77,29 +77,6 @@ namespace wspr {
     return 0;
   }
 
-  static int cmd_tx_start(const struct shell *sh, size_t argc, char **argv) {
-    if (argc < 2) {
-      shell_error(sh, "Usage: tx_start <freq_hz> [power_0_255]");
-      return -EINVAL;
-    }
-    uint32_t freq = strtoul(argv[1], NULL, 10);
-    uint8_t pwr = 255;
-    if (argc >= 3) {
-      pwr = (uint8_t)strtoul(argv[2], NULL, 10);
-    }
-
-    auto& fpga = FPGA::instance();
-    fpga.setFrequency(freq);
-    fpga.setPowerLevel(pwr);
-    int ret = fpga.startTX();
-    if (ret == 0) {
-      shell_print(sh, "TX started at %u Hz, Power %u (Ignored by current RTL)", freq, pwr);
-    } else {
-      shell_error(sh, "Failed to start TX: %d", ret);
-    }
-    return ret;
-  }
-
   static int cmd_tx_stop(const struct shell *sh, size_t argc, char **argv) {
     sweepRunning = false;
     FPGA::instance().stopTX();
@@ -109,7 +86,7 @@ namespace wspr {
 
   static int cmd_tx_sweep(const struct shell *sh, size_t argc, char **argv) {
     if (sweepRunning) {
-      shell_error(sh, "Sweep already running. Use tx_stop first.");
+      shell_error(sh, "Sweep already running. Use tx stop first.");
       return -EBUSY;
     }
 
@@ -125,6 +102,93 @@ namespace wspr {
                     K_THREAD_STACK_SIZEOF(sweepThreadStack),
                     sweepThreadEntry, (void*)sh, NULL, NULL,
                     7, 0, K_NO_WAIT);
+
+    return 0;
+  }
+
+  static int cmd_tx(const struct shell *sh, size_t argc, char **argv) {
+    if (argc < 2) {
+      shell_error(sh, "Usage: tx <freq_mhz|stop|sweep>");
+      return -EINVAL;
+    }
+
+    if (strcmp(argv[1], "stop") == 0) {
+      return cmd_tx_stop(sh, argc - 1, argv + 1);
+    }
+
+    if (strcmp(argv[1], "sweep") == 0) {
+      return cmd_tx_sweep(sh, argc - 1, argv + 1);
+    }
+
+    // Try parsing as float MHz
+    char *endptr;
+    double freqMhz = strtod(argv[1], &endptr);
+    if (*endptr == '\0') {
+      uint32_t freqHz = (uint32_t)(freqMhz * 1000000.0);
+      uint8_t pwr = 255;
+      if (argc >= 3) {
+        pwr = (uint8_t)strtoul(argv[2], NULL, 10);
+      }
+
+      auto& fpga = FPGA::instance();
+      fpga.setFrequency(freqHz);
+      fpga.setPowerLevel(pwr);
+      int ret = fpga.startTX();
+      if (ret == 0 || ret == -EALREADY) {
+        shell_print(sh, "TX: %.6f MHz (Power %u)", freqMhz, pwr);
+        return 0;
+      } else {
+        shell_error(sh, "Failed to start TX: %d", ret);
+        return ret;
+      }
+    }
+
+    shell_error(sh, "Invalid argument: %s", argv[1]);
+    return -EINVAL;
+  }
+
+  static int cmd_log(const struct shell *sh, size_t argc, char **argv) {
+    auto& lm = LogManager::instance();
+
+    if (argc < 2) {
+      lm.listSubsystems(sh);
+      return 0;
+    }
+
+    std::string arg = argv[1];
+    if (arg == "quiet") {
+      lm.setAll(false);
+      shell_print(sh, "All logging disabled.");
+    } else if (arg == "full") {
+      lm.setAll(true);
+      shell_print(sh, "All logging enabled.");
+    } else if (arg[0] == '+') {
+      std::string sub = arg.substr(1);
+      size_t colon = sub.find(':');
+      if (colon != std::string::npos) {
+	std::string type = sub.substr(colon + 1);
+	sub = sub.substr(0, colon);
+	lm.setSubtype(sub, type, true);
+	shell_print(sh, "Subsystem %s subtype %s enabled.", sub.c_str(), type.c_str());
+      } else {
+	lm.setSubsystem(sub, true);
+	shell_print(sh, "Subsystem %s enabled.", sub.c_str());
+      }
+    } else if (arg[0] == '-') {
+      std::string sub = arg.substr(1);
+      size_t colon = sub.find(':');
+      if (colon != std::string::npos) {
+	std::string type = sub.substr(colon + 1);
+	sub = sub.substr(0, colon);
+	lm.setSubtype(sub, type, false);
+	shell_print(sh, "Subsystem %s subtype %s disabled.", sub.c_str(), type.c_str());
+      } else {
+	lm.setSubsystem(sub, false);
+	shell_print(sh, "Subsystem %s disabled.", sub.c_str());
+      }
+    } else {
+      lm.listSubtypes(sh, arg);
+    }
 
     return 0;
   }
@@ -308,52 +372,6 @@ namespace wspr {
     return 0;
   }
 
-  static int cmd_wspr_log(const struct shell *sh, size_t argc, char **argv) {
-    auto& lm = LogManager::instance();
-
-    if (argc < 2) {
-      lm.listSubsystems(sh);
-      return 0;
-    }
-
-    std::string arg = argv[1];
-    if (arg == "quiet") {
-      lm.setAll(false);
-      shell_print(sh, "All logging disabled.");
-    } else if (arg == "full") {
-      lm.setAll(true);
-      shell_print(sh, "All logging enabled.");
-    } else if (arg[0] == '+') {
-      std::string sub = arg.substr(1);
-      size_t colon = sub.find(':');
-      if (colon != std::string::npos) {
-	std::string type = sub.substr(colon + 1);
-	sub = sub.substr(0, colon);
-	lm.setSubtype(sub, type, true);
-	shell_print(sh, "Subsystem %s subtype %s enabled.", sub.c_str(), type.c_str());
-      } else {
-	lm.setSubsystem(sub, true);
-	shell_print(sh, "Subsystem %s enabled.", sub.c_str());
-      }
-    } else if (arg[0] == '-') {
-      std::string sub = arg.substr(1);
-      size_t colon = sub.find(':');
-      if (colon != std::string::npos) {
-	std::string type = sub.substr(colon + 1);
-	sub = sub.substr(0, colon);
-	lm.setSubtype(sub, type, false);
-	shell_print(sh, "Subsystem %s subtype %s disabled.", sub.c_str(), type.c_str());
-      } else {
-	lm.setSubsystem(sub, false);
-	shell_print(sh, "Subsystem %s disabled.", sub.c_str());
-      }
-    } else {
-      lm.listSubtypes(sh, arg);
-    }
-
-    return 0;
-  }
-
   static int cmd_fpga_status(const struct shell *sh, size_t argc, char **argv) {
     auto& fpga = FPGA::instance();
 
@@ -391,13 +409,6 @@ namespace wspr {
 				 SHELL_SUBCMD_SET_END
 				 );
 
-  SHELL_STATIC_SUBCMD_SET_CREATE(sub_tx,
-				 SHELL_CMD(start, NULL, "Start TX <freq_hz> [pwr_0_255]", cmd_tx_start),
-				 SHELL_CMD(stop, NULL, "Stop TX / Sweep", cmd_tx_stop),
-				 SHELL_CMD(sweep, NULL, "Sweep 1-30MHz <duration_sec> [single|continuous]", cmd_tx_sweep),
-				 SHELL_SUBCMD_SET_END
-				 );
-
   SHELL_STATIC_SUBCMD_SET_CREATE(sub_gnss,
 				 SHELL_CMD(raw, NULL, "Show most recent raw NMEA string", cmd_gnss_raw),
 				 SHELL_CMD(reset, NULL, "Manual GNSS chip reset (IO15)", cmd_gnss_reset),
@@ -405,16 +416,11 @@ namespace wspr {
 				 SHELL_SUBCMD_SET_END
 				 );
 
-  SHELL_STATIC_SUBCMD_SET_CREATE(sub_wspr,
-				 SHELL_CMD(status, NULL, "Show system status", cmd_wspr_status),
-				 SHELL_CMD(log, NULL, "Control subsystem logging", cmd_wspr_log),
-				 SHELL_CMD(fpga, &sub_fpga, "FPGA control commands", NULL),
-				 SHELL_CMD(gnss, &sub_gnss, "GNSS control commands", NULL),
-				 SHELL_CMD(fs, &sub_fs, "FileSystem commands", NULL),
-				 SHELL_CMD(tx, &sub_tx, "Transmitter test commands", NULL),
-				 SHELL_SUBCMD_SET_END
-				 );
-
-  SHELL_CMD_REGISTER(wspr, &sub_wspr, "WSPR-ease commands", NULL);
+  SHELL_CMD_REGISTER(status, NULL, "Show system status", cmd_status);
+  SHELL_CMD_REGISTER(log, NULL, "Control subsystem logging", cmd_log);
+  SHELL_CMD_REGISTER(fpga, &sub_fpga, "FPGA control commands", NULL);
+  SHELL_CMD_REGISTER(gnss, &sub_gnss, "GNSS control commands", NULL);
+  SHELL_CMD_REGISTER(fs, &sub_fs, "FileSystem commands", NULL);
+  SHELL_CMD_REGISTER(tx, NULL, "Transmitter control: <freq_mhz|stop|sweep>", cmd_tx);
 
 } // namespace wspr
