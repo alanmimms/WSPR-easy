@@ -395,6 +395,11 @@ namespace wspr {
     return 0;
   }
 
+  static int cmd_reboot(const struct shell *sh, size_t argc, char **argv) {
+    shell_execute_cmd(sh, "kernel reboot");
+    return 0;
+  }
+
   SHELL_STATIC_SUBCMD_SET_CREATE(sub_fpga,
 				 SHELL_CMD(status, NULL, "Show FPGA hardware register status", cmd_fpga_status),
 				 SHELL_CMD(reset, NULL, "Reset iCE40 FPGA", cmd_fpga_reset),
@@ -422,5 +427,6 @@ namespace wspr {
   SHELL_CMD_REGISTER(gnss, &sub_gnss, "GNSS control commands", NULL);
   SHELL_CMD_REGISTER(fs, &sub_fs, "FileSystem commands", NULL);
   SHELL_CMD_REGISTER(tx, NULL, "Transmitter control: <freq_mhz|stop|sweep>", cmd_tx);
+  SHELL_CMD_REGISTER(reboot, NULL, "Reboot system", cmd_reboot);
 
 } // namespace wspr

@@ -165,6 +165,15 @@ int main(void)
         }
         wasConnected = wifi.isConnected();
 
+        // Non-disableable warning if FPGA loaded but PLL not locked
+        if (fpga.isInitialized()) {
+            WSPRRegs::WSPRControl ctrl;
+            fpga.readRegister(WSPRRegs::aWSPRControl, &ctrl.u);
+            if (!ctrl.pllLocked) {
+                printk("WARNING: FPGA PLL is not locked!\n");
+            }
+        }
+
         // Periodic status log
         if ((loopCount % 60) == 0) {  // Every 60 seconds
             logger.inf("status", "Status: WiFi=%s IP=%s RSSI=%d GNSS=%s Freq=%u",
