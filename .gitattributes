@@ -1,0 +1,6 @@
+# Handle line endings automatically for all files detected as text
+* text=auto
+
+# Explicitly declare files that should always use LF (Unix style)
+*.cpp text eol=lf
+*.h text eol=lf

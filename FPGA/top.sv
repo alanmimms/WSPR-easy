@@ -61,6 +61,7 @@ module Top (
 
   logic [5:0] ppsGen;
   logic [25:0] ppsCount;
+  logic [7:0] powerThresh;
   logic [31:0] tuningWord;
   logic txEnable;
 
@@ -69,9 +70,10 @@ module Top (
   // =========================================================================
   logic driverEnableState;
   
-  // Calculate internal state: Enabled only when txEnable is high AND PLL is locked
-  // We use the async signals here, they are buffered by SB_IO in the end.
-  assign driverEnableState = ~(txEnable & pllLocked);
+  // Register the enable state on clk90 to ensure timing closure for the output pin.
+  always_ff @(posedge clk90) begin
+    driverEnableState <= ~(txEnable & pllLocked);
+  end
 
   // Explicit I/O instantiation for Pin 25
   SB_IO #(
@@ -100,17 +102,29 @@ module Top (
 			.fpgaNCS(fpgaNCS),
 			.clk90(clk90),
 			.tuningWord(tuningWord),
+			.powerThresh(powerThresh),
 			.pllLocked(pllLocked),
 			.txEnable(txEnable),
 			.ppsCount(ppsCount),
 			.ppsGen(ppsGen)
 			);
 
+  // Pipeline control signals for WSPRExciter to decouple timing
+  logic [31:0] tuningWordExciter;
+  logic [7:0]  powerThreshExciter;
+  logic        txEnableExciter;
+  always_ff @(posedge clk90) begin
+    tuningWordExciter  <= tuningWord;
+    powerThreshExciter <= powerThresh;
+    txEnableExciter    <= txEnable & pllLocked;
+  end
+
   WSPRExciter exciterCore (
 			   .reset(reset90),
 			   .clk90(clk90),
-			   .tuningWord(tuningWord),
-			   .txEnable(txEnable & pllLocked), 
+			   .tuningWord(tuningWordExciter),
+			   .powerThreshold(powerThreshExciter),
+			   .txEnable(txEnableExciter), 
 			   .rfPushBase(rfPushBase),
 			   .rfPushPeak(rfPushPeak),
 			   .rfPullBase(rfPullBase),

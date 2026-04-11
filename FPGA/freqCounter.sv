@@ -9,25 +9,34 @@ module FreqCounter (
 		    output logic [5:0] ppsGen
 		    );
 
-  // 2-stage pipelined 26-bit counter to hit 90MHz
-  logic [12:0] cLow = 0;
-  logic [12:0] cHigh = 0;
-  logic lowWrap = 0;
+  // 4-stage pipelined 28-bit counter to comfortably hit 90MHz
+  reg [6:0] c0 = 0, c1 = 0, c2 = 0, c3 = 0;
+  reg w0, w1, w2;
 
   always_ff @(posedge clk40) begin
-    cLow <= cLow + 13'd1;
-    // Signal wrap one cycle early to allow registration
-    lowWrap <= (cLow == 13'h1FFE);
+    c0 <= c0 + 7'd1;
+    w0 <= (c0 == 7'h7E);
     
-    if (lowWrap) begin
-      cHigh <= cHigh + 13'd1;
+    if (w0) begin
+      c1 <= c1 + 7'd1;
+      w1 <= (c1 == 7'h7E);
+    end else begin
+      w1 <= 1'b0;
+    end
+
+    if (w1) begin
+      c2 <= c2 + 7'd1;
+      w2 <= (c2 == 7'h7E);
+    end else begin
+      w2 <= 1'b0;
+    end
+
+    if (w2) begin
+      c3 <= c3 + 7'd1;
     end
   end
 
-  // Re-combine for output. Note: cHigh is effectively 2 cycles behind cLow
-  // relative to the start of the count, but for frequency measurement
-  // it just creates a fixed offset which cancels out.
-  wire [25:0] counter40MHz = {cHigh, cLow};
+  wire [25:0] counter40MHz = {c3[4:0], c2, c1, c0};
 
   logic syncNCS;
   logic fallingNCS;
