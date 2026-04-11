@@ -13,51 +13,49 @@ module Top (
 	    output logic fpgaMISO,
 	    input  logic fpgaNCS,
 
-	    // TX Exciter Pins
+	    // RF Output Phase Drivers
 	    output logic rfPushBase,
-	    output logic rfPushPeak,
+	    output wire rfPushPeak,
 	    output logic rfPullBase,
-	    output logic rfPullPeak,
+	    output wire rfPullPeak,
 
-	    // Transmit Enable (Active Low) routing to 74ACT buffers
-	    output logic driverNEN 
+	    // Driver Enable (Active Low)
+	    output logic driverNEN
 	    );
 
+  // --- Clock Management ---
+  logic clk90_pre, clk40_sys_pre;
+  logic clk90, clk40_sys;
   logic fpgaSCLK;
-  SB_GB sclkGbuf (
-		  .USER_SIGNAL_TO_GLOBAL_BUFFER(fpgaSCLK_pin),
-		  .GLOBAL_BUFFER_OUTPUT(fpgaSCLK)
-		  );
-
-  logic clk90_pre;
-  logic clk90;
   logic pllLocked;
 
-  // TARGET: 90 MHz for 180 MHz DDR RF Output.
+  SB_GB sclkGbuf (.USER_SIGNAL_TO_GLOBAL_BUFFER(fpgaSCLK_pin), .GLOBAL_BUFFER_OUTPUT(fpgaSCLK));
+
   // F_VCO = 40 * (17 + 1) = 720 MHz
-  // F_OUT = 720 / 2^3 = 90 MHz
-  SB_PLL40_PAD #(
+  // F_OUT_A = 720 / 8 = 90 MHz
+  // F_OUT_B = 720 / 18 = 40 MHz (Wait! 720/18 = 40 MHz)
+  SB_PLL40_2_PAD #(
 		 .FEEDBACK_PATH("SIMPLE"),
 		 .DIVR(4'b0000),       
 		 .DIVF(7'b0010001),   
-		 .DIVQ(3'b011),        
+		 .DIVQ(3'b011),        // 90 MHz
 		 .FILTER_RANGE(3'b011) 
 		 ) sysPll (
 			   .PACKAGEPIN(clk40), 
-			   .PLLOUTCORE(clk90_pre),
+			   .PLLOUTCOREA(clk90_pre),
+			   .PLLOUTCOREB(clk40_sys_pre),
 			   .LOCK(pllLocked),
 			   .RESETB(1'b1),
 			   .BYPASS(1'b0)
 			   );
 
-  SB_GB clk90Gbuf (
-		   .USER_SIGNAL_TO_GLOBAL_BUFFER(clk90_pre),
-		   .GLOBAL_BUFFER_OUTPUT(clk90)
-		   );
+  SB_GB clk90Gbuf (.USER_SIGNAL_TO_GLOBAL_BUFFER(clk90_pre), .GLOBAL_BUFFER_OUTPUT(clk90));
+  SB_GB clk40Gbuf (.USER_SIGNAL_TO_GLOBAL_BUFFER(clk40_sys_pre), .GLOBAL_BUFFER_OUTPUT(clk40_sys));
 
-  // Synchronized reset for 90MHz domain
-  logic reset90;
-  Synchronizer resetSync (.clk(clk90), .dIn(!fpgaNRESET), .dOut(reset90));
+  // Synchronized resets
+  logic rst90, rst40;
+  Synchronizer resetSync90 (.clk(clk90), .dIn(!fpgaNRESET), .dOut(rst90));
+  Synchronizer resetSync40 (.clk(clk40_sys), .dIn(!fpgaNRESET), .dOut(rst40));
 
   logic [5:0] ppsGen;
   logic [25:0] ppsCount;
@@ -65,37 +63,18 @@ module Top (
   logic [31:0] tuningWord;
   logic txEnable;
 
-  // =========================================================================
-  // Transmit Enable / Driver Control (Active Low)
-  // =========================================================================
-  logic driverEnableState;
-  
-  // Register the enable state on clk90 to ensure timing closure for the output pin.
-  always_ff @(posedge clk90) begin
-    driverEnableState <= ~(txEnable & pllLocked);
-  end
-
-  // Explicit I/O instantiation for Pin 25
-  SB_IO #(
-	  .PIN_TYPE(6'b010001) 
-	  ) ioDriverNEN (
-			 .PACKAGE_PIN(driverNEN), 
-			 .D_OUT_0(driverEnableState)
-			 );
-
-  // Use clk90 for frequency counter.
+  // FreqCounter now runs at its own 40 MHz clock domain
   FreqCounter freqCounter (
-			   .reset(reset90),
-			   .clk40(clk90),
+			   .reset(rst40),
+			   .clk40(clk40_sys),
 			   .fpgaNCS(fpgaNCS),
 			   .ppsCount(ppsCount),
 			   .ppsGen(ppsGen),
 			   .samplePPS(gnssPPS)
 			   );
 
-
   SPIRegisters spiCore (
-			.reset(reset90),
+			.reset(rst90),
 			.fpgaSCLK(fpgaSCLK),
 			.fpgaMOSI(fpgaMOSI),
 			.fpgaMISO(fpgaMISO),
@@ -109,26 +88,21 @@ module Top (
 			.ppsGen(ppsGen)
 			);
 
-  // Pipeline control signals for WSPRExciter to decouple timing
-  logic [31:0] tuningWordExciter;
-  logic [7:0]  powerThreshExciter;
-  logic        txEnableExciter;
-  always_ff @(posedge clk90) begin
-    tuningWordExciter  <= tuningWord;
-    powerThreshExciter <= powerThresh;
-    txEnableExciter    <= txEnable & pllLocked;
-  end
-
   WSPRExciter exciterCore (
-			   .reset(reset90),
+			   .reset(rst90),
 			   .clk90(clk90),
-			   .tuningWord(tuningWordExciter),
-			   .powerThreshold(powerThreshExciter),
-			   .txEnable(txEnableExciter), 
+			   .tuningWord(tuningWord),
+			   .powerThreshold(powerThresh),
+			   .txEnable(txEnable & pllLocked), 
 			   .rfPushBase(rfPushBase),
 			   .rfPushPeak(rfPushPeak),
 			   .rfPullBase(rfPullBase),
 			   .rfPullPeak(rfPullPeak)
 			   );
 
-endmodule // Top
+  logic driverEnableState;
+  always_ff @(posedge clk90) driverEnableState <= !(txEnable & pllLocked);
+
+  SB_IO #(.PIN_TYPE(6'b010101)) ioDriverNEN (.PACKAGE_PIN(driverNEN), .D_OUT_0(driverEnableState));
+
+endmodule

@@ -37,18 +37,27 @@ module SPIRegisters (
   
   // 1. Status bits from clk90 -> SPI Domain
   logic pllLockedSPI;
-  Synchronizer pllSyncSPI (.clk(fpgaSCLK), .dIn(pllLocked), .dOut(pllLockedSPI));
+  Synchronizer pllSyncSPI_highspeed (.clk(fpgaSCLK), .dIn(pllLocked), .dOut(pllLockedSPI));
 
   // 2. Control bits from SPI -> clk90 Domain
   logic ncsSync, ncsRising;
   Synchronizer ncsSync90 (.clk(clk90), .dIn(fpgaNCS), .dOut(ncsSync));
   edgeDetector ncsEdge90 (.clk(clk90), .sigIn(ncsSync), .risingOut(ncsRising));
 
+  // Double-registration to break cross-domain timing paths
+  logic [31:0] tw_s1, tw_s2;
+  logic [7:0]  pwr_s1, pwr_s2;
+  logic        tx_s1, tx_s2;
+
   always_ff @(posedge clk90) begin
+    tw_s1 <= twRaw; tw_s2 <= tw_s1;
+    pwr_s1 <= ctrlSPI.powerThresh; pwr_s2 <= pwr_s1;
+    tx_s1 <= ctrlSPI.txEnable; tx_s2 <= tx_s1;
+
     if (ncsRising || reset) begin
-      tuningWord  <= twRaw;
-      powerThresh <= ctrlSPI.powerThresh;
-      txEnable    <= ctrlSPI.txEnable;
+      tuningWord  <= tw_s2;
+      powerThresh <= pwr_s2;
+      txEnable    <= tx_s2;
     end
   end
 
@@ -71,8 +80,7 @@ module SPIRegisters (
     end
   end
 
-  // Readback logic (LATCHED into readBuf at T8)
-  // Decoupled from combinatorial path by selecting from local shadows where possible.
+  // Readback logic
   logic [31:0] vRead;
   always_comb begin
     vRead = 32'hDEADBEEF;
@@ -81,8 +89,8 @@ module SPIRegisters (
         vRead = ctrlSPI;
         vRead[1] = pllLockedSPI;
       end
-      aWSPRTuning:  vRead = twRaw; // Read from shadow instead of clk90 output
-      aWSPRPPS:     vRead = {ppsGen, ppsCount}; // This still crosses domains, but at 12MHz SPI it should be fine.
+      aWSPRTuning:  vRead = twRaw;
+      aWSPRPPS:     vRead = {ppsGen, ppsCount};
       aWSPRSig:     vRead = eWSPRSigVal;
     endcase
   end
