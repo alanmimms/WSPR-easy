@@ -19,6 +19,10 @@
 
 LOG_MODULE_REGISTER(wspr_ease, LOG_LEVEL_INF);
 
+namespace WSPRRegs {
+#include "regs.hpp"
+};
+
 namespace wspr {
 // Register subsystem with LogManager
 static Logger& logger = LogManager::instance().registerSubsystem("sys", 
