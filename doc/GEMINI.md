@@ -1,5 +1,9 @@
 # Project Context & Coding Guidelines
 
+## Project Base Knowledge
+Look in doc/OVERVIEW.md for overall info on the project and
+doc/FPGA.md for details on what we're doing right now. 
+
 ## C & C++ Coding Standards
 
 **General Style**
@@ -32,3 +36,5 @@
 * **Closing:** Do not end responses with prompts for further questions
   (e.g., "Let me know if..."). Simply complete the output and await
   the next command.
+
+When this is all clear, wait for me to tell you next steps.
