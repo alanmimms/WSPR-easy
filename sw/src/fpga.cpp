@@ -229,14 +229,13 @@ namespace wspr {
     currentFreq = freqHz;
     if (!initialized) return -ENODEV;
 
-    // NCO tuning: The FPGA NCO now runs at an effective 180 MHz sample rate
-    // (using DDR) and triggers a 6-step sequence.
-    // One full RF cycle corresponds to 6 NCO overflows.
-    // Therefore, the NCO frequency f_nco = 6 * freqHz.
-    // Tuning Word M = (f_nco / 180,000,000) * 2^32
-    // M = (6 * freqHz / 180,000,000) * 2^32
-    // M = (freqHz / 30,000,000) * 2^32
-    
+    // NCO tuning for 90 MHz system clock and 180 Msps effective sample rate.
+    // One full RF cycle corresponds to 6 state transitions (NCO overflows).
+    // The NCO frequency f_nco = 6 * freqHz.
+    // The tuning word per 180 Msps sample is M = (f_nco / 180,000,000) * 2^32.
+    // M = (6 * freqHz / 180,000,000) * 2^32 = (freqHz / 30,000,000) * 2^32.
+    // In each 90 MHz clock cycle (2 samples), the FPGA takes two steps of size M.
+
     // Using 64-bit math to avoid overflow before division
     const uint64_t f_limit = 30000000ULL;
     uint64_t word = ((uint64_t)freqHz << 32) / f_limit;

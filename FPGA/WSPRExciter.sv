@@ -1,10 +1,18 @@
 `timescale 1ns / 100ps
 `default_nettype none
 
+/**
+ * WSPRExciter - High-purity RF synthesis for WSPR-ease.
+ * 
+ * Optimized Architecture:
+ * - Single 33-bit pipelined NCO (adds 2*M per 90MHz clock).
+ * - Fast 4-bit mid-cycle overflow prediction.
+ * - Walking ring advances by 0, 1, or 2 steps.
+ */
 module WSPRExciter (
     input  wire        clk90,
     input  wire        reset,
-    input  wire [31:0] tuningWord,
+    input  wire [31:0] tuningWord,     // M
     input  wire [7:0]  powerThreshold,
     input  wire        txEnable,
 
@@ -14,100 +22,134 @@ module WSPRExciter (
     output wire        rfPullPeak
     );
 
-  // T0
-  reg [31:0] tw_q;
-  reg [7:0]  pwr_q;
-  reg        en_q, rst_q;
+  // --- Local Sync ---
+  reg rst_l, txEn_l;
   always_ff @(posedge clk90) begin
-    tw_q <= tuningWord; pwr_q <= powerThreshold; en_q <= txEnable; rst_q <= reset;
+    rst_l  <= reset;
+    txEn_l <= txEnable;
   end
 
-  wire [32:0] tw90 = {tw_q, 1'b0};
-
-  // NCO Pipeline (4-bit slices, 8 stages) - NO TUNING WORD PIPELINE
-  reg [3:0] a [0:7];
-  reg [3:0] m [0:7];
-  reg       cf [0:7];
-  reg       cm [0:7];
-  reg       cf_t;
+  // --- 1. Pipelined Tuning Word Delay matching ---
+  wire [32:0] W = {tuningWord, 1'b0}; // 2*M
+  
+  reg [3:0] w_pipe[7:0][7:0];
+  reg [7:0] w_bit32_pipe;
 
   always_ff @(posedge clk90) begin
-    if (rst_q || !en_q) begin
-      for (int i=0; i<8; i++) begin a[i]<=0; cf[i]<=0; m[i]<=0; cm[i]<=0; end
-      cf_t <= 0;
-    end else begin
-      {cf[0], a[0]} <= a[0] + tw90[3:0]; {cm[0], m[0]} <= a[0] + tw_q[3:0];
-      {cf[1], a[1]} <= a[1] + tw90[7:4] + cf[0]; {cm[1], m[1]} <= a[1] + tw_q[7:4] + cm[0];
-      {cf[2], a[2]} <= a[2] + tw90[11:8] + cf[1]; {cm[2], m[2]} <= a[2] + tw_q[11:8] + cm[1];
-      {cf[3], a[3]} <= a[3] + tw90[15:12] + cf[2]; {cm[3], m[3]} <= a[3] + tw_q[15:12] + cm[2];
-      {cf[4], a[4]} <= a[4] + tw90[19:16] + cf[3]; {cm[4], m[4]} <= a[4] + tw_q[19:16] + cm[3];
-      {cf[5], a[5]} <= a[5] + tw90[23:20] + cf[4]; {cm[5], m[5]} <= a[5] + tw_q[23:20] + cm[4];
-      {cf[6], a[6]} <= a[6] + tw90[27:24] + cf[5]; {cm[6], m[6]} <= a[6] + tw_q[27:24] + cm[5];
-      begin
-        logic [4:0] sF, sM;
-        sF = {1'b0, a[7]} + {1'b0, tw90[31:28]} + {4'd0, cf[6]};
-        a[7] <= sF[3:0]; {cf_t, cf[7]} <= {1'b0, sF[4]} + {1'b0, tw90[32]};
-        sM = {1'b0, a[7]} + {1'b0, tw_q[31:28]} + {4'd0, cm[6]};
-        m[7] <= sM[3:0]; cm[7] <= sM[4];
+    for (int s = 0; s < 8; s = s + 1) begin
+      w_pipe[s][0] <= W[s*4 +: 4];
+      for (int d = 1; d <= s; d = d + 1) begin
+        w_pipe[s][d] <= w_pipe[s][d-1];
       end
+    end
+    w_bit32_pipe <= {w_bit32_pipe[6:0], W[32]};
+  end
+
+  // --- 2. Segmented 33-bit Accumulator ---
+  reg [3:0] acc[7:0];
+  reg       c[8:0];
+  always_ff @(posedge clk90) begin
+    if (rst_l) begin
+      for (int s = 0; s < 8; s = s + 1) acc[s] <= 0;
+      for (int s = 0; s < 9; s = s + 1) c[s]   <= 0;
+    end else begin
+      {c[0], acc[0]} <= acc[0] + w_pipe[0][0]; 
+      for (int s = 1; s < 8; s = s + 1) begin
+        {c[s], acc[s]} <= acc[s] + w_pipe[s][s] + c[s-1];
+      end
+      c[8] <= w_bit32_pipe[7] + c[7];
     end
   end
 
-  // T9: Step Integration
-  reg [1:0] stepsF_T9;
-  reg       stepM_T9;
-  reg [7:0] posA_T9, posB_T9;
+  // Predictive mid-cycle overflow
+  reg comp_res;
   always_ff @(posedge clk90) begin
-    stepsF_T9 <= {1'b0, cf[7]} + {1'b0, cf_t};
-    stepM_T9  <= cm[7];
-    posA_T9   <= {a[7], a[6]};
-    posB_T9   <= {m[7], m[6]};
+    comp_res <= (acc[7] >= {w_bit32_pipe[7], w_pipe[7][7][3:1]});
   end
 
-  // T10: Compare
-  reg gateA_T10, gateB_T10;
+  reg [1:0] ovf_full_d1;
+  reg ovf_mid;
   always_ff @(posedge clk90) begin
-    gateA_T10 <= (posA_T9 < pwr_q);
-    gateB_T10 <= (posB_T9 < pwr_q);
+    ovf_full_d1 <= {c[8], c[7]};
+    // c[8], c[7] are from the same cycle as acc[7]. 
+    // comp_res is from the cycle after acc[7].
+    // So we need to delay c bits to match comp_res.
+    ovf_mid <= ovf_full_d1[1] | (ovf_full_d1[0] & comp_res);
   end
 
-  // T11: Ring Update
-  reg [5:0] ring;
-  reg [5:0] rA_T11, rB_T11;
-  wire [5:0] rP1 = {ring[4:0], ring[5]};
-  wire [5:0] rP2 = {ring[3:0], ring[5:4]};
+  reg [1:0] ovf_full; 
   always_ff @(posedge clk90) begin
-    if (rst_q || !en_q) ring <= 6'b000001;
-    else begin
-      rA_T11 <= ring;
-      rB_T11 <= stepM_T9 ? rP1 : ring;
-      case (stepsF_T9)
-        2'd1: ring <= rP1;
-        2'd2: ring <= rP2;
+    ovf_full <= ovf_full_d1;
+  end
+
+  // --- 3. Walking Ring ---
+  reg [5:0] ring = 6'b000001;
+  function [5:0] advance1(input [5:0] r);
+    advance1 = {r[4:0], r[5]};
+  endfunction
+  function [5:0] advance2(input [5:0] r);
+    advance2 = {r[3:0], r[5:4]};
+  endfunction
+
+  always_ff @(posedge clk90) begin
+    if (rst_l || !txEn_l) begin
+      ring <= 6'b000001;
+    end else begin
+      case (ovf_full)
+        2'd0: ring <= ring;
+        2'd1: ring <= advance1(ring);
+        2'd2: ring <= advance2(ring);
         default: ring <= ring;
       endcase
     end
   end
 
-  // T12: Final Gate
-  reg [3:0] fa, fb;
-  reg ga_d1, gb_d1, ga_d2, gb_d2;
+  // --- 4. Power Control ---
+  reg [7:0] phaseEnd;
   always_ff @(posedge clk90) begin
-    ga_d1 <= gateA_T10; gb_d1 <= gateB_T10;
-    ga_d2 <= ga_d1; gb_d2 <= gb_d1;
-    begin
-      logic [3:0] ba, bb;
-      ba[0]=rA_T11[0]|rA_T11[1]|rA_T11[2]; ba[1]=rA_T11[1]; ba[2]=rA_T11[3]|rA_T11[4]|rA_T11[5]; ba[3]=rA_T11[4];
-      bb[0]=rB_T11[0]|rB_T11[1]|rB_T11[2]; bb[1]=rB_T11[1]; bb[2]=rB_T11[3]|rB_T11[4]|rB_T11[5]; bb[3]=rB_T11[4];
-      fa <= ba & {4{ga_d2}}; fb <= bb & {4{gb_d2}};
-    end
+    phaseEnd <= {acc[7], acc[6]};
+  end
+  
+  reg en1, en2;
+  reg [7:0] pwrThresh_l;
+  always_ff @(posedge clk90) begin
+    pwrThresh_l <= powerThreshold;
+    en1 <= (phaseEnd < pwrThresh_l); // Simplified: use end phase for both
+    en2 <= (phaseEnd < pwrThresh_l);
   end
 
-  // SB_IO
-  SB_IO #(.PIN_TYPE(6'b011000)) ioPB (.PACKAGE_PIN(rfPushBase), .OUTPUT_CLK(clk90), .D_OUT_0(fa[0]), .D_OUT_1(fb[0]));
-  SB_IO #(.PIN_TYPE(6'b011000)) ioPP (.PACKAGE_PIN(rfPushPeak), .OUTPUT_CLK(clk90), .D_OUT_0(fa[1]), .D_OUT_1(fb[1]));
-  SB_IO #(.PIN_TYPE(6'b011000)) ioLB (.PACKAGE_PIN(rfPullBase), .OUTPUT_CLK(clk90), .D_OUT_0(fa[2]), .D_OUT_1(fb[2]));
-  SB_IO #(.PIN_TYPE(6'b011000)) ioLP (.PACKAGE_PIN(rfPullPeak), .OUTPUT_CLK(clk90), .D_OUT_0(fa[3]), .D_OUT_1(fb[3]));
+  // --- 5. Output Mapping ---
+  function [3:0] ringToGates(input [5:0] r, input en);
+    logic [3:0] gates;
+    begin
+      gates[0] = r[0] | r[1] | r[2];
+      gates[1] = r[1];
+      gates[2] = r[3] | r[4] | r[5];
+      gates[3] = r[4];
+      ringToGates = gates & {4{en}};
+    end
+  endfunction
+
+  reg [3:0] outR, outF;
+  always_ff @(posedge clk90) begin
+    outF <= ringToGates(ovf_mid ? advance1(ring) : ring, en1);
+    case (ovf_full)
+      2'd0: outR <= ringToGates(ring, en2);
+      2'd1: outR <= ringToGates(advance1(ring), en2);
+      2'd2: outR <= ringToGates(advance2(ring), en2);
+      default: outR <= ringToGates(ring, en2);
+    endcase
+  end
+
+  reg [3:0] outR_reg, outF_reg;
+  always_ff @(posedge clk90) begin
+    outR_reg <= outR;
+    outF_reg <= outF;
+  end
+
+  SB_IO #(.PIN_TYPE(6'b011000)) ioPB (.PACKAGE_PIN(rfPushBase), .OUTPUT_CLK(clk90), .D_OUT_0(outR_reg[0]), .D_OUT_1(outF_reg[0]));
+  SB_IO #(.PIN_TYPE(6'b011000)) ioPP (.PACKAGE_PIN(rfPushPeak), .OUTPUT_CLK(clk90), .D_OUT_0(outR_reg[1]), .D_OUT_1(outF_reg[1]));
+  SB_IO #(.PIN_TYPE(6'b011000)) ioLB (.PACKAGE_PIN(rfPullBase), .OUTPUT_CLK(clk90), .D_OUT_0(outR_reg[2]), .D_OUT_1(outF_reg[2]));
+  SB_IO #(.PIN_TYPE(6'b011000)) ioLP (.PACKAGE_PIN(rfPullPeak), .OUTPUT_CLK(clk90), .D_OUT_0(outR_reg[3]), .D_OUT_1(outF_reg[3]));
 
 endmodule
-`default_nettype wire
