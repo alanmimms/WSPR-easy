@@ -32,6 +32,7 @@ int main(int argc, char** argv) {
   top->fpgaSCLK_pin = 0;
   top->fpgaMOSI = 0;
   top->gnssPPS = 0;
+  top->fpgaNRESET = 1;
 
   std::cout << "Starting simulation..." << std::endl;
   // Let PLL lock
@@ -58,7 +59,7 @@ int main(int argc, char** argv) {
   std::cout << "Readback Tuning: 0x" << std::hex << rb << std::dec << std::endl;
 
   std::cout << "Enabling TX..." << std::endl;
-  spi.writeReg(0x00, 0x01); // TX EN = 1
+  spi.writeReg(0x00, 0xFF000001); // TX EN = 1, Power Threshold = 255
   
   // Simulation loop
   std::cout << "Running RF simulation for 5000 cycles..." << std::endl;
